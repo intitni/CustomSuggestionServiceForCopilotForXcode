@@ -7,19 +7,90 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697502B7B7B3700B8B840 /* TestFieldView.swift */; };
+		C84697542B7B8B8300B8B840 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = C84697532B7B8B8300B8B840 /* STTextView */; };
+		C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697562B7B8C9000B8B840 /* TutorialView.swift */; };
+		C867A12E2B7BDB3900875400 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C867A12D2B7BDB3900875400 /* App.swift */; };
+		C867A1302B7BDBA500875400 /* TestField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C867A12F2B7BDBA500875400 /* TestField.swift */; };
+		C874CD4B2B70FDD0003ABA96 /* ExistedChatModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */; };
 		C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */; };
 		C8D0114E2B59912700219412 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114D2B59912700219412 /* ContentView.swift */; };
 		C8D011502B59912800219412 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D0114F2B59912800219412 /* Assets.xcassets */; };
 		C8D011532B59912800219412 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D011522B59912800219412 /* Preview Assets.xcassets */; };
+		C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */; };
+		C8D011682B5A5B4D00219412 /* CopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */ = {isa = PBXBuildFile; productRef = C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */; };
+		C8D011712B5A5C3A00219412 /* SuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011702B5A5C3A00219412 /* SuggestionService.swift */; };
+		C8D011752B5A5DC600219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011742B5A5DC600219412 /* Shared */; };
+		C8D011772B5A5DCC00219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011762B5A5DCC00219412 /* Shared */; };
+		C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */; };
+		C8EA62D52B6BE5FD00E081FC /* BaseURLSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */; };
+		C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CF2B6BE49E00E081FC /* ChatModelEdit.swift */; };
+		C8EA62D72B6BE5FD00E081FC /* ChatModelEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D02B6BE49E00E081FC /* ChatModelEditView.swift */; };
+		C8EA62D82B6BE5FD00E081FC /* BaseURLPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D12B6BE4AC00E081FC /* BaseURLPicker.swift */; };
+		C8EA62D92B6BE60500E081FC /* APIKeyManangement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CB2B6BE49500E081FC /* APIKeyManangement.swift */; };
+		C8EA62DA2B6BE60500E081FC /* APIKeyManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CA2B6BE49500E081FC /* APIKeyManagementView.swift */; };
+		C8EA62DB2B6BE60500E081FC /* APIKeySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CC2B6BE49500E081FC /* APIKeySelection.swift */; };
+		C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CE2B6BE49500E081FC /* APIKeySubmission.swift */; };
+		C8EA62DD2B6BE60500E081FC /* APIKeyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CD2B6BE49500E081FC /* APIKeyPicker.swift */; };
+		C8EA62DE2B6BE61500E081FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D42B6BE4BE00E081FC /* Toast.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C8D011662B5A5B4D00219412 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C8D011402B59912700219412 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C8D0115F2B5A5B4D00219412;
+			remoteInfo = CopilotForXcodeExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C8D0116C2B5A5B4D00219412 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				C8D011682B5A5B4D00219412 /* CopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */,
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		C8D011482B59912700219412 /* CustomSuggestionService.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomSuggestionService.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C84697502B7B7B3700B8B840 /* TestFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldView.swift; sourceTree = "<group>"; };
+		C84697562B7B8C9000B8B840 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
+		C867A12D2B7BDB3900875400 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		C867A12F2B7BDBA500875400 /* TestField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestField.swift; sourceTree = "<group>"; };
+		C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExistedChatModelPicker.swift; sourceTree = "<group>"; };
+		C874CD4C2B712BF0003ABA96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Suggestion Service Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSuggestionServiceApp.swift; sourceTree = "<group>"; };
 		C8D0114D2B59912700219412 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C8D0114F2B59912800219412 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C8D011522B59912800219412 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C8D011542B59912800219412 /* CustomSuggestionService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CustomSuggestionService.entitlements; sourceTree = "<group>"; };
+		C8D0115A2B5A59D100219412 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.debug.xcconfig; sourceTree = "<group>"; };
+		C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = CopilotForXcodeExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotForXcodeExtension.swift; sourceTree = "<group>"; };
+		C8D011642B5A5B4D00219412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopilotForXcodeExtension.entitlements; sourceTree = "<group>"; };
+		C8D011702B5A5C3A00219412 /* SuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionService.swift; sourceTree = "<group>"; };
+		C8D011722B5A5DAA00219412 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
+		C8EA62CA2B6BE49500E081FC /* APIKeyManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManagementView.swift; sourceTree = "<group>"; };
+		C8EA62CB2B6BE49500E081FC /* APIKeyManangement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManangement.swift; sourceTree = "<group>"; };
+		C8EA62CC2B6BE49500E081FC /* APIKeySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeySelection.swift; sourceTree = "<group>"; };
+		C8EA62CD2B6BE49500E081FC /* APIKeyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyPicker.swift; sourceTree = "<group>"; };
+		C8EA62CE2B6BE49500E081FC /* APIKeySubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeySubmission.swift; sourceTree = "<group>"; };
+		C8EA62CF2B6BE49E00E081FC /* ChatModelEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelEdit.swift; sourceTree = "<group>"; };
+		C8EA62D02B6BE49E00E081FC /* ChatModelEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelEditView.swift; sourceTree = "<group>"; };
+		C8EA62D12B6BE4AC00E081FC /* BaseURLPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLPicker.swift; sourceTree = "<group>"; };
+		C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLSelection.swift; sourceTree = "<group>"; };
+		C8EA62D42B6BE4BE00E081FC /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,24 +98,59 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */,
+				C8D011752B5A5DC600219412 /* Shared in Frameworks */,
+				C84697542B7B8B8300B8B840 /* STTextView in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8D0115D2B5A5B4D00219412 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */,
+				C8D011772B5A5DCC00219412 /* Shared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C846974F2B7B7B2600B8B840 /* TestField */ = {
+			isa = PBXGroup;
+			children = (
+				C84697502B7B7B3700B8B840 /* TestFieldView.swift */,
+				C867A12F2B7BDBA500875400 /* TestField.swift */,
+			);
+			path = TestField;
+			sourceTree = "<group>";
+		};
+		C84697552B7B8C6800B8B840 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				C84697562B7B8C9000B8B840 /* TutorialView.swift */,
+			);
+			path = Tutorial;
+			sourceTree = "<group>";
+		};
 		C8D0113F2B59912700219412 = {
 			isa = PBXGroup;
 			children = (
+				C8D011722B5A5DAA00219412 /* Shared */,
+				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
+				C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */,
 				C8D0114A2B59912700219412 /* CustomSuggestionService */,
+				C8D011612B5A5B4D00219412 /* CopilotForXcodeExtension */,
 				C8D011492B59912700219412 /* Products */,
+				C8D011732B5A5DC600219412 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		C8D011492B59912700219412 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C8D011482B59912700219412 /* CustomSuggestionService.app */,
+				C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */,
+				C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -52,8 +158,15 @@
 		C8D0114A2B59912700219412 /* CustomSuggestionService */ = {
 			isa = PBXGroup;
 			children = (
+				C874CD4C2B712BF0003ABA96 /* Info.plist */,
+				C8EA62D32B6BE4BE00E081FC /* Toast */,
+				C846974F2B7B7B2600B8B840 /* TestField */,
+				C84697552B7B8C6800B8B840 /* Tutorial */,
+				C8EA62BC2B6BE45B00E081FC /* ChatModelManagement */,
 				C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */,
 				C8D0114D2B59912700219412 /* ContentView.swift */,
+				C867A12D2B7BDB3900875400 /* App.swift */,
+				C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */,
 				C8D0114F2B59912800219412 /* Assets.xcassets */,
 				C8D011542B59912800219412 /* CustomSuggestionService.entitlements */,
 				C8D011512B59912800219412 /* Preview Content */,
@@ -69,6 +182,56 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C8D011612B5A5B4D00219412 /* CopilotForXcodeExtension */ = {
+			isa = PBXGroup;
+			children = (
+				C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */,
+				C8D011702B5A5C3A00219412 /* SuggestionService.swift */,
+				C8D011642B5A5B4D00219412 /* Info.plist */,
+				C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */,
+			);
+			path = CopilotForXcodeExtension;
+			sourceTree = "<group>";
+		};
+		C8D011732B5A5DC600219412 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C8EA62BC2B6BE45B00E081FC /* ChatModelManagement */ = {
+			isa = PBXGroup;
+			children = (
+				C8EA62C92B6BE49500E081FC /* APIKeyManagement */,
+				C8EA62CF2B6BE49E00E081FC /* ChatModelEdit.swift */,
+				C8EA62D02B6BE49E00E081FC /* ChatModelEditView.swift */,
+				C8EA62D12B6BE4AC00E081FC /* BaseURLPicker.swift */,
+				C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */,
+			);
+			path = ChatModelManagement;
+			sourceTree = "<group>";
+		};
+		C8EA62C92B6BE49500E081FC /* APIKeyManagement */ = {
+			isa = PBXGroup;
+			children = (
+				C8EA62CA2B6BE49500E081FC /* APIKeyManagementView.swift */,
+				C8EA62CB2B6BE49500E081FC /* APIKeyManangement.swift */,
+				C8EA62CC2B6BE49500E081FC /* APIKeySelection.swift */,
+				C8EA62CD2B6BE49500E081FC /* APIKeyPicker.swift */,
+				C8EA62CE2B6BE49500E081FC /* APIKeySubmission.swift */,
+			);
+			path = APIKeyManagement;
+			sourceTree = "<group>";
+		};
+		C8EA62D32B6BE4BE00E081FC /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				C8EA62D42B6BE4BE00E081FC /* Toast.swift */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -79,15 +242,43 @@
 				C8D011442B59912700219412 /* Sources */,
 				C8D011452B59912700219412 /* Frameworks */,
 				C8D011462B59912700219412 /* Resources */,
+				C8D0116C2B5A5B4D00219412 /* Embed ExtensionKit Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C8D011672B5A5B4D00219412 /* PBXTargetDependency */,
+			);
+			name = CustomSuggestionService;
+			packageProductDependencies = (
+				C8D011742B5A5DC600219412 /* Shared */,
+				C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */,
+				C84697532B7B8B8300B8B840 /* STTextView */,
+			);
+			productName = CustomSuggestionService;
+			productReference = C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C8D0115F2B5A5B4D00219412 /* CopilotForXcodeExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C8D011692B5A5B4D00219412 /* Build configuration list for PBXNativeTarget "CopilotForXcodeExtension" */;
+			buildPhases = (
+				C8D0115C2B5A5B4D00219412 /* Sources */,
+				C8D0115D2B5A5B4D00219412 /* Frameworks */,
+				C8D0115E2B5A5B4D00219412 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = CustomSuggestionService;
-			productName = CustomSuggestionService;
-			productReference = C8D011482B59912700219412 /* CustomSuggestionService.app */;
-			productType = "com.apple.product-type.application";
+			name = CopilotForXcodeExtension;
+			packageProductDependencies = (
+				C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */,
+				C8D011762B5A5DCC00219412 /* Shared */,
+			);
+			productName = CopilotForXcodeExtension;
+			productReference = C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */;
+			productType = "com.apple.product-type.extensionkit-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -102,6 +293,9 @@
 					C8D011472B59912700219412 = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
+					C8D0115F2B5A5B4D00219412 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
 				};
 			};
 			buildConfigurationList = C8D011432B59912700219412 /* Build configuration list for PBXProject "CustomSuggestionService" */;
@@ -113,11 +307,17 @@
 				Base,
 			);
 			mainGroup = C8D0113F2B59912700219412;
+			packageReferences = (
+				C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */,
+				C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				C84697522B7B8B8300B8B840 /* XCRemoteSwiftPackageReference "STTextView" */,
+			);
 			productRefGroup = C8D011492B59912700219412 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				C8D011472B59912700219412 /* CustomSuggestionService */,
+				C8D0115F2B5A5B4D00219412 /* CopilotForXcodeExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -132,6 +332,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C8D0115E2B5A5B4D00219412 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -139,16 +346,49 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8EA62DA2B6BE60500E081FC /* APIKeyManagementView.swift in Sources */,
+				C8EA62DE2B6BE61500E081FC /* Toast.swift in Sources */,
+				C8EA62D82B6BE5FD00E081FC /* BaseURLPicker.swift in Sources */,
+				C8EA62DD2B6BE60500E081FC /* APIKeyPicker.swift in Sources */,
 				C8D0114E2B59912700219412 /* ContentView.swift in Sources */,
+				C867A12E2B7BDB3900875400 /* App.swift in Sources */,
+				C8EA62DB2B6BE60500E081FC /* APIKeySelection.swift in Sources */,
+				C874CD4B2B70FDD0003ABA96 /* ExistedChatModelPicker.swift in Sources */,
+				C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */,
+				C867A1302B7BDBA500875400 /* TestField.swift in Sources */,
+				C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */,
+				C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */,
 				C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */,
+				C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */,
+				C8EA62D92B6BE60500E081FC /* APIKeyManangement.swift in Sources */,
+				C8EA62D72B6BE5FD00E081FC /* ChatModelEditView.swift in Sources */,
+				C8EA62D52B6BE5FD00E081FC /* BaseURLSelection.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8D0115C2B5A5B4D00219412 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */,
+				C8D011712B5A5C3A00219412 /* SuggestionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C8D011672B5A5B4D00219412 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C8D0115F2B5A5B4D00219412 /* CopilotForXcodeExtension */;
+			targetProxy = C8D011662B5A5B4D00219412 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		C8D011552B59912800219412 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -212,6 +452,7 @@
 		};
 		C8D011562B59912800219412 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8D0115A2B5A59D100219412 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -268,6 +509,7 @@
 		C8D011582B59912800219412 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CustomSuggestionService/CustomSuggestionService.entitlements;
@@ -279,14 +521,16 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CustomSuggestionService/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.intii.CopilotForXcode.CustomSuggestionService;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService";
+				PRODUCT_NAME = "$(HOST_APP_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -295,6 +539,7 @@
 		C8D011592B59912800219412 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CustomSuggestionService/CustomSuggestionService.entitlements;
@@ -306,14 +551,70 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CustomSuggestionService/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.intii.CopilotForXcode.CustomSuggestionService;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService";
+				PRODUCT_NAME = "$(HOST_APP_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C8D0116A2B5A5B4D00219412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CopilotForXcodeExtension/CopilotForXcodeExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CopilotForXcodeExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CopilotForXcodeExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService.CopilotForXcodeExtension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C8D0116B2B5A5B4D00219412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CopilotForXcodeExtension/CopilotForXcodeExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CopilotForXcodeExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CopilotForXcodeExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService.CopilotForXcodeExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -340,7 +641,69 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C8D011692B5A5B4D00219412 /* Build configuration list for PBXNativeTarget "CopilotForXcodeExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8D0116A2B5A5B4D00219412 /* Debug */,
+				C8D0116B2B5A5B4D00219412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C84697522B7B8B8300B8B840 /* XCRemoteSwiftPackageReference "STTextView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/STTextView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+		C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/intitni/CopilotForXcodeKit.git";
+			requirement = {
+				branch = "feature/passing-file-content-to-extension";
+				kind = branch;
+			};
+		};
+		C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C84697532B7B8B8300B8B840 /* STTextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C84697522B7B8B8300B8B840 /* XCRemoteSwiftPackageReference "STTextView" */;
+			productName = STTextView;
+		};
+		C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */;
+			productName = CopilotForXcodeKit;
+		};
+		C8D011742B5A5DC600219412 /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Shared;
+		};
+		C8D011762B5A5DCC00219412 /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Shared;
+		};
+		C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C8D011402B59912700219412 /* Project object */;
 }
