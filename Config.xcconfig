@@ -1,5 +1,6 @@
 SLASH = /
 
+MODULE_NAME = Custom Suggestion Service
 HOST_APP_NAME = Custom Suggestion Service
 BUNDLE_IDENTIFIER_BASE = com.intii.CopilotForXcode
 SPARKLE_FEED_URL = https:$(SLASH)$(SLASH)raw.githubusercontent.com/intitni/CustomSuggestionServiceForCopilotForXcode/main/appcast.xml

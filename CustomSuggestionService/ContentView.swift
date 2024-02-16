@@ -12,25 +12,27 @@ struct ContentView: View {
     @State var isEditingCustomModel: Bool = false
 
     var body: some View {
-        VStack {
-            HStack {
-                ExistedChatModelPicker()
-                if chatModelId.isEmpty {
-                    Button("Edit Model") {
-                        isEditingCustomModel = true
+        WithPerceptionTracking {
+            VStack {
+                HStack {
+                    ExistedChatModelPicker()
+                    if chatModelId.isEmpty {
+                        Button("Edit Model") {
+                            isEditingCustomModel = true
+                        }
                     }
                 }
+                
+                TestFieldView(store: store.scope(state: \.testField, action: \.testField))
             }
-            
-            TestFieldView()
-        }
-        .padding()
-        .sheet(isPresented: $isEditingCustomModel) {
-            ChatModelEditView(store: store.scope(
-                state: \.customChatModel,
-                action: \.customChatModel
-            ))
-            .frame(width: 800)
+            .padding()
+            .sheet(isPresented: $isEditingCustomModel) {
+                ChatModelEditView(store: store.scope(
+                    state: \.customChatModel,
+                    action: \.customChatModel
+                ))
+                .frame(width: 800)
+            }
         }
     }
 }

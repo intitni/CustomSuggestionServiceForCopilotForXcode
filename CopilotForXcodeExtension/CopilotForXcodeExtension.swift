@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import SuggestionService
 
 @main
 class Extension: CopilotForXcodeExtension {

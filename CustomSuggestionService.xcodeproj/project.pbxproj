@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83B83AE2B7DD261007B4442 /* Dependency.swift */; };
 		C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697502B7B7B3700B8B840 /* TestFieldView.swift */; };
 		C84697542B7B8B8300B8B840 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = C84697532B7B8B8300B8B840 /* STTextView */; };
 		C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697562B7B8C9000B8B840 /* TutorialView.swift */; };
@@ -20,7 +21,6 @@
 		C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */; };
 		C8D011682B5A5B4D00219412 /* CopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */ = {isa = PBXBuildFile; productRef = C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */; };
-		C8D011712B5A5C3A00219412 /* SuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011702B5A5C3A00219412 /* SuggestionService.swift */; };
 		C8D011752B5A5DC600219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011742B5A5DC600219412 /* Shared */; };
 		C8D011772B5A5DCC00219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011762B5A5DCC00219412 /* Shared */; };
 		C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */; };
@@ -61,6 +61,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C83B83AE2B7DD261007B4442 /* Dependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependency.swift; sourceTree = "<group>"; };
 		C84697502B7B7B3700B8B840 /* TestFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldView.swift; sourceTree = "<group>"; };
 		C84697562B7B8C9000B8B840 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		C867A12D2B7BDB3900875400 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -79,7 +80,6 @@
 		C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotForXcodeExtension.swift; sourceTree = "<group>"; };
 		C8D011642B5A5B4D00219412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopilotForXcodeExtension.entitlements; sourceTree = "<group>"; };
-		C8D011702B5A5C3A00219412 /* SuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionService.swift; sourceTree = "<group>"; };
 		C8D011722B5A5DAA00219412 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
 		C8EA62CA2B6BE49500E081FC /* APIKeyManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManagementView.swift; sourceTree = "<group>"; };
 		C8EA62CB2B6BE49500E081FC /* APIKeyManangement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManangement.swift; sourceTree = "<group>"; };
@@ -167,6 +167,7 @@
 				C8D0114D2B59912700219412 /* ContentView.swift */,
 				C867A12D2B7BDB3900875400 /* App.swift */,
 				C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */,
+				C83B83AE2B7DD261007B4442 /* Dependency.swift */,
 				C8D0114F2B59912800219412 /* Assets.xcassets */,
 				C8D011542B59912800219412 /* CustomSuggestionService.entitlements */,
 				C8D011512B59912800219412 /* Preview Content */,
@@ -186,7 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */,
-				C8D011702B5A5C3A00219412 /* SuggestionService.swift */,
 				C8D011642B5A5B4D00219412 /* Info.plist */,
 				C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */,
 			);
@@ -358,6 +358,7 @@
 				C867A1302B7BDBA500875400 /* TestField.swift in Sources */,
 				C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */,
 				C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */,
+				C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */,
 				C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */,
 				C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */,
 				C8EA62D92B6BE60500E081FC /* APIKeyManangement.swift in Sources */,
@@ -371,7 +372,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */,
-				C8D011712B5A5C3A00219412 /* SuggestionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,7 +529,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService";
+				PRODUCT_MODULE_NAME = "$(MODULE_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(HOST_APP_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -560,6 +562,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService";
+				PRODUCT_MODULE_NAME = "$(MODULE_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(HOST_APP_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

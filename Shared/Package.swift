@@ -9,7 +9,7 @@ let package = Package(
     products: [
         .library(
             name: "Shared",
-            targets: ["Shared"]
+            targets: ["Shared", "SuggestionService"]
         ),
     ],
     dependencies: [
@@ -35,6 +35,17 @@ let package = Package(
         .testTarget(
             name: "SharedTests",
             dependencies: ["Shared"]
+        ),
+        .target(
+            name: "SuggestionService",
+            dependencies: [
+                "Shared",
+                .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
+            ]
+        ),
+        .testTarget(
+            name: "SuggestionServiceTests",
+            dependencies: ["SuggestionService"]
         ),
     ]
 )

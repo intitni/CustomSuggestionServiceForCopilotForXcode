@@ -1,5 +1,5 @@
-import Foundation
 import ComposableArchitecture
+import Foundation
 
 @Reducer
 struct TheApp {
@@ -8,19 +8,20 @@ struct TheApp {
         var customChatModel: ChatModelEdit.State = .init(name: "", format: .openAI)
         var testField: TestField.State = .init()
     }
-    
+
     enum Action: Equatable {
         case customChatModel(ChatModelEdit.Action)
         case testField(TestField.Action)
     }
-    
+
     var body: some Reducer<State, Action> {
         Scope(state: \.customChatModel, action: \.customChatModel) {
             ChatModelEdit()
         }
-        
+
         Scope(state: \.testField, action: \.testField) {
             TestField()
         }
     }
 }
+

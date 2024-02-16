@@ -2,56 +2,65 @@ import CopilotForXcodeKit
 import Foundation
 import Shared
 
-final class SuggestionService: SuggestionServiceType {
-    var configuration: SuggestionServiceConfiguration {
+public final class SuggestionService: SuggestionServiceType {
+    public init() {}
+
+    public var configuration: SuggestionServiceConfiguration {
         .init(acceptsRelevantCodeSnippets: true)
     }
 
-    func notifyAccepted(_ suggestion: CodeSuggestion, workspace: WorkspaceInfo) async {}
+    public func notifyAccepted(_ suggestion: CodeSuggestion, workspace: WorkspaceInfo) async {}
 
-    func notifyRejected(_ suggestions: [CodeSuggestion], workspace: WorkspaceInfo) async {}
+    public func notifyRejected(_ suggestions: [CodeSuggestion], workspace: WorkspaceInfo) async {}
 
-    func cancelRequest(workspace: WorkspaceInfo) async {}
+    public func cancelRequest(workspace: WorkspaceInfo) async {}
 
-    func getSuggestions(
+    public func getSuggestions(
         _ request: SuggestionRequest,
         workspace: WorkspaceInfo
     ) async throws -> [CodeSuggestion] {
-        let lines = request.content.breakLines()
-        let (previousLines, nextLines, prefix) = split(
-            code: request.content,
-            lines: lines,
-            at: request.cursorPosition
-        )
-        let strategy = DefaultRequestStrategy(
-            filePath: request.fileURL.path,
-            prefix: previousLines,
-            suffix: nextLines,
-            relevantCodeSnippets: request.relevantCodeSnippets
-        )
-        let service = CodeCompletionService()
-        let suggestedCodeSnippets = try await service.getCompletions(
-            strategy.createRequest(),
-            model: UserDefaults.shared.value(for: \.customChatModel),
-            count: 1
-        )
-
-        return suggestedCodeSnippets
-            .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
-            .map {
-                .init(
-                    id: UUID().uuidString,
-                    text: prefix + $0,
-                    position: request.cursorPosition,
-                    range: .init(
-                        start: .init(
-                            line: request.cursorPosition.line,
-                            character: 0
-                        ),
-                        end: request.cursorPosition
+        try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
+            let lines = request.content.breakLines()
+            let (previousLines, nextLines, prefix) = split(
+                code: request.content,
+                lines: lines,
+                at: request.cursorPosition
+            )
+            let strategy = DefaultRequestStrategy(
+                sourceRequest: request,
+                prefix: previousLines,
+                suffix: nextLines
+            )
+            let service = CodeCompletionService()
+            let suggestedCodeSnippets = try await service.getCompletions(
+                strategy.createRequest(),
+                model: getModel(),
+                count: 1
+            )
+            
+            return suggestedCodeSnippets
+                .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
+                .map {
+                    .init(
+                        id: UUID().uuidString,
+                        text: prefix + $0,
+                        position: request.cursorPosition,
+                        range: .init(
+                            start: .init(
+                                line: request.cursorPosition.line,
+                                character: 0
+                            ),
+                            end: request.cursorPosition
+                        )
                     )
-                )
-            }
+                }
+        }
+    }
+    
+    func getModel() -> ChatModel {
+        let id = UserDefaults.shared.value(for: \.chatModelId)
+        let models = UserDefaults.shared.value(for: \.chatModels)
+        return models.first { $0.id == id } ?? UserDefaults.shared.value(for: \.customChatModel)
     }
 
     func split(
@@ -94,14 +103,14 @@ final class SuggestionService: SuggestionServiceType {
 protocol RequestStrategy {
     associatedtype Request: PreprocessedSuggestionRequest
 
+    init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String])
     func createRequest() -> Request
 }
 
 struct DefaultRequestStrategy: RequestStrategy {
-    var filePath: String
+    var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
-    var relevantCodeSnippets: [RelevantCodeSnippet]
 
     struct Request: PreprocessedSuggestionRequest {
         let systemPrompt: String = """
@@ -111,23 +120,25 @@ struct DefaultRequestStrategy: RequestStrategy {
         You only respond with code that works and fits seamlessly with surrounding code.
         Do not include anything else beyond the code.
         """
-        var filePath: String
+        var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
-        var relevantCodeSnippets: [RelevantCodeSnippet]
+        var filePath: String { sourceRequest.fileURL.path }
+        var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
 
         func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
-            let promptLinesCount = min(truncatedPrefix.count, 2)
+            let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
                 if let last = proposed.last,
-                   last.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                   last.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                {
                     return Array(proposed) + [
                         """
                         // write some code
-                        
-                        """
+                        \(last)
+                        """,
                     ]
                 }
                 return Array(proposed)
@@ -137,15 +148,24 @@ struct DefaultRequestStrategy: RequestStrategy {
             Below is the code from file \(filePath) that you are trying to complete.
             Review the code carefully, detect the functionality, formats, style, patterns, \
             and logics in use and use them to predict the completion.
+            Make sure your completion has the correct syntax and formatting.
             Enclose the completion the XML tag \(Tag.openingCode).
             Do not duplicate existing implementations.
+            Start with a line break if needed.
+            Do not put the response in a markdown code block.
+            
+            Indentation: \
+            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
-            Here is the code: ```
+            Here is the code: 
+            ```
             \(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())
             ```
-
-            Keep writing:
-            \(Tag.openingCode)\(promptLines.joined())
+            
+            Please complete the code inside \(Tag.openingCode):
+            
+            \(Tag.openingCode)
+            \(promptLines.joined())
             """
         }
 
@@ -164,61 +184,10 @@ struct DefaultRequestStrategy: RequestStrategy {
 
     func createRequest() -> Request {
         Request(
-            filePath: filePath,
+            sourceRequest: sourceRequest,
             prefix: prefix,
-            suffix: suffix,
-            relevantCodeSnippets: relevantCodeSnippets
+            suffix: suffix
         )
-    }
-}
-
-public extension String {
-    /// The line ending of the string.
-    ///
-    /// We are pretty safe to just check the last character here, in most case, a line ending
-    /// will be in the end of the string.
-    ///
-    /// For other situations, we can assume that they are "\n".
-    var lineEnding: Character {
-        if let last, last.isNewline { return last }
-        return "\n"
-    }
-
-    func splitByNewLine(
-        omittingEmptySubsequences: Bool = true,
-        fast: Bool = true
-    ) -> [Substring] {
-        if fast {
-            let lineEndingInText = lineEnding
-            return split(
-                separator: lineEndingInText,
-                omittingEmptySubsequences: omittingEmptySubsequences
-            )
-        }
-        return split(
-            omittingEmptySubsequences: omittingEmptySubsequences,
-            whereSeparator: \.isNewline
-        )
-    }
-
-    /// Break a string into lines.
-    func breakLines(
-        proposedLineEnding: String? = nil,
-        appendLineBreakToLastLine: Bool = false
-    ) -> [String] {
-        let lineEndingInText = lineEnding
-        let lineEnding = proposedLineEnding ?? String(lineEndingInText)
-        // Split on character for better performance.
-        let lines = split(separator: lineEndingInText, omittingEmptySubsequences: false)
-        var all = [String]()
-        for (index, line) in lines.enumerated() {
-            if !appendLineBreakToLastLine, index == lines.endIndex - 1 {
-                all.append(String(line))
-            } else {
-                all.append(String(line) + lineEnding)
-            }
-        }
-        return all
     }
 }
 

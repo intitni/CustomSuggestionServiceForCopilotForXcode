@@ -2,20 +2,21 @@ import CopilotForXcodeKit
 import Foundation
 
 public actor OpenAIService {
-    let baseURL: URL
+    let url: URL
     let modelName: String
     let maxToken: Int
     let temperature: Double
     let apiKey: String
 
     public init(
-        baseURL: String? = nil,
+        url: String? = nil,
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,
         apiKey: String
     ) {
-        self.baseURL = baseURL.flatMap(URL.init(string:)) ?? URL(string: "https://api.openai.com")!
+        self.url = url.flatMap(URL.init(string:)) ??
+            URL(string: "https://api.openai.com/v1/chat/completions")!
         self.modelName = modelName
         self.maxToken = maxToken ?? KnownModels(rawValue: modelName)?.maxToken ?? 4096
         self.temperature = temperature
@@ -26,6 +27,9 @@ public actor OpenAIService {
 extension OpenAIService: CodeCompletionServiceType {
     func getCompletion(_ request: PreprocessedSuggestionRequest) async throws -> String {
         let messages = createMessages(from: request)
+        CodeCompletionLogger.logger.logPrompt(messages.map {
+            ($0.content, $0.role.rawValue)
+        })
         return try await sendMessages(messages)
     }
 }
@@ -75,9 +79,11 @@ extension OpenAIService {
             truncatedSuffix: request.suffix
         )
         return [
-            .init(role: .system, content: request.systemPrompt),
-            .init(role: .user, content: snippets),
-            .init(role: .user, content: source),
+            // The result is more correct when there is only one message.
+            .init(
+                role: .user,
+                content: [request.systemPrompt, snippets, source].joined(separator: "\n\n")
+            ),
         ]
     }
 
@@ -88,7 +94,7 @@ extension OpenAIService {
             temperature: temperature
         )
 
-        var request = URLRequest(url: baseURL.appendingPathComponent(""))
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(requestBody)
@@ -177,7 +183,7 @@ extension OpenAIService {
             top_p: Double? = nil,
             n: Double? = nil,
             stream: Bool? = nil,
-            stop: [String]? = nil,
+            stop: [String]? = [Tag.closingCode],
             max_tokens: Int? = nil,
             presence_penalty: Double? = nil,
             frequency_penalty: Double? = nil,

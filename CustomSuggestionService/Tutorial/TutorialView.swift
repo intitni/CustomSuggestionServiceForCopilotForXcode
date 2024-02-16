@@ -5,3 +5,7 @@ struct TutorialView: View {
         Text("Hello, World!")
     }
 }
+
+#Preview {
+    TutorialView()
+}
