@@ -2,6 +2,8 @@ import CopilotForXcodeKit
 import Foundation
 import Shared
 
+/// This strategy mixed and rearrange everything naively to make the model think it's writing code
+/// at the end of a file.
 struct NaiveRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
@@ -30,7 +32,7 @@ struct NaiveRequestStrategy: RequestStrategy {
 
         Code completion means to keep writing the code. For example, if I tell you to 
         ###
-        complete the code inside \(Tag.openingCode):
+        Keep writing the following code:
 
         \(Tag.openingCode)
         print("Hello
@@ -69,6 +71,23 @@ struct NaiveRequestStrategy: RequestStrategy {
                 }
                 return Array(proposed)
             }()
+            
+            /// Mix and rearrange the file and relevant code snippets.
+            let code = {
+                var codes = [String]()
+                if !includedSnippets.isEmpty {
+                    codes.append(includedSnippets.map(\.content).joined(separator: "\n\n"))
+                }
+                if !truncatedSuffix.isEmpty {
+                    codes.append("""
+                    // From the end of the file
+                    \(truncatedSuffix.joined())
+                    // End
+                    """)
+                }
+                codes.append("\(prefixLines.joined())\(promptLines.joined())")
+                return codes.joined(separator: "\n\n")
+            }()
 
             return ["""
             // File path: \(filePath)
@@ -78,9 +97,7 @@ struct NaiveRequestStrategy: RequestStrategy {
             Keep writing the following code:
 
             \(Tag.openingCode)
-            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
-
-            \(prefixLines.joined())\(promptLines.joined())
+            \(code)
             """]
         }
     }

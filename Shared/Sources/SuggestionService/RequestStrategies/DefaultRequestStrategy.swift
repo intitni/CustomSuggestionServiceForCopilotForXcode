@@ -3,6 +3,9 @@ import Foundation
 import Shared
 
 /// The default strategy to generate prompts.
+///
+/// This strategy tries to believe that the model is smart. It will explain carefully what is what
+/// and tell the model to complete the code.
 struct DefaultRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
@@ -33,7 +36,7 @@ struct DefaultRequestStrategy: RequestStrategy {
 
         Code completion means to keep writing the code. For example, if I tell you to 
         ###
-        complete the code inside \(Tag.openingCode):
+        Complete code inside \(Tag.openingCode):
 
         \(Tag.openingCode)
         print("Hello
@@ -62,10 +65,11 @@ struct DefaultRequestStrategy: RequestStrategy {
                     truncatedPrefix: truncatedPrefix,
                     truncatedSuffix: truncatedSuffix
                 ),
-            ]
+            ].filter { !$0.isEmpty }
         }
 
         func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
+            guard !truncatedPrefix.isEmpty, truncatedSuffix.isEmpty else { return "" }
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
@@ -109,6 +113,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         }
 
         func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {
+            guard !includedSnippets.isEmpty else { return "" }
             var content = "References from codebase: \n\n"
             for snippet in includedSnippets {
                 content += """
