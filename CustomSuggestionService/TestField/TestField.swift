@@ -11,13 +11,13 @@ struct TestField {
         struct Foo {
             var bar: Int
         }
-        
-        protocol Owner {
-            var name: String { get }
-            var age: Int { get }
-            var pets: [Animal] { get }
+
+        struct Owner {
+            var name: String
+            var age: Int
+            var pets: [Animal]
         }
-        
+
         var peter = Owner(name: "Peter", age: 30, pets: [])
 
         /// Cat is a type of animal
@@ -47,6 +47,7 @@ struct TestField {
         case previousSuggestionButtonClicked
         case generateSuggestionButtonClicked
         case generateSuggestion
+        case cancelSuggestion
         case binding(BindingAction<State>)
     }
 
@@ -80,6 +81,7 @@ struct TestField {
             case let .textChanged(_, position):
                 state.cursorPosition = position
                 return .run { send in
+                    await send(.cancelSuggestion)
                     try await Task.sleep(for: .milliseconds(400))
                     await send(.generateSuggestion)
                 }.cancellable(id: CancellationID.textChanged, cancelInFlight: true)
@@ -110,6 +112,9 @@ struct TestField {
                         await send(.suggestionRequestFailed(error.localizedDescription))
                     }
                 }
+
+            case .cancelSuggestion:
+                return .run { _ in await suggestionService.cancelRequest(workspace: workspace) }
 
             case let .suggestionReceived(suggestions):
                 state.suggestions = suggestions

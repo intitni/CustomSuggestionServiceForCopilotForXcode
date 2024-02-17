@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/intitni/CopilotForXcodeKit.git",
       "state" : {
-        "branch" : "feature/passing-file-content-to-extension",
-        "revision" : "550ce5753ca32531f8e8609aedaf0702bb7b4b48"
+        "revision" : "b4927f9ce3ca75968034547eca572c0c53d4ba62",
+        "version" : "0.2.0"
       }
     },
     {

@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/intitni/CopilotForXcodeKit",
-            branch: "feature/passing-file-content-to-extension"
+            from: "0.2.0"
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",

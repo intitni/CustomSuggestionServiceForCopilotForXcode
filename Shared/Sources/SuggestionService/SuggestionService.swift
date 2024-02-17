@@ -2,7 +2,9 @@ import CopilotForXcodeKit
 import Foundation
 import Shared
 
-public final class SuggestionService: SuggestionServiceType {
+public class SuggestionService: SuggestionServiceType {
+    let service = Service()
+
     public init() {}
 
     public var configuration: SuggestionServiceConfiguration {
@@ -13,48 +15,72 @@ public final class SuggestionService: SuggestionServiceType {
 
     public func notifyRejected(_ suggestions: [CodeSuggestion], workspace: WorkspaceInfo) async {}
 
-    public func cancelRequest(workspace: WorkspaceInfo) async {}
+    public func cancelRequest(workspace: WorkspaceInfo) async {
+        await service.cancelRequest()
+    }
 
     public func getSuggestions(
         _ request: SuggestionRequest,
         workspace: WorkspaceInfo
     ) async throws -> [CodeSuggestion] {
-        try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
-            let lines = request.content.breakLines()
-            let (previousLines, nextLines, prefix) = split(
-                code: request.content,
-                lines: lines,
-                at: request.cursorPosition
-            )
-            let strategy = getStrategy(
-                sourceRequest: request,
-                prefix: previousLines,
-                suffix: nextLines
-            )
-            let service = CodeCompletionService()
-            let suggestedCodeSnippets = try await service.getCompletions(
-                strategy.createRequest(),
-                model: getModel(),
-                count: 1
-            )
+        try await service.getSuggestions(request, workspace: workspace)
+    }
+}
 
-            return suggestedCodeSnippets
-                .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
-                .map {
-                    .init(
-                        id: UUID().uuidString,
-                        text: prefix + $0,
-                        position: request.cursorPosition,
-                        range: .init(
-                            start: .init(
-                                line: request.cursorPosition.line,
-                                character: 0
-                            ),
-                            end: request.cursorPosition
+actor Service {
+    var onGoingTask: Task<[CodeSuggestion], Error>?
+    
+    func cancelRequest() {
+        onGoingTask?.cancel()
+        onGoingTask = nil
+    }
+
+    func getSuggestions(
+        _ request: SuggestionRequest,
+        workspace: WorkspaceInfo
+    ) async throws -> [CodeSuggestion] {
+        onGoingTask?.cancel()
+        onGoingTask = nil
+        let task = Task {
+            try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
+                let lines = request.content.breakLines()
+                let (previousLines, nextLines, prefix) = split(
+                    code: request.content,
+                    lines: lines,
+                    at: request.cursorPosition
+                )
+                let strategy = getStrategy(
+                    sourceRequest: request,
+                    prefix: previousLines,
+                    suffix: nextLines
+                )
+                let service = CodeCompletionService()
+                let suggestedCodeSnippets = try await service.getCompletions(
+                    strategy.createRequest(),
+                    model: getModel(),
+                    count: 1
+                )
+
+                return suggestedCodeSnippets
+                    .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
+                    .map {
+                        CodeSuggestion(
+                            id: UUID().uuidString,
+                            text: prefix + $0,
+                            position: request.cursorPosition,
+                            range: .init(
+                                start: .init(
+                                    line: request.cursorPosition.line,
+                                    character: 0
+                                ),
+                                end: request.cursorPosition
+                            )
                         )
-                    )
-                }
+                    }
+            }
         }
+        onGoingTask = task
+        return try await task.value
     }
 
     func getModel() -> ChatModel {

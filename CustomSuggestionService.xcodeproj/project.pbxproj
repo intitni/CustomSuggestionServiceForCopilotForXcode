@@ -664,8 +664,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/intitni/CopilotForXcodeKit.git";
 			requirement = {
-				branch = "feature/passing-file-content-to-extension";
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
 			};
 		};
 		C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
