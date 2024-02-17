@@ -12,7 +12,7 @@ protocol RequestStrategy {
 }
 
 public enum RequestStrategyOption: String, CaseIterable, Codable {
-    case `default`
+    case `default` = ""
 }
 
 extension RequestStrategyOption {

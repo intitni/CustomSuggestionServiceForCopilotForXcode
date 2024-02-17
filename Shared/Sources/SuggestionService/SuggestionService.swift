@@ -26,7 +26,7 @@ public final class SuggestionService: SuggestionServiceType {
                 lines: lines,
                 at: request.cursorPosition
             )
-            let strategy = DefaultRequestStrategy(
+            let strategy = getStrategy(
                 sourceRequest: request,
                 prefix: previousLines,
                 suffix: nextLines
@@ -37,7 +37,7 @@ public final class SuggestionService: SuggestionServiceType {
                 model: getModel(),
                 count: 1
             )
-            
+
             return suggestedCodeSnippets
                 .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
                 .map {
@@ -56,11 +56,25 @@ public final class SuggestionService: SuggestionServiceType {
                 }
         }
     }
-    
+
     func getModel() -> ChatModel {
         let id = UserDefaults.shared.value(for: \.chatModelId)
         let models = UserDefaults.shared.value(for: \.chatModels)
         return models.first { $0.id == id } ?? UserDefaults.shared.value(for: \.customChatModel)
+    }
+
+    func getStrategy(
+        sourceRequest: SuggestionRequest,
+        prefix: [String],
+        suffix: [String]
+    ) -> any RequestStrategy {
+        let id = UserDefaults.shared.value(for: \.requestStrategyId)
+        let strategyOption = RequestStrategyOption(rawValue: id) ?? .default
+        return strategyOption.strategy.init(
+            sourceRequest: sourceRequest,
+            prefix: prefix,
+            suffix: suffix
+        )
     }
 
     func split(
@@ -99,5 +113,4 @@ public final class SuggestionService: SuggestionServiceType {
         return (previousLines, nextLines, prefix)
     }
 }
-
 

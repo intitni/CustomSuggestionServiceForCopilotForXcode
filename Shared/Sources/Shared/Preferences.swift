@@ -36,6 +36,10 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-CustomChatModel"
         )
     }
+    
+    var requestStrategyId: PreferenceKey<String> {
+        .init(defaultValue: "", key: "CustomSuggestionService-RequestStrategyId")
+    }
 
     var chatModelId: PreferenceKey<String> {
         .init(defaultValue: "", key: "CustomSuggestionService-SuggestionChatModelId")

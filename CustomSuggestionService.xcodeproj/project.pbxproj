@@ -13,7 +13,6 @@
 		C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697562B7B8C9000B8B840 /* TutorialView.swift */; };
 		C867A12E2B7BDB3900875400 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C867A12D2B7BDB3900875400 /* App.swift */; };
 		C867A1302B7BDBA500875400 /* TestField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C867A12F2B7BDBA500875400 /* TestField.swift */; };
-		C874CD4B2B70FDD0003ABA96 /* ExistedChatModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */; };
 		C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */; };
 		C8D0114E2B59912700219412 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114D2B59912700219412 /* ContentView.swift */; };
 		C8D011502B59912800219412 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D0114F2B59912800219412 /* Assets.xcassets */; };
@@ -66,7 +65,6 @@
 		C84697562B7B8C9000B8B840 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		C867A12D2B7BDB3900875400 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C867A12F2B7BDBA500875400 /* TestField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestField.swift; sourceTree = "<group>"; };
-		C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExistedChatModelPicker.swift; sourceTree = "<group>"; };
 		C874CD4C2B712BF0003ABA96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Suggestion Service Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSuggestionServiceApp.swift; sourceTree = "<group>"; };
@@ -166,7 +164,6 @@
 				C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */,
 				C8D0114D2B59912700219412 /* ContentView.swift */,
 				C867A12D2B7BDB3900875400 /* App.swift */,
-				C874CD4A2B70FDD0003ABA96 /* ExistedChatModelPicker.swift */,
 				C83B83AE2B7DD261007B4442 /* Dependency.swift */,
 				C8D0114F2B59912800219412 /* Assets.xcassets */,
 				C8D011542B59912800219412 /* CustomSuggestionService.entitlements */,
@@ -353,7 +350,6 @@
 				C8D0114E2B59912700219412 /* ContentView.swift in Sources */,
 				C867A12E2B7BDB3900875400 /* App.swift in Sources */,
 				C8EA62DB2B6BE60500E081FC /* APIKeySelection.swift in Sources */,
-				C874CD4B2B70FDD0003ABA96 /* ExistedChatModelPicker.swift in Sources */,
 				C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */,
 				C867A1302B7BDBA500875400 /* TestField.swift in Sources */,
 				C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */,
