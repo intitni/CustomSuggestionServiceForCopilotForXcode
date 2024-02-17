@@ -30,6 +30,19 @@ struct DefaultRequestStrategy: RequestStrategy {
         high-quality code to complete the code enclosed in \(Tag.openingCode) tags.
         You only respond with code that works and fits seamlessly with surrounding code.
         Do not include anything else beyond the code.
+        
+        Code completion means to keep writing the code. For example, if I tell you to 
+        ###
+        complete the code inside \(Tag.openingCode):
+        
+        \(Tag.openingCode)
+        print("Hello
+        ###
+        
+        You should respond with:
+        ###
+         World")\(Tag.closingCode)
+        ###
         """
         var sourceRequest: SuggestionRequest
         var prefix: [String]
@@ -74,7 +87,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             \(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())
             ```
 
-            Please complete the code inside \(Tag.openingCode):
+            Complete code inside \(Tag.openingCode):
 
             \(Tag.openingCode)
             \(promptLines.joined())

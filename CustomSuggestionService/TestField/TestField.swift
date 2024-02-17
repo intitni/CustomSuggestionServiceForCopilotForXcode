@@ -11,6 +11,14 @@ struct TestField {
         struct Foo {
             var bar: Int
         }
+        
+        protocol Owner {
+            var name: String { get }
+            var age: Int { get }
+            var pets: [Animal] { get }
+        }
+        
+        var peter = Owner(name: "Peter", age: 30, pets: [])
 
         /// Cat is a type of animal
         struct Cat
