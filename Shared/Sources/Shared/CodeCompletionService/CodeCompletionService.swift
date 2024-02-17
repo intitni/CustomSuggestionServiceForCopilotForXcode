@@ -37,7 +37,7 @@ public struct CodeCompletionService {
             try Task.checkCancellation()
             return result
         case .googleAI:
-            let service = GoogleGeminiService()
+            let service = GoogleGeminiService(modelName: model.info.modelName, apiKey: apiKey)
             let result = try await service.getCompletions(request, count: count)
             try Task.checkCancellation()
             return result
