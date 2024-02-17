@@ -4,11 +4,18 @@ import GoogleGenerativeAI
 public struct GoogleGeminiService {
     let modelName: String
     let temperature: Double
+    let stopWords: [String]
     let apiKey: String
 
-    public init(modelName: String, temperature: Double = 0.2, apiKey: String) {
+    public init(
+        modelName: String,
+        temperature: Double = 0.2,
+        stopWords: [String] = [],
+        apiKey: String
+    ) {
         self.modelName = modelName
         self.temperature = temperature
+        self.stopWords = stopWords
         self.apiKey = apiKey
     }
 }
@@ -69,7 +76,10 @@ extension GoogleGeminiService {
         let aiModel = GenerativeModel(
             name: modelName,
             apiKey: apiKey,
-            generationConfig: .init(GenerationConfig(temperature: Float(temperature)))
+            generationConfig: .init(GenerationConfig(
+                temperature: Float(temperature),
+                stopSequences: stopWords
+            ))
         )
 
         do {

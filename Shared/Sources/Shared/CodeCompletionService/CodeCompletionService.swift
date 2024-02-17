@@ -22,6 +22,7 @@ public struct CodeCompletionService {
             let service = OpenAIService(
                 url: model.endpoint,
                 modelName: model.info.modelName,
+                stopWords: request.stopWords,
                 apiKey: apiKey
             )
             let result = try await service.getCompletions(request, count: count)
@@ -31,6 +32,7 @@ public struct CodeCompletionService {
             let service = AzureOpenAIService(
                 url: model.endpoint,
                 modelName: model.info.modelName,
+                stopWords: request.stopWords,
                 apiKey: apiKey
             )
             let result = try await service.getCompletions(request, count: count)

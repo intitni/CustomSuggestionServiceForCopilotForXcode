@@ -7,12 +7,14 @@ public actor AzureOpenAIService {
     let maxToken: Int
     let temperature: Double
     let apiKey: String
+    let stopWords: [String]
 
     public init(
         url: String? = nil,
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,
+        stopWords: [String] = [],
         apiKey: String
     ) {
         self.url = url.flatMap(URL.init(string:)) ??
@@ -20,6 +22,7 @@ public actor AzureOpenAIService {
         self.modelName = modelName
         self.maxToken = maxToken ?? 4096
         self.temperature = temperature
+        self.stopWords = stopWords
         self.apiKey = apiKey
     }
 }
@@ -58,7 +61,8 @@ extension AzureOpenAIService {
         let requestBody = OpenAIService.CompletionRequestBody(
             model: modelName,
             messages: messages,
-            temperature: temperature
+            temperature: temperature,
+            stop: stopWords
         )
 
         var request = URLRequest(url: url)

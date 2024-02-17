@@ -7,12 +7,14 @@ public actor OpenAIService {
     let maxToken: Int
     let temperature: Double
     let apiKey: String
+    let stopWords: [String]
 
     public init(
         url: String? = nil,
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,
+        stopWords: [String] = [],
         apiKey: String
     ) {
         self.url = url.flatMap(URL.init(string:)) ??
@@ -21,6 +23,7 @@ public actor OpenAIService {
         self.maxToken = maxToken ?? KnownModels(rawValue: modelName)?.maxToken ?? 4096
         self.temperature = temperature
         self.apiKey = apiKey
+        self.stopWords = stopWords
     }
 }
 
@@ -91,7 +94,8 @@ extension OpenAIService {
         let requestBody = CompletionRequestBody(
             model: modelName,
             messages: messages,
-            temperature: temperature
+            temperature: temperature,
+            stop: stopWords
         )
 
         var request = URLRequest(url: url)
@@ -183,7 +187,7 @@ extension OpenAIService {
             top_p: Double? = nil,
             n: Double? = nil,
             stream: Bool? = nil,
-            stop: [String]? = [Tag.closingCode],
+            stop: [String]? = nil,
             max_tokens: Int? = nil,
             presence_penalty: Double? = nil,
             frequency_penalty: Double? = nil,
