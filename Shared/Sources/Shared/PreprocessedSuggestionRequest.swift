@@ -13,20 +13,19 @@ public protocol PreprocessedSuggestionRequest {
     /// The words at which the AI model should stop generating the completion.
     var stopWords: [String] { get }
     
-    /// Creates a prompt about the source code to be sent to the AI model.
+    /// Creates a prompt about the source code and relevant code snippets to be sent to the AI model.
     ///
     /// - Parameters:
     ///  - truncatedPrefix: The truncated source code before the text cursor.
     ///  - truncatedSuffix: The truncated source code after the text cursor.
+    ///  - includedSnippets: The relevant code snippets to be included in the prompt.
     ///
-    /// - Warning: Please make sure that the prefix and suffix won't cause the whole prompt to
+    /// - Warning: Please make sure that the prompt won't cause the whole prompt to
     /// exceed the token limit.
-    func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String
-    /// Creates a prompt about the relevant code snippets to be sent to the AI model.
-    ///
-    /// - Parameter includedSnippets: The relevant code snippets to be included in the prompt.
-    ///   
-    /// - Warning: Please make sure that the `includedSnippets` won't cause the whole prompt to
-    /// exceed the token limit.
-    func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String
+    func createPrompt(
+        truncatedPrefix: [String],
+        truncatedSuffix: [String],
+        includedSnippets: [RelevantCodeSnippet]
+    ) -> [String]
 }
+

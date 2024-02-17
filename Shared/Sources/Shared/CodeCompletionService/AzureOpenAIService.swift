@@ -43,16 +43,16 @@ extension AzureOpenAIService {
     public typealias Error = OpenAIService.Error
 
     func createMessages(from request: PreprocessedSuggestionRequest) -> [Message] {
-        let snippets = request.createSnippetsPrompt(includedSnippets: request.relevantCodeSnippets)
-        let source = request.createSourcePrompt(
+        let prompts = request.createPrompt(
             truncatedPrefix: request.prefix,
-            truncatedSuffix: request.suffix
+            truncatedSuffix: request.suffix,
+            includedSnippets: request.relevantCodeSnippets
         )
         return [
             // The result is more correct when there is only one message.
             .init(
                 role: .user,
-                content: [request.systemPrompt, snippets, source].joined(separator: "\n\n")
+                content: ([request.systemPrompt] + prompts).joined(separator: "\n\n")
             ),
         ]
     }

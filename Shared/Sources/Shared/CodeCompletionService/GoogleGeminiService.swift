@@ -59,15 +59,15 @@ extension GoogleGeminiService {
     }
 
     func createMessages(from request: PreprocessedSuggestionRequest) -> [ModelContent] {
-        let snippets = request.createSnippetsPrompt(includedSnippets: request.relevantCodeSnippets)
-        let source = request.createSourcePrompt(
+        let prompts = request.createPrompt(
             truncatedPrefix: request.prefix,
-            truncatedSuffix: request.suffix
+            truncatedSuffix: request.suffix,
+            includedSnippets: request.relevantCodeSnippets
         )
         return [
             .init(
                 role: "user",
-                parts: [.text([request.systemPrompt, snippets, source].joined(separator: "\n\n"))]
+                parts: ([request.systemPrompt] + prompts).joined(separator: "\n\n")
             ),
         ]
     }

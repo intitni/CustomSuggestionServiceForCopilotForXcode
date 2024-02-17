@@ -2,8 +2,7 @@ import CopilotForXcodeKit
 import Foundation
 import Shared
 
-/// The default strategy to generate prompts.
-struct DefaultRequestStrategy: RequestStrategy {
+struct NaiveRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
@@ -19,8 +18,6 @@ struct DefaultRequestStrategy: RequestStrategy {
     enum Tag {
         public static let openingCode = "<Code3721>"
         public static let closingCode = "</Code3721>"
-        public static let openingSnippet = "<Snippet9981>"
-        public static let closingSnippet = "</Snippet9981>"
     }
 
     struct Request: PreprocessedSuggestionRequest {
@@ -56,16 +53,6 @@ struct DefaultRequestStrategy: RequestStrategy {
             truncatedSuffix: [String],
             includedSnippets: [RelevantCodeSnippet]
         ) -> [String] {
-            return [
-                createSnippetsPrompt(includedSnippets: includedSnippets),
-                createSourcePrompt(
-                    truncatedPrefix: truncatedPrefix,
-                    truncatedSuffix: truncatedSuffix
-                ),
-            ]
-        }
-
-        func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
@@ -83,41 +70,18 @@ struct DefaultRequestStrategy: RequestStrategy {
                 return Array(proposed)
             }()
 
-            return """
-            Below is the code from file \(filePath) that you are trying to complete.
-            Review the code carefully, detect the functionality, formats, style, patterns, \
-            and logics in use and use them to predict the completion.
-            Make sure your completion has the correct syntax and formatting.
-            Enclose the completion the XML tag \(Tag.openingCode).
-            Do not duplicate existing implementations.
-            Start with a line break if needed.
-            Do not put the response in a markdown code block.
-
-            Indentation: \
+            return ["""
+            // File path: \(filePath)
+            // Indentation: \
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
-            Here is the code:
-            ```
-            \(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())
-            ```
-
-            Complete code inside \(Tag.openingCode):
+            Keep writing the following code:
 
             \(Tag.openingCode)
-            \(promptLines.joined())
-            """
-        }
+            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
 
-        func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {
-            var content = "References from codebase: \n\n"
-            for snippet in includedSnippets {
-                content += """
-                \(Tag.openingSnippet)
-                \(snippet.content)
-                \(Tag.closingSnippet)
-                """ + "\n\n"
-            }
-            return content.trimmingCharacters(in: .whitespacesAndNewlines)
+            \(prefixLines.joined())\(promptLines.joined())
+            """]
         }
     }
 }
