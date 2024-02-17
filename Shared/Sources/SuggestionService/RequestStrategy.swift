@@ -13,6 +13,7 @@ protocol RequestStrategy {
 
 public enum RequestStrategyOption: String, CaseIterable, Codable {
     case `default` = ""
+    case naive
 }
 
 extension RequestStrategyOption {
@@ -20,6 +21,8 @@ extension RequestStrategyOption {
         switch self {
         case .default:
             return DefaultRequestStrategy.self
+        case .naive:
+            return NaiveRequestStrategy.self
         }
     }
 }
