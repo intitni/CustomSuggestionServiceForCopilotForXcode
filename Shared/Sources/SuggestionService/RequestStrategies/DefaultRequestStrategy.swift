@@ -116,7 +116,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             truncatedPrefix: [String],
             truncatedSuffix: [String]
         ) -> (summary: String, infillBlock: String)? {
-            guard !truncatedPrefix.isEmpty, !truncatedSuffix.isEmpty else { return nil }
+            guard !(truncatedPrefix.isEmpty && truncatedSuffix.isEmpty) else { return nil }
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
