@@ -60,7 +60,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             includedSnippets: [RelevantCodeSnippet]
         ) -> [String] {
             return [
-                createSnippetsPrompt(includedSnippets: includedSnippets),
+                Self.createSnippetsPrompt(includedSnippets: includedSnippets),
                 createSourcePrompt(
                     truncatedPrefix: truncatedPrefix,
                     truncatedSuffix: truncatedSuffix
@@ -69,7 +69,54 @@ struct DefaultRequestStrategy: RequestStrategy {
         }
 
         func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
-            guard !truncatedPrefix.isEmpty, truncatedSuffix.isEmpty else { return "" }
+            guard let (summary, infillBlock) = Self.createCodeSummary(
+                truncatedPrefix: truncatedPrefix,
+                truncatedSuffix: truncatedSuffix
+            ) else { return "" }
+
+            return """
+            Below is the code from file \(filePath) that you are trying to complete.
+            Review the code carefully, detect the functionality, formats, style, patterns, \
+            and logics in use and use them to predict the completion.
+            Make sure your completion has the correct syntax and formatting.
+            Enclose the completion the XML tag \(Tag.openingCode).
+            Do not duplicate existing implementations.
+            Start with a line break if needed.
+            Do not put the response in a markdown code block.
+
+            Indentation: \
+            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+
+            Here is the code:
+            ```
+            \(summary)
+            ```
+
+            Complete code inside \(Tag.openingCode):
+
+            \(Tag.openingCode)
+            \(infillBlock)
+            """
+        }
+
+        static func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {
+            guard !includedSnippets.isEmpty else { return "" }
+            var content = "References from codebase: \n\n"
+            for snippet in includedSnippets {
+                content += """
+                \(Tag.openingSnippet)
+                \(snippet.content)
+                \(Tag.closingSnippet)
+                """ + "\n\n"
+            }
+            return content.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        
+        static func createCodeSummary(
+            truncatedPrefix: [String],
+            truncatedSuffix: [String]
+        ) -> (summary: String, infillBlock: String)? {
+            guard !truncatedPrefix.isEmpty, !truncatedSuffix.isEmpty else { return nil }
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
@@ -87,43 +134,10 @@ struct DefaultRequestStrategy: RequestStrategy {
                 return Array(proposed)
             }()
 
-            return """
-            Below is the code from file \(filePath) that you are trying to complete.
-            Review the code carefully, detect the functionality, formats, style, patterns, \
-            and logics in use and use them to predict the completion.
-            Make sure your completion has the correct syntax and formatting.
-            Enclose the completion the XML tag \(Tag.openingCode).
-            Do not duplicate existing implementations.
-            Start with a line break if needed.
-            Do not put the response in a markdown code block.
-
-            Indentation: \
-            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-
-            Here is the code:
-            ```
-            \(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())
-            ```
-
-            Complete code inside \(Tag.openingCode):
-
-            \(Tag.openingCode)
-            \(promptLines.joined())
-            """
-        }
-
-        func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {
-            guard !includedSnippets.isEmpty else { return "" }
-            var content = "References from codebase: \n\n"
-            for snippet in includedSnippets {
-                content += """
-                \(Tag.openingSnippet)
-                \(snippet.content)
-                \(Tag.closingSnippet)
-                """ + "\n\n"
-            }
-            return content.trimmingCharacters(in: .whitespacesAndNewlines)
+            return (
+                summary: "\(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())",
+                infillBlock: promptLines.joined()
+            )
         }
     }
 }
-
