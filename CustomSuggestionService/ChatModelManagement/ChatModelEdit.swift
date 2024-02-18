@@ -8,16 +8,13 @@ struct ChatModelEdit {
     @ObservableState
     struct State: Equatable, Identifiable {
         var id: String = "Custom"
-        var name: String
         var format: ChatModel.Format
         var maxTokens: Int = 4000
-        var supportsFunctionCalling: Bool = true
         var modelName: String = ""
         var apiKeyName: String { apiKeySelection.apiKeyName }
         var baseURL: String { baseURLSelection.baseURL }
         var availableModelNames: [String] = []
         var availableAPIKeys: [String] = []
-        var isTesting = false
         var suggestedMaxTokens: Int?
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
@@ -143,10 +140,8 @@ extension ChatModel {
     func toState() -> ChatModelEdit.State {
         .init(
             id: id,
-            name: name,
             format: format,
             maxTokens: info.maxTokens,
-            supportsFunctionCalling: info.supportsFunctionCalling,
             modelName: info.modelName,
             apiKeySelection: .init(
                 apiKeyName: info.apiKeyName,
@@ -159,18 +154,13 @@ extension ChatModel {
     init(state: ChatModelEdit.State) {
         self.init(
             id: state.id,
-            name: state.name,
+            name: "Custom",
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 maxTokens: state.maxTokens,
-                supportsFunctionCalling: {
-                    if case .googleAI = state.format {
-                        return false
-                    }
-                    return state.supportsFunctionCalling
-                }(),
+                supportsFunctionCalling: false,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
             )
         )

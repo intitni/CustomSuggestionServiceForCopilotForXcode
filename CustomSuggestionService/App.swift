@@ -5,7 +5,7 @@ import Foundation
 struct TheApp {
     @ObservableState
     struct State: Equatable {
-        var customChatModel: ChatModelEdit.State = .init(name: "", format: .openAI)
+        var customChatModel: ChatModelEdit.State = .init(format: .openAI)
         var testField: TestField.State = .init()
     }
 

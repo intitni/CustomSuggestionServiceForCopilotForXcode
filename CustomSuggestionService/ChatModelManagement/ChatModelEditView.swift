@@ -13,7 +13,6 @@ struct ChatModelEditView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     Form {
-                        nameTextField
                         formatPicker
 
                         switch store.format {
@@ -58,10 +57,6 @@ struct ChatModelEditView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
         }
-    }
-
-    var nameTextField: some View {
-        TextField("Name", text: $store.name)
     }
 
     var formatPicker: some View {
@@ -112,21 +107,6 @@ struct ChatModelEditView: View {
         prompt: Text?
     ) -> some View {
         baseURLTextField(title: title, prompt: prompt, trailingContent: { EmptyView() })
-    }
-
-    @ViewBuilder
-    var supportsFunctionCallingToggle: some View {
-        Toggle(
-            "Supports Function Calling",
-            isOn: $store.supportsFunctionCalling
-        )
-
-        Text(
-            "Function calling is required by some features, if this model doesn't support function calling, you should turn it off to avoid undefined behaviors."
-        )
-        .foregroundColor(.secondary)
-        .font(.callout)
-        .dynamicHeightTextInFormWorkaround()
     }
 
     var maxTokensTextField: some View {
@@ -204,7 +184,6 @@ struct ChatModelEditView: View {
             }
 
         maxTokensTextField
-        supportsFunctionCallingToggle
 
         VStack(alignment: .leading, spacing: 8) {
             Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
@@ -226,7 +205,6 @@ struct ChatModelEditView: View {
         TextField("Deployment Name", text: $store.modelName)
 
         maxTokensTextField
-        supportsFunctionCallingToggle
     }
 
     @ViewBuilder
@@ -256,7 +234,6 @@ struct ChatModelEditView: View {
         TextField("Model Name", text: $store.modelName)
 
         maxTokensTextField
-        supportsFunctionCallingToggle
     }
 
     @ViewBuilder
