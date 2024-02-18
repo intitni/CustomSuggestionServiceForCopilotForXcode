@@ -44,7 +44,7 @@ actor Service {
         let task = Task {
             try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
                 let lines = request.content.breakLines()
-                let (previousLines, nextLines, prefix) = split(
+                let (previousLines, nextLines, prefix) = Self.split(
                     code: request.content,
                     lines: lines,
                     at: request.cursorPosition
@@ -103,7 +103,7 @@ actor Service {
         )
     }
 
-    func split(
+    static func split(
         code: String,
         lines: [String],
         at cursorPosition: CursorPosition
