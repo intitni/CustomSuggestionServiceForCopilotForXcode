@@ -56,12 +56,13 @@ actor Service {
                 )
                 let service = CodeCompletionService()
                 let suggestedCodeSnippets = try await service.getCompletions(
-                    strategy.createRequest(),
+                    strategy.createPrompt(),
                     model: getModel(),
                     count: 1
                 )
 
                 return suggestedCodeSnippets
+                    .map(strategy.postProcessRawSuggestion(suggestion:))
                     .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
                     .map {
                         CodeSuggestion(

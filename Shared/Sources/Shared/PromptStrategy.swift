@@ -12,8 +12,9 @@ public protocol PromptStrategy {
     var relevantCodeSnippets: [RelevantCodeSnippet] { get }
     /// The words at which the AI model should stop generating the completion.
     var stopWords: [String] { get }
-    
-    /// Creates a prompt about the source code and relevant code snippets to be sent to the AI model.
+
+    /// Creates a prompt about the source code and relevant code snippets to be sent to the AI
+    /// model.
     ///
     /// - Parameters:
     ///  - truncatedPrefix: The truncated source code before the text cursor.

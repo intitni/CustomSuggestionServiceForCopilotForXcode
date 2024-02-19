@@ -11,8 +11,8 @@ struct DefaultRequestStrategy: RequestStrategy {
     var prefix: [String]
     var suffix: [String]
 
-    func createRequest() -> Request {
-        Request(
+    func createPrompt() -> Prompt {
+        Prompt(
             sourceRequest: sourceRequest,
             prefix: prefix,
             suffix: suffix
@@ -26,7 +26,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         public static let closingSnippet = "</Snippet9981>"
     }
 
-    struct Request: PromptStrategy {
+    struct Prompt: PromptStrategy {
         let systemPrompt: String = """
         You are a code completion AI designed to take the surrounding code and \
         references from the codebase into account in order to predict and suggest \

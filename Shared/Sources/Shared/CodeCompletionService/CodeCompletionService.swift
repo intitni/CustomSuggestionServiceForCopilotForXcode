@@ -8,7 +8,7 @@ public struct CodeCompletionService {
     }
 
     public func getCompletions(
-        _ request: PromptStrategy,
+        _ prompt: PromptStrategy,
         model: ChatModel,
         count: Int
     ) async throws -> [String] {
@@ -22,25 +22,25 @@ public struct CodeCompletionService {
             let service = OpenAIService(
                 url: model.endpoint,
                 modelName: model.info.modelName,
-                stopWords: request.stopWords,
+                stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(request, count: count)
+            let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
         case .azureOpenAI:
             let service = AzureOpenAIService(
                 url: model.endpoint,
                 modelName: model.info.modelName,
-                stopWords: request.stopWords,
+                stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(request, count: count)
+            let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
         case .googleAI:
             let service = GoogleGeminiService(modelName: model.info.modelName, apiKey: apiKey)
-            let result = try await service.getCompletions(request, count: count)
+            let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
         case .unknown:

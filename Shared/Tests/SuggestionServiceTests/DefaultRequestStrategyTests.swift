@@ -25,7 +25,7 @@ class DefaultRequestStrategyTests: XCTestCase {
         let cat:
         """
 
-        guard let (summary, infillBlock) = DefaultRequestStrategy.Request.createCodeSummary(
+        guard let (summary, infillBlock) = DefaultRequestStrategy.Prompt.createCodeSummary(
             truncatedPrefix: prefix.breakLines(),
             truncatedSuffix: []
         ) else {
@@ -85,7 +85,7 @@ class DefaultRequestStrategyTests: XCTestCase {
         print("5")
         """
 
-        guard let (summary, infillBlock) = DefaultRequestStrategy.Request.createCodeSummary(
+        guard let (summary, infillBlock) = DefaultRequestStrategy.Prompt.createCodeSummary(
             truncatedPrefix: prefix.breakLines(),
             truncatedSuffix: suffix.breakLines()
         ) else {

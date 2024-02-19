@@ -9,7 +9,7 @@ struct NaiveRequestStrategy: RequestStrategy {
     var prefix: [String]
     var suffix: [String]
 
-    func createRequest() -> Request {
+    func createPrompt() -> Request {
         Request(
             sourceRequest: sourceRequest,
             prefix: prefix,
