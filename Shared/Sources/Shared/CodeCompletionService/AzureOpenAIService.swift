@@ -130,7 +130,8 @@ extension AzureOpenAIService {
             model: modelName,
             prompt: prompt,
             temperature: temperature,
-            stop: stopWords
+            stop: stopWords,
+            max_tokens: maxToken / 2
         )
 
         var request = URLRequest(url: url)

@@ -238,7 +238,8 @@ extension OpenAIService {
             model: modelName,
             prompt: prompt,
             temperature: temperature,
-            stop: stopWords
+            stop: stopWords,
+            max_tokens: maxToken / 2
         )
 
         var request = URLRequest(url: url)
@@ -278,6 +279,7 @@ extension OpenAIService {
         var n: Double?
         var stream: Bool?
         var stop: [String]?
+        /// Default to be 16.
         var max_tokens: Int?
         var presence_penalty: Double?
         var frequency_penalty: Double?
@@ -319,7 +321,6 @@ extension OpenAIService {
 
         struct Usage: Codable, Equatable {
             var prompt_tokens: Int
-            var completion_tokens: Int
             var total_tokens: Int
         }
 
