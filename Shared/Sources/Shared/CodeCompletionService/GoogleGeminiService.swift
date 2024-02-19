@@ -47,7 +47,7 @@ extension GoogleGeminiService {
     public enum Error: Swift.Error, LocalizedError {
         case apiError(Swift.Error)
         case otherError(Swift.Error)
-        
+
         public var errorDescription: String? {
             switch self {
             case let .apiError(error):
@@ -78,6 +78,7 @@ extension GoogleGeminiService {
             apiKey: apiKey,
             generationConfig: .init(GenerationConfig(
                 temperature: Float(temperature),
+                maxOutputTokens: 300, 
                 stopSequences: stopWords
             ))
         )
