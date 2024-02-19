@@ -67,7 +67,7 @@ extension GoogleGeminiService {
         return [
             .init(
                 role: "user",
-                parts: ([request.systemPrompt] + prompts).joined(separator: "\n\n")
+                parts: ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
             ),
         ]
     }

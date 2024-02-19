@@ -112,12 +112,15 @@ extension OpenAIService {
             includedSnippets: request.relevantCodeSnippets
         )
         return [
-            .init(role: .system, content: request.systemPrompt),
-            .init(
-                role: .user,
-                content: prompts.joined(separator: "\n\n")
-            ),
-        ]
+            .init(role: .system, content: request.systemPrompt)
+        ] + prompts.map { prompt in
+            switch prompt.role {
+            case .user:
+                return .init(role: .user, content: prompt.content)
+            case .assistant:
+                return .init(role: .assistant, content: prompt.content)
+            }
+        }
     }
 
     func sendMessages(_ messages: [Message]) async throws -> String {
@@ -227,7 +230,7 @@ extension OpenAIService {
             truncatedSuffix: request.suffix,
             includedSnippets: request.relevantCodeSnippets
         )
-        return ([request.systemPrompt] + prompts).joined(separator: "\n\n")
+        return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
     }
 
     func sendPrompt(_ prompt: String) async throws -> String {

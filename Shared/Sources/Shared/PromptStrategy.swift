@@ -27,6 +27,21 @@ public protocol PromptStrategy {
         truncatedPrefix: [String],
         truncatedSuffix: [String],
         includedSnippets: [RelevantCodeSnippet]
-    ) -> [String]
+    ) -> [PromptMessage]
 }
+
+public struct PromptMessage {
+    public enum PromptRole {
+        case user
+        case assistant
+    }
+    public var role: PromptRole
+    public var content: String
+    
+    public init(role: PromptRole, content: String) {
+        self.role = role
+        self.content = content
+    }
+}
+
 

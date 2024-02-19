@@ -46,7 +46,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
-        
+
         ---
         """
         var sourceRequest: SuggestionRequest
@@ -60,14 +60,14 @@ struct DefaultRequestStrategy: RequestStrategy {
             truncatedPrefix: [String],
             truncatedSuffix: [String],
             includedSnippets: [RelevantCodeSnippet]
-        ) -> [String] {
-            return [
+        ) -> [PromptMessage] {
+            return [.init(role: .user, content: [
                 Self.createSnippetsPrompt(includedSnippets: includedSnippets),
                 createSourcePrompt(
                     truncatedPrefix: truncatedPrefix,
                     truncatedSuffix: truncatedSuffix
                 ),
-            ].filter { !$0.isEmpty }
+            ].filter { !$0.isEmpty }.joined(separator: "\n\n"))]
         }
 
         func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
@@ -91,7 +91,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
             ---
-            
+
             Here is the code:
             ```
             \(summary)
@@ -116,7 +116,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             }
             return content.trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        
+
         static func createCodeSummary(
             truncatedPrefix: [String],
             truncatedSuffix: [String]
@@ -146,3 +146,4 @@ struct DefaultRequestStrategy: RequestStrategy {
         }
     }
 }
+
