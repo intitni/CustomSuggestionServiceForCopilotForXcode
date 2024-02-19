@@ -28,6 +28,11 @@ public class SuggestionService: SuggestionServiceType {
 }
 
 actor Service {
+    enum Model {
+        case chatModel(ChatModel)
+        case completionModel(CompletionModel)
+    }
+
     var onGoingTask: Task<[CodeSuggestion], Error>?
 
     func cancelRequest() {
@@ -55,11 +60,21 @@ actor Service {
                     suffix: nextLines
                 )
                 let service = CodeCompletionService()
-                let suggestedCodeSnippets = try await service.getCompletions(
-                    strategy.createPrompt(),
-                    model: getModel(),
-                    count: 1
-                )
+
+                let suggestedCodeSnippets = switch getModel() {
+                case let .chatModel(model):
+                    try await service.getCompletions(
+                        strategy.createPrompt(),
+                        model: model,
+                        count: 1
+                    )
+                case let .completionModel(model):
+                    try await service.getCompletions(
+                        strategy.createPrompt(),
+                        model: model,
+                        count: 1
+                    )
+                }
 
                 return suggestedCodeSnippets
                     .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
@@ -86,10 +101,19 @@ actor Service {
         return try await task.value
     }
 
-    func getModel() -> ChatModel {
+    func getModel() -> Model {
         let id = UserDefaults.shared.value(for: \.chatModelId)
         let models = UserDefaults.shared.value(for: \.chatModelsFromCopilotForXcode)
-        return models.first { $0.id == id } ?? UserDefaults.shared.value(for: \.customChatModel)
+        if let existedModel = models.first(where: { $0.id == id }) {
+            return .chatModel(existedModel)
+        }
+        let type = CustomModelType(rawValue: id) ?? .default
+        switch type {
+        case .chatModel:
+            return .chatModel(UserDefaults.shared.value(for: \.customChatModel))
+        case .completionModel:
+            return .completionModel(UserDefaults.shared.value(for: \.customCompletionModel))
+        }
     }
 
     func getStrategy(

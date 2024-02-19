@@ -40,12 +40,24 @@ public extension UserDefaultPreferenceKeys {
         )
     }
     
+    var customCompletionModel: PreferenceKey<StorageBox<CompletionModel>> {
+        .init(
+            defaultValue: .init(CompletionModel(
+                id: "ID",
+                name: "Custom",
+                format: .openAI,
+                info: .init()
+            )),
+            key: "CustomSuggestionService-CustomCompletionModel"
+        )
+    }
+    
     var requestStrategyId: PreferenceKey<String> {
         .init(defaultValue: "", key: "CustomSuggestionService-RequestStrategyId")
     }
 
     var chatModelId: PreferenceKey<String> {
-        .init(defaultValue: "", key: "CustomSuggestionService-SuggestionChatModelId")
+        .init(defaultValue: CustomModelType.default.rawValue, key: "CustomSuggestionService-SuggestionChatModelId")
     }
 }
 

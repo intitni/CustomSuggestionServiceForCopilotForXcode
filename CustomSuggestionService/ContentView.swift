@@ -19,7 +19,7 @@ struct ContentView: View {
                 VStack {
                     HStack {
                         ExistedChatModelPicker()
-                        if chatModelId.isEmpty {
+                        if CustomModelType(rawValue: chatModelId) != nil {
                             Button("Edit Model") {
                                 isEditingCustomModel = true
                             }
@@ -32,11 +32,24 @@ struct ContentView: View {
                 }
                 .padding()
                 .sheet(isPresented: $isEditingCustomModel) {
-                    ChatModelEditView(store: store.scope(
-                        state: \.customChatModel,
-                        action: \.customChatModel
-                    ))
-                    .frame(width: 800)
+                    if let type = CustomModelType(rawValue: chatModelId) {
+                        switch type {
+                        case .chatModel:
+                            ChatModelEditView(store: store.scope(
+                                state: \.customChatModel,
+                                action: \.customChatModel
+                            ))
+                            .frame(width: 800)
+                        case .completionModel:
+                            CompletionModelEditView(store: store.scope(
+                                state: \.customCompletionModel,
+                                action: \.customCompletionModel
+                            ))
+                            .frame(width: 800)
+                        }
+                    } else {
+                        EmptyView()
+                    }
                 }
             }
         }
@@ -50,7 +63,8 @@ struct ExistedChatModelPicker: View {
     var body: some View {
         let unknownId: String? =
             if !chatModels.contains(where: { $0.id == chatModelId }),
-            !chatModelId.isEmpty
+            !chatModelId.isEmpty,
+            CustomModelType(rawValue: chatModelId) == nil
         {
             chatModelId
         } else {
@@ -59,18 +73,22 @@ struct ExistedChatModelPicker: View {
 
         Picker(
             selection: $chatModelId,
-            label: Text("Chat Model"),
+            label: Text("Model"),
             content: {
                 if let unknownId {
                     Text("Unknown Model (Use Custom Model Instead)").tag(unknownId)
                 }
 
-                Text("Custom Model").tag("")
+                ForEach(CustomModelType.allCases, id: \.rawValue) {
+                    switch $0 {
+                    case .chatModel:
+                        Text("Custom Chat Model").tag($0)
+                    case .completionModel:
+                        Text("Custom Completion Model").tag($0)
+                    }
+                }
 
-                ForEach(
-                    chatModels,
-                    id: \.id
-                ) { chatModel in
+                ForEach(chatModels, id: \.id) { chatModel in
                     Text(chatModel.name).tag(chatModel.id)
                 }
             }
