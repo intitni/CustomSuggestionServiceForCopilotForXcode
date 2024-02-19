@@ -107,6 +107,8 @@ struct RequestStrategyPicker: View {
                         Text("Default").tag(option.rawValue)
                     case .naive:
                         Text("Naive").tag(option.rawValue)
+                    case .continue:
+                        Text("Continue").tag(option.rawValue)
                     }
                 }
             }
