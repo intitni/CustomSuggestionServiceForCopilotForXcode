@@ -172,10 +172,10 @@ struct ChatModelEditView: View {
                     "",
                     selection: $store.modelName,
                     content: {
-                        if OpenAIService.KnownModels(rawValue: store.modelName) == nil {
+                        if OpenAIService.ChatCompletionModels(rawValue: store.modelName) == nil {
                             Text("Custom Model").tag(store.modelName)
                         }
-                        ForEach(OpenAIService.KnownModels.allCases, id: \.self) { model in
+                        ForEach(OpenAIService.ChatCompletionModels.allCases, id: \.self) { model in
                             Text(model.rawValue).tag(model.rawValue)
                         }
                     }

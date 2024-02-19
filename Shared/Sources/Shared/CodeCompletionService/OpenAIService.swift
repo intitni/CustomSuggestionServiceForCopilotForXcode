@@ -3,24 +3,39 @@ import Foundation
 
 public actor OpenAIService {
     let url: URL
+    let endpoint: Endpoint
     let modelName: String
     let maxToken: Int
     let temperature: Double
     let apiKey: String
     let stopWords: [String]
+    
+    public enum Endpoint {
+        case completion
+        case chatCompletion
+    }
 
     public init(
         url: String? = nil,
+        endpoint: Endpoint,
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,
         stopWords: [String] = [],
         apiKey: String
     ) {
-        self.url = url.flatMap(URL.init(string:)) ??
-            URL(string: "https://api.openai.com/v1/chat/completions")!
+        self.url = url.flatMap(URL.init(string:)) ?? {
+            switch endpoint {
+            case .chatCompletion:
+                URL(string: "https://api.openai.com/v1/chat/completions")!
+            case .completion:
+                URL(string: "https://api.openai.com/v1/completions")!
+            }
+        }()
+            
+        self.endpoint = endpoint
         self.modelName = modelName
-        self.maxToken = maxToken ?? KnownModels(rawValue: modelName)?.maxToken ?? 4096
+        self.maxToken = maxToken ?? ChatCompletionModels(rawValue: modelName)?.maxToken ?? 4096
         self.temperature = temperature
         self.apiKey = apiKey
         self.stopWords = stopWords
@@ -91,7 +106,7 @@ extension OpenAIService {
     }
 
     func sendMessages(_ messages: [Message]) async throws -> String {
-        let requestBody = CompletionRequestBody(
+        let requestBody = ChatCompletionRequestBody(
             model: modelName,
             messages: messages,
             temperature: temperature,
@@ -125,6 +140,10 @@ extension OpenAIService {
             throw Error.decodeError(error)
         }
     }
+    
+    func sendCompletionRequest(_ prompt: String) async throws -> String {
+        fatalError()
+    }
 
     func countToken(_ message: Message) -> Int {
         message.content.count
@@ -132,7 +151,7 @@ extension OpenAIService {
 }
 
 extension OpenAIService {
-    public enum KnownModels: String, CaseIterable {
+    public enum ChatCompletionModels: String, CaseIterable {
         case gpt35Turbo = "gpt-3.5-turbo"
         case gpt35Turbo16k = "gpt-3.5-turbo-16k"
         case gpt4 = "gpt-4"
@@ -152,8 +171,12 @@ extension OpenAIService {
         case gpt40125 = "gpt-4-0125-preview"
     }
 
+    public enum CompletionModels: String, CaseIterable {
+        case gpt35TurboInstruct = "gpt-3.5-turbo-instruct"
+    }
+
     /// https://platform.openai.com/docs/api-reference/chat/create
-    struct CompletionRequestBody: Codable, Equatable {
+    struct ChatCompletionRequestBody: Codable, Equatable {
         struct MessageFunctionCall: Codable, Equatable {
             /// The name of the
             var name: String
@@ -228,7 +251,7 @@ extension OpenAIService {
     }
 }
 
-public extension OpenAIService.KnownModels {
+public extension OpenAIService.ChatCompletionModels {
     var maxToken: Int {
         switch self {
         case .gpt4:
@@ -265,6 +288,15 @@ public extension OpenAIService.KnownModels {
             return 128_000
         case .gpt40125:
             return 128_000
+        }
+    }
+}
+
+public extension OpenAIService.CompletionModels {
+    var maxToken: Int {
+        switch self {
+        case .gpt35TurboInstruct:
+            return 4096
         }
     }
 }

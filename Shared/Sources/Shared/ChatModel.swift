@@ -1,6 +1,7 @@
 import CodableWrappers
 import Foundation
 
+/// A chat completion model.
 public struct ChatModel: Codable, Equatable, Identifiable {
     public var id: String
     public var name: String

@@ -58,7 +58,7 @@ extension AzureOpenAIService {
     }
 
     func sendMessages(_ messages: [Message]) async throws -> String {
-        let requestBody = OpenAIService.CompletionRequestBody(
+        let requestBody = OpenAIService.ChatCompletionRequestBody(
             model: modelName,
             messages: messages,
             temperature: temperature,

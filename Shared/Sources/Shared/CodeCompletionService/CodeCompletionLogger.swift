@@ -2,6 +2,13 @@ import CopilotForXcodeKit
 import Foundation
 
 public final class CodeCompletionLogger {
+    struct Model {
+        var type: String
+        var format: String
+        var modelName: String
+        var baseURL: String
+    }
+
     @TaskLocal public static var logger: CodeCompletionLogger = .init(request: SuggestionRequest(
         fileURL: .init(filePath: "/"),
         content: "",
@@ -13,7 +20,7 @@ public final class CodeCompletionLogger {
     ))
 
     let request: SuggestionRequest
-    var chatModel: ChatModel = .init(id: "", name: "", format: .openAI, info: .init())
+    var model = Model(type: "", format: "", modelName: "", baseURL: "")
     var prompt: [(message: String, role: String)] = []
     var responses: [String] = []
     let startTime = Date()
@@ -21,9 +28,23 @@ public final class CodeCompletionLogger {
     public init(request: SuggestionRequest) {
         self.request = request
     }
-    
-    func logChatModel(_ chatModel: ChatModel) {
-        self.chatModel = chatModel
+
+    func logModel(_ chatModel: ChatModel) {
+        model = .init(
+            type: "Chat Completion",
+            format: chatModel.format.rawValue,
+            modelName: chatModel.info.modelName,
+            baseURL: chatModel.info.baseURL
+        )
+    }
+
+    func logModel(_ completionModel: CompletionModel) {
+        model = .init(
+            type: "Chat Completion",
+            format: completionModel.format.rawValue,
+            modelName: completionModel.info.modelName,
+            baseURL: completionModel.info.baseURL
+        )
     }
 
     func logPrompt(_ prompt: [(message: String, role: String)]) {
@@ -51,13 +72,13 @@ public final class CodeCompletionLogger {
         Logger.service.info("""
         [Request]
 
-        Format: \(chatModel.format)
-        Model Name: \(chatModel.name)
-        Base URL: \(chatModel.info.baseURL)
+        Format: \(model.format)
+        Model Name: \(model.modelName)
+        Base URL: \(model.baseURL)
         Duration: \(formattedDuration)
         ---
         File URL: \(request.fileURL)
-        Code Snippets: \(request.relevantCodeSnippets.count)
+        Code Snippets: \(request.relevantCodeSnippets.count) snippets
         CursorPosition: \(request.cursorPosition)
 
         [Prompt]
