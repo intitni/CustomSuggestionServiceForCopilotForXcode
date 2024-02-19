@@ -28,7 +28,7 @@ public actor OpenAIService {
 }
 
 extension OpenAIService: CodeCompletionServiceType {
-    func getCompletion(_ request: PreprocessedSuggestionRequest) async throws -> String {
+    func getCompletion(_ request: PromptStrategy) async throws -> String {
         let messages = createMessages(from: request)
         CodeCompletionLogger.logger.logPrompt(messages.map {
             ($0.content, $0.role.rawValue)
@@ -75,7 +75,7 @@ extension OpenAIService {
         }
     }
 
-    func createMessages(from request: PreprocessedSuggestionRequest) -> [Message] {
+    func createMessages(from request: PromptStrategy) -> [Message] {
         let prompts = request.createPrompt(
             truncatedPrefix: request.prefix,
             truncatedSuffix: request.suffix,

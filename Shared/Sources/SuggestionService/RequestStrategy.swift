@@ -5,7 +5,7 @@ import Shared
 /// Prompts may behave differently in different LLMs.
 /// This protocol allows for different strategies to be used to generate prompts.
 protocol RequestStrategy {
-    associatedtype Request: PreprocessedSuggestionRequest
+    associatedtype Request: PromptStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String])
     func createRequest() -> Request

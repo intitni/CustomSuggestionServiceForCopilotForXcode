@@ -22,7 +22,7 @@ struct NaiveRequestStrategy: RequestStrategy {
         public static let closingCode = "</Code3721>"
     }
 
-    struct Request: PreprocessedSuggestionRequest {
+    struct Request: PromptStrategy {
         let systemPrompt: String = """
         You are a code completion AI designed to take the surrounding code and \
         references from the codebase into account in order to predict and suggest \

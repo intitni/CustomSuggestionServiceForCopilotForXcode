@@ -1,7 +1,7 @@
 import CopilotForXcodeKit
 import Foundation
 
-public protocol PreprocessedSuggestionRequest {
+public protocol PromptStrategy {
     /// An instruction to the AI model to generate a completion.
     var systemPrompt: String { get }
     /// The source code before the text cursor. Represented as an array of lines.

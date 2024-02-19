@@ -8,7 +8,7 @@ public struct CodeCompletionService {
     }
 
     public func getCompletions(
-        _ request: PreprocessedSuggestionRequest,
+        _ request: PromptStrategy,
         model: ChatModel,
         count: Int
     ) async throws -> [String] {
@@ -56,13 +56,13 @@ public struct CodeCompletionService {
 
 protocol CodeCompletionServiceType {
     func getCompletion(
-        _ request: PreprocessedSuggestionRequest
+        _ request: PromptStrategy
     ) async throws -> String
 }
 
 extension CodeCompletionServiceType {
     func getCompletions(
-        _ request: PreprocessedSuggestionRequest,
+        _ request: PromptStrategy,
         count: Int
     ) async throws -> [String] {
         try await withThrowingTaskGroup(of: String.self) { group in
