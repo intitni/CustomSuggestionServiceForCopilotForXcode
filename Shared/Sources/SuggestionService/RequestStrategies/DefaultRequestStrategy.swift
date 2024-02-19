@@ -46,6 +46,8 @@ struct DefaultRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
+        
+        ---
         """
         var sourceRequest: SuggestionRequest
         var prefix: [String]
@@ -88,6 +90,8 @@ struct DefaultRequestStrategy: RequestStrategy {
             Indentation: \
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
+            ---
+            
             Here is the code:
             ```
             \(summary)

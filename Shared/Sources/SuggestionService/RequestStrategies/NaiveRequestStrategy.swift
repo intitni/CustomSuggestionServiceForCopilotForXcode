@@ -42,6 +42,8 @@ struct NaiveRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
+        
+        ---
         """
         var sourceRequest: SuggestionRequest
         var prefix: [String]
