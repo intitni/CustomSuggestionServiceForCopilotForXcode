@@ -99,7 +99,7 @@ struct TestField {
                                 content: text,
                                 cursorPosition: position,
                                 tabSize: 4,
-                                indentSize: 1,
+                                indentSize: 4,
                                 usesTabsForIndentation: false,
                                 relevantCodeSnippets: [
                                     .init(content: relevantCodeSnippet, priority: 999),
