@@ -1,59 +1,5 @@
 import Foundation
 
-public struct CodeCompletionService {
-    public init() {}
-
-    public enum Error: Swift.Error {
-        case unknownFormat
-    }
-
-    public func getCompletions(
-        _ prompt: PromptStrategy,
-        model: ChatModel,
-        count: Int
-    ) async throws -> [String] {
-        CodeCompletionLogger.logger.logChatModel(model)
-        defer { CodeCompletionLogger.logger.finish() }
-
-        let apiKey = apiKey(from: model)
-
-        switch model.format {
-        case .openAI, .openAICompatible:
-            let service = OpenAIService(
-                url: model.endpoint,
-                modelName: model.info.modelName,
-                stopWords: prompt.stopWords,
-                apiKey: apiKey
-            )
-            let result = try await service.getCompletions(prompt, count: count)
-            try Task.checkCancellation()
-            return result
-        case .azureOpenAI:
-            let service = AzureOpenAIService(
-                url: model.endpoint,
-                modelName: model.info.modelName,
-                stopWords: prompt.stopWords,
-                apiKey: apiKey
-            )
-            let result = try await service.getCompletions(prompt, count: count)
-            try Task.checkCancellation()
-            return result
-        case .googleAI:
-            let service = GoogleGeminiService(modelName: model.info.modelName, apiKey: apiKey)
-            let result = try await service.getCompletions(prompt, count: count)
-            try Task.checkCancellation()
-            return result
-        case .unknown:
-            throw Error.unknownFormat
-        }
-    }
-
-    func apiKey(from model: ChatModel) -> String {
-        let name = model.info.apiKeyName
-        return (try? Keychain.apiKey.get(name)) ?? ""
-    }
-}
-
 protocol CodeCompletionServiceType {
     func getCompletion(
         _ request: PromptStrategy
@@ -88,6 +34,105 @@ extension CodeCompletionServiceType {
 
             return result.filter { !$0.isEmpty }
         }
+    }
+}
+
+public struct CodeCompletionService {
+    public init() {}
+
+    public enum Error: Swift.Error {
+        case unknownFormat
+    }
+
+    public func getCompletions(
+        _ prompt: PromptStrategy,
+        model: ChatModel,
+        count: Int
+    ) async throws -> [String] {
+        CodeCompletionLogger.logger.logModel(model)
+        defer { CodeCompletionLogger.logger.finish() }
+
+        let apiKey = apiKey(from: model)
+
+        switch model.format {
+        case .openAI, .openAICompatible:
+            let service = OpenAIService(
+                url: model.endpoint, 
+                endpoint: .chatCompletion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .azureOpenAI:
+            let service = AzureOpenAIService(
+                url: model.endpoint,
+                endpoint: .chatCompletion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .googleAI:
+            let service = GoogleGeminiService(modelName: model.info.modelName, apiKey: apiKey)
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .unknown:
+            throw Error.unknownFormat
+        }
+    }
+
+    public func getCompletions(
+        _ prompt: PromptStrategy,
+        model: CompletionModel,
+        count: Int
+    ) async throws -> [String] {
+        CodeCompletionLogger.logger.logModel(model)
+        defer { CodeCompletionLogger.logger.finish() }
+
+        let apiKey = apiKey(from: model)
+
+        switch model.format {
+        case .openAI, .openAICompatible:
+            let service = OpenAIService(
+                url: model.endpoint,
+                endpoint: .completion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .azureOpenAI:
+            let service = AzureOpenAIService(
+                url: model.endpoint, 
+                endpoint: .completion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .unknown:
+            throw Error.unknownFormat
+        }
+    }
+
+    func apiKey(from model: ChatModel) -> String {
+        let name = model.info.apiKeyName
+        return (try? Keychain.apiKey.get(name)) ?? ""
+    }
+
+    func apiKey(from model: CompletionModel) -> String {
+        let name = model.info.apiKeyName
+        return (try? Keychain.apiKey.get(name)) ?? ""
     }
 }
 
