@@ -30,8 +30,8 @@ struct DefaultRequestStrategy: RequestStrategy {
         let systemPrompt: String = """
         You are a code completion AI designed to take the surrounding code and \
         references from the codebase into account in order to predict and suggest \
-        high-quality code to complete the code enclosed in \(Tag.openingCode) tags.
-        You only respond with code that works and fits seamlessly with surrounding code.
+        high-quality code to complete the code enclosed in \(Tag.openingCode) tags. \
+        You only respond with code that works and fits seamlessly with surrounding code. \
         Do not include anything else beyond the code.
 
         Code completion means to keep writing the code. For example, if I tell you to 
@@ -52,7 +52,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -77,13 +77,14 @@ struct DefaultRequestStrategy: RequestStrategy {
             return """
             Below is the code from file \(filePath) that you are trying to complete.
             Review the code carefully, detect the functionality, formats, style, patterns, \
-            and logics in use and use them to predict the completion.
-            Make sure your completion has the correct syntax and formatting.
-            Enclose the completion the XML tag \(Tag.openingCode).
-            Do not duplicate existing implementations.
-            Start with a line break if needed.
+            and logics in use and use them to predict the completion. \
+            Make sure your completion has the correct syntax and formatting. \
+            Enclose the completion the XML tag \(Tag.openingCode). \
+            Do not duplicate existing implementations. \
+            Start with a line break if needed. \
             Do not put the response in a markdown code block.
 
+            File Path: \(filePath)
             Indentation: \
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 

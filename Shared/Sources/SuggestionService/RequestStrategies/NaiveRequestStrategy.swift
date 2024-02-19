@@ -33,7 +33,7 @@ struct NaiveRequestStrategy: RequestStrategy {
         Code completion means to keep writing the code. For example, if I tell you to 
         ###
         Keep writing the following code:
-
+        
         \(Tag.openingCode)
         print("Hello
         ###
@@ -48,7 +48,7 @@ struct NaiveRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -90,12 +90,14 @@ struct NaiveRequestStrategy: RequestStrategy {
             }()
 
             return ["""
-            // File path: \(filePath)
-            // Indentation: \
+            File path: \(filePath)
+            Indentation: \
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
+            ---
+            
             Keep writing the following code:
-
+            
             \(Tag.openingCode)
             \(code)
             """]
