@@ -29,7 +29,7 @@ public class SuggestionService: SuggestionServiceType {
 
 actor Service {
     var onGoingTask: Task<[CodeSuggestion], Error>?
-    
+
     func cancelRequest() {
         onGoingTask?.cancel()
         onGoingTask = nil
@@ -62,12 +62,14 @@ actor Service {
                 )
 
                 return suggestedCodeSnippets
-                    .map(strategy.postProcessRawSuggestion(suggestion:))
                     .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
                     .map {
                         CodeSuggestion(
                             id: UUID().uuidString,
-                            text: prefix + $0,
+                            text: strategy.postProcessRawSuggestion(
+                                prefix: prefix,
+                                suggestion: $0
+                            ),
                             position: request.cursorPosition,
                             range: .init(
                                 start: .init(

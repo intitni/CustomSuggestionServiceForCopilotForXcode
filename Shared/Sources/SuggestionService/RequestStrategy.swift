@@ -15,13 +15,14 @@ protocol RequestStrategy {
     /// The AI model may not return a suggestion in a ideal format. You can use it to reformat the
     /// suggestions.
     ///
-    /// By default, it will return the suggestion as is.
-    func postProcessRawSuggestion(suggestion: String) -> String
+    /// By default, it will return the prefix + suggestion.
+    func postProcessRawSuggestion(prefix: String, suggestion: String) -> String
 }
 
 public enum RequestStrategyOption: String, CaseIterable, Codable {
     case `default` = ""
     case naive
+    case `continue`
 }
 
 extension RequestStrategyOption {
@@ -31,6 +32,8 @@ extension RequestStrategyOption {
             return DefaultRequestStrategy.self
         case .naive:
             return NaiveRequestStrategy.self
+        case .continue:
+            return ContinueRequestStrategy.self
         }
     }
 }
@@ -38,8 +41,8 @@ extension RequestStrategyOption {
 // MARK: - Default Implementations
 
 extension RequestStrategy {
-    func postProcessRawSuggestion(suggestion: String) -> String {
-        suggestion
+    func postProcessRawSuggestion(prefix: String, suggestion: String) -> String {
+        prefix + suggestion
     }
 }
 
