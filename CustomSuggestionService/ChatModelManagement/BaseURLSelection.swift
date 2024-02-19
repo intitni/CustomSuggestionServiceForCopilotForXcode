@@ -32,7 +32,7 @@ struct BaseURLSelection {
                 }
 
             case .refreshAvailableBaseURLNames:
-                let chatModels = userDefaults.value(for: \.chatModels)
+                let chatModels = userDefaults.value(for: \.chatModelsFromCopilotForXcode)
                 var allBaseURLs = Set(
                     chatModels.map(\.info.baseURL)
                         .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }

@@ -44,7 +44,7 @@ struct ContentView: View {
 }
 
 struct ExistedChatModelPicker: View {
-    @AppStorage(\.chatModels) var chatModels: [ChatModel]
+    @AppStorage(\.chatModelsFromCopilotForXcode) var chatModels: [ChatModel]
     @AppStorage(\.chatModelId) var chatModelId: String
 
     var body: some View {

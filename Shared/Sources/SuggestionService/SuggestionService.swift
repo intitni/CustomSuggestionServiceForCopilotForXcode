@@ -86,7 +86,7 @@ actor Service {
 
     func getModel() -> ChatModel {
         let id = UserDefaults.shared.value(for: \.chatModelId)
-        let models = UserDefaults.shared.value(for: \.chatModels)
+        let models = UserDefaults.shared.value(for: \.chatModelsFromCopilotForXcode)
         return models.first { $0.id == id } ?? UserDefaults.shared.value(for: \.customChatModel)
     }
 

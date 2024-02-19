@@ -21,7 +21,10 @@ public struct PreferenceKey<T>: UserDefaultPreferenceKey {
 }
 
 public extension UserDefaultPreferenceKeys {
-    var chatModels: PreferenceKey<[ChatModel]> {
+    /// Access the chat models set in Copilot for Xcode.
+    ///
+    /// - Note: It only works when they are in the same app group.
+    var chatModelsFromCopilotForXcode: PreferenceKey<[ChatModel]> {
         .init(defaultValue: [], key: "ChatModels")
     }
 
