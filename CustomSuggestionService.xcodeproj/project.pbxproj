@@ -70,6 +70,7 @@
 		C874CD4C2B712BF0003ABA96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C8774F462B83A009008FF699 /* CompletionModelEdit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionModelEdit.swift; sourceTree = "<group>"; };
 		C8774F472B83A009008FF699 /* CompletionModelEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionModelEditView.swift; sourceTree = "<group>"; };
+		C8A18A672B85038E004188D3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Suggestion Service Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSuggestionServiceApp.swift; sourceTree = "<group>"; };
 		C8D0114D2B59912700219412 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -138,6 +139,7 @@
 		C8D0113F2B59912700219412 = {
 			isa = PBXGroup;
 			children = (
+				C8A18A672B85038E004188D3 /* README.md */,
 				C8D011722B5A5DAA00219412 /* Shared */,
 				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
 				C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */,
