@@ -17,40 +17,14 @@ struct NaiveRequestStrategy: RequestStrategy {
         )
     }
 
-    enum Tag {
-        public static let openingCode = "<Code3721>"
-        public static let closingCode = "</Code3721>"
-    }
-
     struct Request: PromptStrategy {
-        let systemPrompt: String = """
-        You are a code completion AI designed to take the surrounding code and \
-        references from the codebase into account in order to predict and suggest \
-        high-quality code to complete the code enclosed in \(Tag.openingCode) tags.
-        You only respond with code that works and fits seamlessly with surrounding code.
-        Do not include anything else beyond the code.
-
-        Code completion means to keep writing the code. For example, if I tell you to 
-        ###
-        Keep writing the following code:
-
-        \(Tag.openingCode)
-        print("Hello
-        ###
-
-        You should respond with:
-        ###
-         World")\(Tag.closingCode)
-        ###
-
-        ---
-        """
+        let systemPrompt: String = ""
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        var stopWords: [String] { ["\n\n"] }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -61,16 +35,6 @@ struct NaiveRequestStrategy: RequestStrategy {
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
-                if let last = proposed.last,
-                   last.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                {
-                    return Array(proposed) + [
-                        """
-                        // write some code
-                        \(last)
-                        """,
-                    ]
-                }
                 return Array(proposed)
             }()
 
@@ -93,14 +57,9 @@ struct NaiveRequestStrategy: RequestStrategy {
 
             return [.init(role: .user, content: """
             File path: \(filePath)
-            Indentation: \
-            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-
+            
             ---
-
-            Keep writing the following code:
-
-            \(Tag.openingCode)
+            
             \(code)
             """)]
         }
