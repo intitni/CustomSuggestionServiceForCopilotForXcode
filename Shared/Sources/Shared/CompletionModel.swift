@@ -61,12 +61,12 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
         case .openAI:
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "https://api.openai.com/v1/completions" }
-            return "\(baseURL)/v1/chat/completions"
+            return "\(baseURL)/v1/completions"
         case .openAICompatible:
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "https://api.openai.com/v1/completions" }
             if info.isFullURL { return baseURL }
-            return "\(baseURL)/v1/chat/completions"
+            return "\(baseURL)/v1/completions"
         case .azureOpenAI:
             let baseURL = info.baseURL
             let deployment = info.azureOpenAIDeploymentName
