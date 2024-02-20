@@ -32,13 +32,13 @@ struct ContinueRequestStrategy: RequestStrategy {
         complete the code enclosed in \(Tag.openingCode) tags. \
         You only respond with code that works and fits seamlessly with surrounding code. \
         Do not include anything else beyond the code.
-        
+
         When you see the prompt "Continue generating", you should continue generating the response.
         For example, if your previous response is:
         ```
         print(Hell
         ```
-        
+
         You should continue with:
         ```
         o World)
@@ -141,10 +141,12 @@ struct ContinueRequestStrategy: RequestStrategy {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
                 return Array(proposed)
             }()
-            
-            // Handle the case where { is the last character in the prefix, always generate starting from the next line.
-            
-            // Handle the case where } is the first character in the prefix, always generate starting from the line after the next
+
+            // Handle the case where { is the last character in the prefix, always generate starting
+            // from the next line.
+
+            // Handle the case where } is the first character in the prefix, always generate
+            // starting from the line after the next
 
             return (
                 summary: "\(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())",
@@ -153,18 +155,20 @@ struct ContinueRequestStrategy: RequestStrategy {
         }
     }
 
-    func postProcessRawSuggestion(prefix: String, suggestion: String) -> String {
-        if suggestion.hasPrefix(prefix) {
+    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String {
+        let suggestion = extractSuggestion(
+            from: suggestion,
+            openingTag: Tag.openingCode,
+            closingTag: Tag.closingCode
+        )
+
+        if suggestion.hasPrefix(linePrefix) {
             var processed = suggestion
             processed.removeFirst(prefix.count)
             return processed
         }
-        
-        // 1. If the first line contains <openingCode>, extract until <closingCode> or the end
-        
-        // 2. <openingCode> is not in the first line, remove it and all lines after it.
-        
-        return prefix + suggestion
+
+        return linePrefix + suggestion
     }
 }
 

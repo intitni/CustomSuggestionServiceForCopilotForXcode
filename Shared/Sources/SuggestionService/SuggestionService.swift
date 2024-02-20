@@ -49,7 +49,7 @@ actor Service {
         let task = Task {
             try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
                 let lines = request.content.breakLines()
-                let (previousLines, nextLines, prefix) = Self.split(
+                let (previousLines, nextLines, linePrefix) = Self.split(
                     code: request.content,
                     lines: lines,
                     at: request.cursorPosition
@@ -82,7 +82,7 @@ actor Service {
                         CodeSuggestion(
                             id: UUID().uuidString,
                             text: strategy.postProcessRawSuggestion(
-                                prefix: prefix,
+                                linePrefix: linePrefix,
                                 suggestion: $0
                             ),
                             position: request.cursorPosition,

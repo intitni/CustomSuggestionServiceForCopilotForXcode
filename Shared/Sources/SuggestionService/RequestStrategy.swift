@@ -16,7 +16,7 @@ protocol RequestStrategy {
     /// suggestions.
     ///
     /// By default, it will return the prefix + suggestion.
-    func postProcessRawSuggestion(prefix: String, suggestion: String) -> String
+    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String
 }
 
 public enum RequestStrategyOption: String, CaseIterable, Codable {
@@ -41,8 +41,26 @@ extension RequestStrategyOption {
 // MARK: - Default Implementations
 
 extension RequestStrategy {
-    func postProcessRawSuggestion(prefix: String, suggestion: String) -> String {
-        prefix + suggestion
+    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String {
+        linePrefix + suggestion
+    }
+}
+
+// MARK: - Shared Implementations
+
+extension RequestStrategy {
+    func extractSuggestion(
+        from response: String,
+        openingTag: String,
+        closingTag: String
+    ) -> String {
+        // 1. If the first line contains <openingCode>, extract until <closingCode> or the end
+        
+        // 2. <openingCode> is not in the first line, remove it and all lines after it.
+        
+        // 3. remove <closingCode> and all lines after it.
+        
+        return response
     }
 }
 
