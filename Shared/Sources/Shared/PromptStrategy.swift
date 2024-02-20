@@ -8,6 +8,9 @@ public protocol PromptStrategy {
     var prefix: [String] { get }
     /// The source code after the text cursor. Represented as an array of lines.
     var suffix: [String] { get }
+    /// The prefix that should be prepended to the response. By default the last element of
+    /// `prefix`.
+    var suggestionPrefix: SuggestionPrefix { get }
     /// The relevant code snippets that the AI model should consider when generating a completion.
     var relevantCodeSnippets: [RelevantCodeSnippet] { get }
     /// The words at which the AI model should stop generating the completion.
@@ -30,18 +33,45 @@ public protocol PromptStrategy {
     ) -> [PromptMessage]
 }
 
+public struct SuggestionPrefix {
+    public var original: String
+    public var infillValue: String
+    public var prependingValue: String
+
+    public static var empty: SuggestionPrefix {
+        .init(original: "", infillValue: "", prependingValue: "")
+    }
+
+    public static func unchanged(_ string: String) -> SuggestionPrefix {
+        .init(original: string, infillValue: string, prependingValue: string)
+    }
+
+    public init(original: String, infillValue: String, prependingValue: String) {
+        self.original = original
+        self.infillValue = infillValue
+        self.prependingValue = prependingValue
+    }
+}
+
+public extension PromptStrategy {
+    var suggestionPrefix: SuggestionPrefix {
+        guard let prefix = prefix.last else { return .empty }
+        return .unchanged(prefix)
+    }
+}
+
 public struct PromptMessage {
     public enum PromptRole {
         case user
         case assistant
     }
+
     public var role: PromptRole
     public var content: String
-    
+
     public init(role: PromptRole, content: String) {
         self.role = role
         self.content = content
     }
 }
-
 

@@ -16,7 +16,7 @@ protocol RequestStrategy {
     /// suggestions.
     ///
     /// By default, it will return the prefix + suggestion.
-    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String
+    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String
 }
 
 public enum RequestStrategyOption: String, CaseIterable, Codable {
@@ -41,8 +41,8 @@ extension RequestStrategyOption {
 // MARK: - Default Implementations
 
 extension RequestStrategy {
-    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String {
-        linePrefix + suggestion
+    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
+        suggestionPrefix + suggestion
     }
 }
 
@@ -55,12 +55,31 @@ extension RequestStrategy {
         closingTag: String
     ) -> String {
         // 1. If the first line contains <openingCode>, extract until <closingCode> or the end
-        
+
         // 2. <openingCode> is not in the first line, remove it and all lines after it.
-        
+
         // 3. remove <closingCode> and all lines after it.
-        
+
         return response
+    }
+}
+
+extension SuggestionPrefix {
+    func curlyBracesLineBreak() -> SuggestionPrefix {
+        func mutate(_ string: String) -> String {
+            let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.hasSuffix("{") {
+                return string + "\n"
+            }
+            if trimmed.hasSuffix("}") {
+                return string + "\n\n"
+            }
+            return string
+        }
+        
+        let infillValue = mutate(infillValue)
+        let prependingValue = mutate(prependingValue)
+        return .init(original: original, infillValue: infillValue, prependingValue: prependingValue)
     }
 }
 

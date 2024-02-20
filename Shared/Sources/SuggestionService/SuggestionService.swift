@@ -49,7 +49,7 @@ actor Service {
         let task = Task {
             try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
                 let lines = request.content.breakLines()
-                let (previousLines, nextLines, linePrefix) = Self.split(
+                let (previousLines, nextLines) = Self.split(
                     code: request.content,
                     lines: lines,
                     at: request.cursorPosition
@@ -61,19 +61,13 @@ actor Service {
                 )
                 let service = CodeCompletionService()
 
+                let promptStrategy = strategy.createPrompt()
+
                 let suggestedCodeSnippets = switch getModel() {
                 case let .chatModel(model):
-                    try await service.getCompletions(
-                        strategy.createPrompt(),
-                        model: model,
-                        count: 1
-                    )
+                    try await service.getCompletions(promptStrategy, model: model, count: 1)
                 case let .completionModel(model):
-                    try await service.getCompletions(
-                        strategy.createPrompt(),
-                        model: model,
-                        count: 1
-                    )
+                    try await service.getCompletions(promptStrategy, model: model, count: 1)
                 }
 
                 return suggestedCodeSnippets
@@ -82,7 +76,7 @@ actor Service {
                         CodeSuggestion(
                             id: UUID().uuidString,
                             text: strategy.postProcessRawSuggestion(
-                                linePrefix: linePrefix,
+                                suggestionPrefix: promptStrategy.suggestionPrefix.prependingValue,
                                 suggestion: $0
                             ),
                             position: request.cursorPosition,
@@ -134,23 +128,23 @@ actor Service {
         code: String,
         lines: [String],
         at cursorPosition: CursorPosition
-    ) -> (head: [String], tail: [String], prefix: String) {
-        if code.isEmpty { return ([], [], "") }
-        if lines.isEmpty { return ([], [], "") }
-        if cursorPosition.line < 0 { return ([], lines, "") }
-        if cursorPosition.line >= lines.endIndex { return (lines, [], "") }
+    ) -> (head: [String], tail: [String]) {
+        if code.isEmpty { return ([], []) }
+        if lines.isEmpty { return ([], []) }
+        if cursorPosition.line < 0 { return ([], lines) }
+        if cursorPosition.line >= lines.endIndex { return (lines, []) }
 
-        let (previousLines, nextLines, prefix): ([String], [String], String) = {
+        let (previousLines, nextLines): ([String], [String]) = {
             let previousLines = Array(lines[0..<cursorPosition.line])
             let nextLines = cursorPosition.line + 1 >= lines.endIndex
                 ? []
                 : Array(lines[(cursorPosition.line + 1)...])
             let splitLine = lines[cursorPosition.line]
             if cursorPosition.character < 0 {
-                return (previousLines, [splitLine] + nextLines, "")
+                return (previousLines, [splitLine] + nextLines)
             }
             if cursorPosition.character >= splitLine.count {
-                return (previousLines + [splitLine], nextLines, splitLine)
+                return (previousLines + [splitLine], nextLines)
             }
             let firstHalf = String(splitLine[..<splitLine.index(
                 splitLine.startIndex,
@@ -160,10 +154,10 @@ actor Service {
                 splitLine.startIndex,
                 offsetBy: cursorPosition.character
             )...])
-            return (previousLines + [firstHalf], [secondHalf] + nextLines, firstHalf)
+            return (previousLines + [firstHalf], [secondHalf] + nextLines)
         }()
 
-        return (previousLines, nextLines, prefix)
+        return (previousLines, nextLines)
     }
 }
 

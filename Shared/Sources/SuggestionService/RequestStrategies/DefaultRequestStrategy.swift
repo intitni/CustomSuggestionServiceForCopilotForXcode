@@ -55,6 +55,11 @@ struct DefaultRequestStrategy: RequestStrategy {
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        
+        var suggestionPrefix: SuggestionPrefix {
+            guard let prefix = prefix.last else { return .empty }
+            return .unchanged(prefix).curlyBracesLineBreak()
+        }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -73,7 +78,8 @@ struct DefaultRequestStrategy: RequestStrategy {
         func createSourcePrompt(truncatedPrefix: [String], truncatedSuffix: [String]) -> String {
             guard let (summary, infillBlock) = Self.createCodeSummary(
                 truncatedPrefix: truncatedPrefix,
-                truncatedSuffix: truncatedSuffix
+                truncatedSuffix: truncatedSuffix,
+                suggestionPrefix: suggestionPrefix.infillValue
             ) else { return "" }
 
             return """
@@ -119,24 +125,15 @@ struct DefaultRequestStrategy: RequestStrategy {
 
         static func createCodeSummary(
             truncatedPrefix: [String],
-            truncatedSuffix: [String]
+            truncatedSuffix: [String],
+            suggestionPrefix: String
         ) -> (summary: String, infillBlock: String)? {
             guard !(truncatedPrefix.isEmpty && truncatedSuffix.isEmpty) else { return nil }
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
-                if let last = proposed.last,
-                   last.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                {
-                    return Array(proposed) + [
-                        """
-                        // write some code
-                        \(last)
-                        """,
-                    ]
-                }
-                return Array(proposed)
+                return Array(proposed.dropLast()) + [suggestionPrefix]
             }()
 
             return (

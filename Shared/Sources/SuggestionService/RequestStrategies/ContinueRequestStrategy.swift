@@ -50,6 +50,11 @@ struct ContinueRequestStrategy: RequestStrategy {
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        
+        var suggestionPrefix: SuggestionPrefix {
+            guard let prefix = prefix.last else { return .empty }
+            return .unchanged(prefix).curlyBracesLineBreak()
+        }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -70,7 +75,8 @@ struct ContinueRequestStrategy: RequestStrategy {
         ) -> [PromptMessage] {
             guard let (summary, infillBlock) = Self.createCodeSummary(
                 truncatedPrefix: truncatedPrefix,
-                truncatedSuffix: truncatedSuffix
+                truncatedSuffix: truncatedSuffix,
+                suggestionPrefix: suggestionPrefix.infillValue
             ) else { return [] }
 
             let snippets = Self.createSnippetsPrompt(includedSnippets: includedSnippets)
@@ -132,21 +138,16 @@ struct ContinueRequestStrategy: RequestStrategy {
 
         static func createCodeSummary(
             truncatedPrefix: [String],
-            truncatedSuffix: [String]
+            truncatedSuffix: [String],
+            suggestionPrefix: String
         ) -> (summary: String, infillBlock: String)? {
             guard !(truncatedPrefix.isEmpty && truncatedSuffix.isEmpty) else { return nil }
             let promptLinesCount = min(4, max(truncatedPrefix.count, 2))
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
-                return Array(proposed)
+                return Array(proposed.dropLast()) + [suggestionPrefix]
             }()
-
-            // Handle the case where { is the last character in the prefix, always generate starting
-            // from the next line.
-
-            // Handle the case where } is the first character in the prefix, always generate
-            // starting from the line after the next
 
             return (
                 summary: "\(prefixLines.joined())\(Tag.openingCode)\(Tag.closingCode)\(truncatedSuffix.joined())",
@@ -155,20 +156,20 @@ struct ContinueRequestStrategy: RequestStrategy {
         }
     }
 
-    func postProcessRawSuggestion(linePrefix: String, suggestion: String) -> String {
+    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
         let suggestion = extractSuggestion(
             from: suggestion,
             openingTag: Tag.openingCode,
             closingTag: Tag.closingCode
         )
 
-        if suggestion.hasPrefix(linePrefix) {
+        if suggestion.hasPrefix(suggestionPrefix) {
             var processed = suggestion
             processed.removeFirst(prefix.count)
             return processed
         }
 
-        return linePrefix + suggestion
+        return suggestionPrefix + suggestion
     }
 }
 
