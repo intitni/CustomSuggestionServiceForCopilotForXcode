@@ -158,7 +158,7 @@ struct CompletionModelEditView: View {
     @ViewBuilder
     var openAI: some View {
         baseURLTextField(prompt: Text("https://api.openai.com")) {
-            Text("/v1/chat/completions")
+            Text("/v1/completions")
         }
         apiKeyNamePicker
 
@@ -184,10 +184,6 @@ struct CompletionModelEditView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
                 " To get an API key, please visit [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)"
-            )
-
-            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
-                " If you don't have access to GPT-4, you may need to visit [https://platform.openai.com/account/billing/overview](https://platform.openai.com/account/billing/overview) to buy some credits. A ChatGPT Plus subscription is not enough to access GPT-4 through API."
             )
         }
         .padding(.vertical)
@@ -218,11 +214,11 @@ struct CompletionModelEditView: View {
         baseURLTextField(
             title: "",
             prompt: store.baseURLSelection.isFullURL
-                ? Text("https://api.openai.com/v1/chat/completions")
+                ? Text("https://api.openai.com/v1/completions")
                 : Text("https://api.openai.com")
         ) {
             if !store.baseURLSelection.isFullURL {
-                Text("/v1/chat/completions")
+                Text("/v1/completions")
             }
         }
         apiKeyNamePicker

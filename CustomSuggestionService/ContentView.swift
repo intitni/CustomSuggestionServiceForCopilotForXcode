@@ -82,9 +82,9 @@ struct ExistedChatModelPicker: View {
                 ForEach(CustomModelType.allCases, id: \.rawValue) {
                     switch $0 {
                     case .chatModel:
-                        Text("Custom Chat Model").tag($0)
+                        Text("Custom Model (Chat Completion API)").tag($0)
                     case .completionModel:
-                        Text("Custom Completion Model").tag($0)
+                        Text("Custom Model (Completion API)").tag($0)
                     }
                 }
 

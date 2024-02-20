@@ -154,7 +154,7 @@ extension ChatModel {
     init(state: ChatModelEdit.State) {
         self.init(
             id: state.id,
-            name: "Custom",
+            name: "Custom Model (Chat Completion API)",
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,

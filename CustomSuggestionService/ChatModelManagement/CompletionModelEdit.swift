@@ -147,7 +147,7 @@ extension CompletionModel {
     init(state: CompletionModelEdit.State) {
         self.init(
             id: state.id,
-            name: "Custom",
+            name: "Custom Model (Completion API)",
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,
