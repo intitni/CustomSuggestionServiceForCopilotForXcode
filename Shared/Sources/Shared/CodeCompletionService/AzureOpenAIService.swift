@@ -60,13 +60,13 @@ extension AzureOpenAIService {
     public typealias Error = OpenAIService.Error
 
     func createMessages(from request: PromptStrategy) -> [Message] {
-        let prompts = request.createPrompt(
-            truncatedPrefix: request.prefix,
-            truncatedSuffix: request.suffix,
-            includedSnippets: request.relevantCodeSnippets
-        )
+        let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+            maxToken / 3 * 2,
+            maxToken - 300 - 20
+        ))
+        let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
-            .init(role: .system, content: request.systemPrompt)
+            .init(role: .system, content: request.systemPrompt),
         ] + prompts.map { prompt in
             switch prompt.role {
             case .user:
@@ -118,11 +118,11 @@ extension AzureOpenAIService {
     }
 
     func createPrompt(from request: PromptStrategy) -> String {
-        let prompts = request.createPrompt(
-            truncatedPrefix: request.prefix,
-            truncatedSuffix: request.suffix,
-            includedSnippets: request.relevantCodeSnippets
-        )
+        let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+            maxToken / 3 * 2,
+            maxToken - 300 - 20
+        ))
+        let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
     }
 
