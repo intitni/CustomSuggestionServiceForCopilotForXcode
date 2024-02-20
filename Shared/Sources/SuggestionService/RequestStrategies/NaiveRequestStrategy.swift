@@ -25,6 +25,11 @@ struct NaiveRequestStrategy: RequestStrategy {
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { ["\n\n"] }
+        
+        var suggestionPrefix: SuggestionPrefix {
+            guard let prefix = prefix.last else { return .empty }
+            return .unchanged(prefix).curlyBracesLineBreak()
+        }
 
         func createPrompt(
             truncatedPrefix: [String],
@@ -35,7 +40,7 @@ struct NaiveRequestStrategy: RequestStrategy {
             let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
-                return Array(proposed)
+                return Array(proposed.dropLast()) + [suggestionPrefix.infillValue]
             }()
 
             /// Mix and rearrange the file and relevant code snippets.

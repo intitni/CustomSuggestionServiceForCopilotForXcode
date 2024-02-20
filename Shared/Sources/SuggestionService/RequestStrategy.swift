@@ -72,7 +72,7 @@ extension SuggestionPrefix {
                 return string + "\n"
             }
             if trimmed.hasSuffix("}") {
-                return string + "\n\n"
+                return string + "\n"
             }
             return string
         }
