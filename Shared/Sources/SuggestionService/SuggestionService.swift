@@ -77,7 +77,7 @@ actor Service {
                             id: UUID().uuidString,
                             text: strategy.postProcessRawSuggestion(
                                 suggestionPrefix: promptStrategy.suggestionPrefix.prependingValue,
-                                suggestion: $0
+                                suggestion: Self.removeTrailingNewlinesAndWhitespace(from: $0)
                             ),
                             position: request.cursorPosition,
                             range: .init(
@@ -158,6 +158,14 @@ actor Service {
         }()
 
         return (previousLines, nextLines)
+    }
+
+    static func removeTrailingNewlinesAndWhitespace(from string: String) -> String {
+        var text = string[...]
+        while let last = text.last, last.isNewline || last.isWhitespace {
+            text = text.dropLast(1)
+        }
+        return String(text)
     }
 }
 
