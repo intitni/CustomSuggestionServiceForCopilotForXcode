@@ -48,55 +48,74 @@ actor Service {
         onGoingTask = nil
         let task = Task {
             try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
-                let lines = request.content.breakLines()
-                let (previousLines, nextLines) = Self.split(
-                    code: request.content,
-                    lines: lines,
-                    at: request.cursorPosition
-                )
-                let strategy = getStrategy(
-                    sourceRequest: request,
-                    prefix: previousLines,
-                    suffix: nextLines
-                )
-                
-                if strategy.shouldSkip {
-                    throw CancellationError()
-                }
-                
-                let service = CodeCompletionService()
+                do {
+                    let lines = request.content.breakLines()
+                    let (previousLines, nextLines) = Self.split(
+                        code: request.content,
+                        lines: lines,
+                        at: request.cursorPosition
+                    )
+                    let strategy = getStrategy(
+                        sourceRequest: request,
+                        prefix: previousLines,
+                        suffix: nextLines
+                    )
 
-                let promptStrategy = strategy.createPrompt()
+                    if strategy.shouldSkip {
+                        throw CancellationError()
+                    }
 
-                let suggestedCodeSnippets = switch getModel() {
-                case let .chatModel(model):
-                    try await service.getCompletions(promptStrategy, model: model, count: 1)
-                case let .completionModel(model):
-                    try await service.getCompletions(promptStrategy, model: model, count: 1)
-                }
+                    let service = CodeCompletionService()
 
-                return suggestedCodeSnippets
-                    .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
-                    .map {
-                        CodeSuggestion(
-                            id: UUID().uuidString,
-                            text: Self.removeTrailingNewlinesAndWhitespace(
-                                from: strategy.postProcessRawSuggestion(
-                                    suggestionPrefix: promptStrategy
-                                        .suggestionPrefix.prependingValue,
-                                    suggestion: $0
-                                )
-                            ),
-                            position: request.cursorPosition,
-                            range: .init(
-                                start: .init(
-                                    line: request.cursorPosition.line,
-                                    character: 0
-                                ),
-                                end: request.cursorPosition
-                            )
+                    let promptStrategy = strategy.createPrompt()
+
+                    let suggestedCodeSnippets: [String]
+
+                    switch getModel() {
+                    case let .chatModel(model):
+                        CodeCompletionLogger.logger.logModel(model)
+                        suggestedCodeSnippets = try await service.getCompletions(
+                            promptStrategy,
+                            model: model,
+                            count: 1
+                        )
+                    case let .completionModel(model):
+                        CodeCompletionLogger.logger.logModel(model)
+                        suggestedCodeSnippets = try await service.getCompletions(
+                            promptStrategy,
+                            model: model,
+                            count: 1
                         )
                     }
+
+                    CodeCompletionLogger.logger.finish()
+
+                    return suggestedCodeSnippets
+                        .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
+                        .map {
+                            CodeSuggestion(
+                                id: UUID().uuidString,
+                                text: Self.removeTrailingNewlinesAndWhitespace(
+                                    from: strategy.postProcessRawSuggestion(
+                                        suggestionPrefix: promptStrategy
+                                            .suggestionPrefix.prependingValue,
+                                        suggestion: $0
+                                    )
+                                ),
+                                position: request.cursorPosition,
+                                range: .init(
+                                    start: .init(
+                                        line: request.cursorPosition.line,
+                                        character: 0
+                                    ),
+                                    end: request.cursorPosition
+                                )
+                            )
+                        }
+                } catch {
+                    CodeCompletionLogger.logger.error(error)
+                    throw error
+                }
             }
         }
         onGoingTask = task

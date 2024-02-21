@@ -49,9 +49,6 @@ public struct CodeCompletionService {
         model: ChatModel,
         count: Int
     ) async throws -> [String] {
-        CodeCompletionLogger.logger.logModel(model)
-        defer { CodeCompletionLogger.logger.finish() }
-
         let apiKey = apiKey(from: model)
 
         switch model.format {
@@ -96,9 +93,6 @@ public struct CodeCompletionService {
         model: CompletionModel,
         count: Int
     ) async throws -> [String] {
-        CodeCompletionLogger.logger.logModel(model)
-        defer { CodeCompletionLogger.logger.finish() }
-
         let apiKey = apiKey(from: model)
 
         switch model.format {

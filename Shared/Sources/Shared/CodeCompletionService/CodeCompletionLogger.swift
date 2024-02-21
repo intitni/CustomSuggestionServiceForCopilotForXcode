@@ -29,7 +29,7 @@ public final class CodeCompletionLogger {
         self.request = request
     }
 
-    func logModel(_ chatModel: ChatModel) {
+    public func logModel(_ chatModel: ChatModel) {
         model = .init(
             type: "Chat Completion",
             format: chatModel.format.rawValue,
@@ -38,7 +38,7 @@ public final class CodeCompletionLogger {
         )
     }
 
-    func logModel(_ completionModel: CompletionModel) {
+    public func logModel(_ completionModel: CompletionModel) {
         model = .init(
             type: "Chat Completion",
             format: completionModel.format.rawValue,
@@ -47,23 +47,33 @@ public final class CodeCompletionLogger {
         )
     }
 
-    func logPrompt(_ prompt: [(message: String, role: String)]) {
+    public func logPrompt(_ prompt: [(message: String, role: String)]) {
         self.prompt = prompt
     }
 
-    func logResponse(_ response: String) {
+    public func logResponse(_ response: String) {
         responses.append(response)
     }
 
-    func finish() {
+    public func error(_ error: Error) {
         #if DEBUG
+        
+        let now = Date()
+        let duration = now.timeIntervalSince(startTime)
+        let formattedDuration = String(format: "%.2f", duration)
+        
+        Logger.service.info("""
+        [Request] 
+        
+        Duration: \(formattedDuration)
+        Error: \(error.localizedDescription).
+        """)
+        
+        #endif
+    }
 
-        guard !Task.isCancelled else {
-            Logger.service.info("""
-            [Request] Cancelled.
-            """)
-            return
-        }
+    public func finish() {
+        #if DEBUG
 
         let now = Date()
         let duration = now.timeIntervalSince(startTime)
