@@ -97,7 +97,7 @@ struct TabbyModelEditView: View {
 
     @ViewBuilder
     var form: some View {
-        urlTextField(prompt: Text("https://127.0.0.1:8080/v1/completions"))
+        urlTextField(prompt: Text("http://127.0.0.1:8080/v1/completions"))
         authorizationModePicker
 
         switch store.authorizationMode {
