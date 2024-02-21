@@ -57,6 +57,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        var language: CodeLanguage? { sourceRequest.language }
         
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }

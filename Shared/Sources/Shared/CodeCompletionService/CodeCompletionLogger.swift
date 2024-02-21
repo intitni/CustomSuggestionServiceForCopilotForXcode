@@ -11,7 +11,10 @@ public final class CodeCompletionLogger {
 
     @TaskLocal public static var logger: CodeCompletionLogger = .init(request: SuggestionRequest(
         fileURL: .init(filePath: "/"),
+        relativePath: "",
+        language: .plaintext,
         content: "",
+        lines: [],
         cursorPosition: .zero,
         tabSize: 0,
         indentSize: 0,

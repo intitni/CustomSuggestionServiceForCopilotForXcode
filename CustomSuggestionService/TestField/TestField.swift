@@ -96,7 +96,10 @@ struct TestField {
                         let result = try await suggestionService.getSuggestions(
                             .init(
                                 fileURL: .init(filePath: "/file.swift"),
+                                relativePath: "/file.swift",
+                                language: .builtIn(.swift),
                                 content: text,
+                                lines: text.breakLines(),
                                 cursorPosition: position,
                                 tabSize: 4,
                                 indentSize: 4,

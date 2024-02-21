@@ -11,7 +11,7 @@ struct SuggestionServiceDependencyKey: DependencyKey {
 
 struct MockSuggestionService: SuggestionServiceType {
     var configuration: SuggestionServiceConfiguration {
-        .init(acceptsRelevantCodeSnippets: true)
+        .init(acceptsRelevantCodeSnippets: true, mixRelevantCodeSnippetsInSource: false)
     }
 
     func getSuggestions(

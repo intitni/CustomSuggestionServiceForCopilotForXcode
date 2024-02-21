@@ -25,7 +25,7 @@ actor Service {
         let task = Task {
             try await CodeCompletionLogger.$logger.withValue(.init(request: request)) {
                 do {
-                    let lines = request.content.breakLines()
+                    let lines = request.lines ?? request.content.breakLines()
                     let (previousLines, nextLines) = Self.split(
                         code: request.content,
                         lines: lines,

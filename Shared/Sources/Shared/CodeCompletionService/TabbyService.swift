@@ -31,7 +31,7 @@ extension TabbyService: CodeCompletionServiceType {
         let suffix = request.suffix.joined()
         let clipboard = request.relevantCodeSnippets.map(\.content).joined(separator: "\n\n")
         let requestBody = RequestBody(
-            language: "swift",
+            language: request.language?.rawValue,
             segments: .init(prefix: prefix, suffix: suffix, clipboard: clipboard),
             temperature: temperature,
             seed: nil
@@ -67,7 +67,7 @@ extension TabbyService {
             var clipboard: String
         }
 
-        var language: String
+        var language: String?
         var segments: Segments
         var temperature: Double
         var seed: Int?
