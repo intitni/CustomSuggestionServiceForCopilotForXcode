@@ -9,10 +9,13 @@ let store = StoreOf<TheApp>(
 )
 
 struct ContentView: View {
-    @AppStorage(\.chatModelId) var chatModelId
-    @AppStorage(\.installBetaBuild) var installBetaBuild
-    @AppStorage(\.verboseLog) var verboseLog
+    final class Settings: ObservableObject {
+        @AppStorage(\.chatModelId) var chatModelId
+        @AppStorage(\.installBetaBuild) var installBetaBuild
+        @AppStorage(\.verboseLog) var verboseLog
+    }
 
+    @StateObject var settings = Settings()
     @State var isEditingCustomModel: Bool = false
 
     @Environment(\.updateChecker) var updateChecker
@@ -24,7 +27,7 @@ struct ContentView: View {
                     Form {
                         HStack {
                             ExistedChatModelPicker()
-                            if CustomModelType(rawValue: chatModelId) != nil {
+                            if CustomModelType(rawValue: settings.chatModelId) != nil {
                                 Button("Edit Model") {
                                     isEditingCustomModel = true
                                 }
@@ -41,7 +44,7 @@ struct ContentView: View {
                                 )) {
                                     Text("Automatically Check for Update")
                                 }
-                                
+
                                 Button(action: {
                                     updateChecker.checkForUpdates()
                                 }) {
@@ -51,9 +54,9 @@ struct ContentView: View {
                                     }
                                 }
                             }
-                            
-                            Toggle("Install Beta Build", isOn: $installBetaBuild)
-                            Toggle("Verbose Log (Logs to Console.app)", isOn: $verboseLog)
+
+                            Toggle("Install Beta Build", isOn: settings.$installBetaBuild)
+                            Toggle("Verbose Log (Logs to Console.app)", isOn: settings.$verboseLog)
                         }
                     }
                     .formStyle(.grouped)
@@ -62,7 +65,7 @@ struct ContentView: View {
                         .padding(.horizontal, 24)
                 }
                 .sheet(isPresented: $isEditingCustomModel) {
-                    if let type = CustomModelType(rawValue: chatModelId) {
+                    if let type = CustomModelType(rawValue: settings.chatModelId) {
                         switch type {
                         case .chatModel:
                             ChatModelEditView(store: store.scope(
@@ -93,22 +96,26 @@ struct ContentView: View {
 }
 
 struct ExistedChatModelPicker: View {
-    @AppStorage(\.chatModelsFromCopilotForXcode) var chatModels: [ChatModel]
-    @AppStorage(\.chatModelId) var chatModelId: String
+    final class Settings: ObservableObject {
+        @AppStorage(\.chatModelsFromCopilotForXcode) var chatModels: [ChatModel]
+        @AppStorage(\.chatModelId) var chatModelId: String
+    }
+
+    @StateObject var settings = Settings()
 
     var body: some View {
         let unknownId: String? =
-            if !chatModels.contains(where: { $0.id == chatModelId }),
-            !chatModelId.isEmpty,
-            CustomModelType(rawValue: chatModelId) == nil
+            if !settings.chatModels.contains(where: { $0.id == settings.chatModelId }),
+            !settings.chatModelId.isEmpty,
+            CustomModelType(rawValue: settings.chatModelId) == nil
         {
-            chatModelId
+            settings.chatModelId
         } else {
             nil
         }
 
         Picker(
-            selection: $chatModelId,
+            selection: settings.$chatModelId,
             label: Text("Model"),
             content: {
                 if let unknownId {
@@ -126,7 +133,7 @@ struct ExistedChatModelPicker: View {
                     }
                 }
 
-                ForEach(chatModels, id: \.id) { chatModel in
+                ForEach(settings.chatModels, id: \.id) { chatModel in
                     Text(chatModel.name).tag(chatModel.id)
                 }
             }
@@ -135,17 +142,23 @@ struct ExistedChatModelPicker: View {
 }
 
 struct RequestStrategyPicker: View {
-    @AppStorage(\.requestStrategyId) var requestStrategyId
+    final class Settings: ObservableObject {
+        @AppStorage(\.requestStrategyId) var requestStrategyId
+    }
+
+    @StateObject var settings = Settings()
 
     var body: some View {
-        let unknownId: String? = if RequestStrategyOption(rawValue: requestStrategyId) == nil {
-            requestStrategyId
+        let unknownId: String? =
+            if RequestStrategyOption(rawValue: settings.requestStrategyId) == nil
+        {
+            settings.requestStrategyId
         } else {
             nil
         }
 
         Picker(
-            selection: $requestStrategyId,
+            selection: settings.$requestStrategyId,
             label: Text("Request Strategy"),
             content: {
                 if let unknownId {
