@@ -12,11 +12,22 @@ struct ContentView: View {
     @AppStorage(\.chatModelId) var chatModelId
 
     @State var isEditingCustomModel: Bool = false
+    
+    @Environment(\.updateChecker) var updateChecker
 
     var body: some View {
         ScrollView {
             WithPerceptionTracking {
-                VStack {
+                VStack(alignment: .trailing) {
+                    Button(action: {
+                        updateChecker.checkForUpdates()
+                    }) {
+                        HStack(spacing: 2) {
+                            Image(systemName: "arrow.up.right.circle.fill")
+                            Text("Check for Updates")
+                        }
+                    }
+                    
                     HStack {
                         ExistedChatModelPicker()
                         if CustomModelType(rawValue: chatModelId) != nil {

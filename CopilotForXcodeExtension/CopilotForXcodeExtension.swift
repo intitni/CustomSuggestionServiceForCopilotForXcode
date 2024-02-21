@@ -10,6 +10,12 @@ class Extension: CopilotForXcodeExtension {
     var promptToCodeService: PromptToCodeServiceType? { nil }
     var sceneConfiguration = SceneConfiguration()
 
+    let updateChecker =
+        UpdateChecker(
+            hostBundle: locateHostBundleURL(url: Bundle.main.bundleURL)
+                .flatMap(Bundle.init(url:))
+        )
+
     required init() {
         let service = SuggestionService()
         suggestionService = service
@@ -18,3 +24,16 @@ class Extension: CopilotForXcodeExtension {
 
 struct SceneConfiguration: CopilotForXcodeExtensionSceneConfiguration {}
 
+func locateHostBundleURL(url: URL) -> URL? {
+    var nextURL = url
+    while nextURL.path != "/" {
+        nextURL = nextURL.deletingLastPathComponent()
+        if nextURL.lastPathComponent.hasSuffix(".app") {
+            return nextURL
+        }
+    }
+    let devAppURL = url
+        .deletingLastPathComponent()
+        .appendingPathComponent("Custom Suggestion Service Dev.app")
+    return devAppURL
+}

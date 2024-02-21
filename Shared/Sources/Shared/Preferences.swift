@@ -79,5 +79,9 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-TabbyModel"
         )
     }
+    
+    var installBetaBuild: PreferenceKey<Bool> {
+        .init(defaultValue: false, key: "InstallBetaBuild")
+    }
 }
 

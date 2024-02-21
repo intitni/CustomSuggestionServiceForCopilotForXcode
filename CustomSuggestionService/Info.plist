@@ -4,6 +4,10 @@
 <dict>
 	<key>BUNDLE_IDENTIFIER_BASE</key>
 	<string>$(BUNDLE_IDENTIFIER_BASE)</string>
+	<key>SUFeedURL</key>
+	<string>$(SPARKLE_FEED_URL)</string>
+	<key>SUPublicEDKey</key>
+	<string>$(SPARKLE_PUBLIC_KEY)</string>
 	<key>TEAM_ID_PREFIX</key>
 	<string>$(TeamIdentifierPrefix)</string>
 </dict>

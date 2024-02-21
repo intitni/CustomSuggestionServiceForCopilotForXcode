@@ -18,6 +18,8 @@
 		C89BA4B22B85E6ED008801C5 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = C89BA4B12B85E6ED008801C5 /* Sparkle */; };
 		C89BA4B92B860193008801C5 /* TabbyModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89BA4B72B860193008801C5 /* TabbyModelEdit.swift */; };
 		C89BA4BA2B860193008801C5 /* TabbyModelEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89BA4B82B860193008801C5 /* TabbyModelEditView.swift */; };
+		C89BA4BC2B861DE4008801C5 /* UpdaterChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89BA4BB2B861DE4008801C5 /* UpdaterChecker.swift */; };
+		C89BA4BD2B861F4B008801C5 /* UpdaterChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89BA4BB2B861DE4008801C5 /* UpdaterChecker.swift */; };
 		C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */; };
 		C8D0114E2B59912700219412 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114D2B59912700219412 /* ContentView.swift */; };
 		C8D011502B59912800219412 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D0114F2B59912800219412 /* Assets.xcassets */; };
@@ -75,6 +77,7 @@
 		C8774F472B83A009008FF699 /* CompletionModelEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionModelEditView.swift; sourceTree = "<group>"; };
 		C89BA4B72B860193008801C5 /* TabbyModelEdit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbyModelEdit.swift; sourceTree = "<group>"; };
 		C89BA4B82B860193008801C5 /* TabbyModelEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbyModelEditView.swift; sourceTree = "<group>"; };
+		C89BA4BB2B861DE4008801C5 /* UpdaterChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterChecker.swift; sourceTree = "<group>"; };
 		C8A18A672B85038E004188D3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Suggestion Service Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSuggestionServiceApp.swift; sourceTree = "<group>"; };
@@ -180,6 +183,7 @@
 				C8D0114F2B59912800219412 /* Assets.xcassets */,
 				C8D011542B59912800219412 /* CustomSuggestionService.entitlements */,
 				C8D011512B59912800219412 /* Preview Content */,
+				C89BA4BB2B861DE4008801C5 /* UpdaterChecker.swift */,
 			);
 			path = CustomSuggestionService;
 			sourceTree = "<group>";
@@ -302,7 +306,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					C8D011472B59912700219412 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -378,6 +382,7 @@
 				C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */,
 				C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */,
 				C8774F482B83A009008FF699 /* CompletionModelEdit.swift in Sources */,
+				C89BA4BC2B861DE4008801C5 /* UpdaterChecker.swift in Sources */,
 				C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */,
 				C8EA62D92B6BE60500E081FC /* APIKeyManangement.swift in Sources */,
 				C8EA62D72B6BE5FD00E081FC /* ChatModelEditView.swift in Sources */,
@@ -390,6 +395,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */,
+				C89BA4BD2B861F4B008801C5 /* UpdaterChecker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +445,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -503,6 +510,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -534,6 +542,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CustomSuggestionService/Preview Content\"";
 				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -566,6 +575,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"CustomSuggestionService/Preview Content\"";
 				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -593,6 +603,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopilotForXcodeExtension/CopilotForXcodeExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -620,6 +631,7 @@
 				CODE_SIGN_ENTITLEMENTS = CopilotForXcodeExtension/CopilotForXcodeExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5YKZ4Y3DAW;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
