@@ -15,6 +15,7 @@
 		C867A1302B7BDBA500875400 /* TestField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C867A12F2B7BDBA500875400 /* TestField.swift */; };
 		C8774F482B83A009008FF699 /* CompletionModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8774F462B83A009008FF699 /* CompletionModelEdit.swift */; };
 		C8774F492B83A009008FF699 /* CompletionModelEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8774F472B83A009008FF699 /* CompletionModelEditView.swift */; };
+		C89BA4B22B85E6ED008801C5 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = C89BA4B12B85E6ED008801C5 /* Sparkle */; };
 		C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114B2B59912700219412 /* CustomSuggestionServiceApp.swift */; };
 		C8D0114E2B59912700219412 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D0114D2B59912700219412 /* ContentView.swift */; };
 		C8D011502B59912800219412 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D0114F2B59912800219412 /* Assets.xcassets */; };
@@ -102,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */,
+				C89BA4B22B85E6ED008801C5 /* Sparkle in Frameworks */,
 				C8D011752B5A5DC600219412 /* Shared in Frameworks */,
 				C84697542B7B8B8300B8B840 /* STTextView in Frameworks */,
 			);
@@ -259,6 +261,7 @@
 				C8D011742B5A5DC600219412 /* Shared */,
 				C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */,
 				C84697532B7B8B8300B8B840 /* STTextView */,
+				C89BA4B12B85E6ED008801C5 /* Sparkle */,
 			);
 			productName = CustomSuggestionService;
 			productReference = C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */;
@@ -316,6 +319,7 @@
 				C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */,
 				C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				C84697522B7B8B8300B8B840 /* XCRemoteSwiftPackageReference "STTextView" */,
+				C89BA4B02B85E6ED008801C5 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = C8D011492B59912700219412 /* Products */;
 			projectDirPath = "";
@@ -670,6 +674,14 @@
 				minimumVersion = 0.9.0;
 			};
 		};
+		C89BA4B02B85E6ED008801C5 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.2;
+			};
+		};
 		C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/intitni/CopilotForXcodeKit.git";
@@ -693,6 +705,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C84697522B7B8B8300B8B840 /* XCRemoteSwiftPackageReference "STTextView" */;
 			productName = STTextView;
+		};
+		C89BA4B12B85E6ED008801C5 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C89BA4B02B85E6ED008801C5 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 		C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */ = {
 			isa = XCSwiftPackageProductDependency;
