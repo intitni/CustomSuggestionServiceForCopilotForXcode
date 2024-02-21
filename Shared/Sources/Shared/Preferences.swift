@@ -28,6 +28,10 @@ public extension UserDefaultPreferenceKeys {
         .init(defaultValue: [], key: "ChatModels")
     }
 
+    var serviceType: PreferenceKey<String> {
+        .init(defaultValue: "", key: "CustomSuggestionService-ServiceType")
+    }
+
     var customChatModel: PreferenceKey<StorageBox<ChatModel>> {
         .init(
             defaultValue: .init(ChatModel(
@@ -39,7 +43,7 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-CustomChatModel"
         )
     }
-    
+
     var customCompletionModel: PreferenceKey<StorageBox<CompletionModel>> {
         .init(
             defaultValue: .init(CompletionModel(
@@ -51,13 +55,29 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-CustomCompletionModel"
         )
     }
-    
+
     var requestStrategyId: PreferenceKey<String> {
         .init(defaultValue: "", key: "CustomSuggestionService-RequestStrategyId")
     }
 
     var chatModelId: PreferenceKey<String> {
-        .init(defaultValue: CustomModelType.default.rawValue, key: "CustomSuggestionService-SuggestionChatModelId")
+        .init(
+            defaultValue: CustomModelType.default.rawValue,
+            key: "CustomSuggestionService-SuggestionChatModelId"
+        )
+    }
+
+    var tabbyModel: PreferenceKey<StorageBox<TabbyModel>> {
+        .init(
+            defaultValue: .init(.init(
+                url: "",
+                authorizationMode: .none,
+                apiKeyName: "",
+                authorizationHeaderName: "",
+                username: ""
+            )),
+            key: "CustomSuggestionService-TabbyModel"
+        )
     }
 }
 

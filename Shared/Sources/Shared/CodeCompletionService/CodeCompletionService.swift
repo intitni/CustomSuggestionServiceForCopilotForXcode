@@ -46,6 +46,31 @@ public struct CodeCompletionService {
 
     public func getCompletions(
         _ prompt: PromptStrategy,
+        model: TabbyModel,
+        count: Int
+    ) async throws -> [String] {
+        let apiKey = apiKey(from: model)
+
+        let service = TabbyService(url: model.url, authorizationMode: {
+            switch model.authorizationMode {
+            case .none:
+                return .none
+            case .bearerToken:
+                return .bearerToken(apiKey)
+            case .basic:
+                return .basic(username: model.username, password: apiKey)
+            case .customHeaderField:
+                return .customHeaderField(name: model.authorizationHeaderName, value: apiKey)
+            }
+        }())
+        
+        let result = try await service.getCompletions(prompt, count: count)
+        try Task.checkCancellation()
+        return result
+    }
+
+    public func getCompletions(
+        _ prompt: PromptStrategy,
         model: ChatModel,
         count: Int
     ) async throws -> [String] {
@@ -54,7 +79,7 @@ public struct CodeCompletionService {
         switch model.format {
         case .openAI, .openAICompatible:
             let service = OpenAIService(
-                url: model.endpoint, 
+                url: model.endpoint,
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
@@ -109,7 +134,7 @@ public struct CodeCompletionService {
             return result
         case .azureOpenAI:
             let service = AzureOpenAIService(
-                url: model.endpoint, 
+                url: model.endpoint,
                 endpoint: .completion,
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
@@ -130,6 +155,11 @@ public struct CodeCompletionService {
 
     func apiKey(from model: CompletionModel) -> String {
         let name = model.info.apiKeyName
+        return (try? Keychain.apiKey.get(name)) ?? ""
+    }
+
+    func apiKey(from model: TabbyModel) -> String {
+        let name = model.apiKeyName
         return (try? Keychain.apiKey.get(name)) ?? ""
     }
 }

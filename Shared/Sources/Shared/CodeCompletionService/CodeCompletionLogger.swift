@@ -46,6 +46,15 @@ public final class CodeCompletionLogger {
             baseURL: completionModel.info.baseURL
         )
     }
+    
+    public func logModel(_ tabbyModel: TabbyModel) {
+        model = .init(
+            type: "Tabby",
+            format: "N/A",
+            modelName: "N/A",
+            baseURL: tabbyModel.url
+        )
+    }
 
     public func logPrompt(_ prompt: [(message: String, role: String)]) {
         self.prompt = prompt
