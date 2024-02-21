@@ -87,6 +87,7 @@ struct TestField {
                 }.cancellable(id: CancellationID.textChanged, cancelInFlight: true)
 
             case .generateSuggestion:
+                guard !isPreview else { return .none }
                 let relevantCodeSnippet = String(state.relevantCodeSnippets.characters[...])
                 let text = String(state.text.characters[...])
                 let position = state.cursorPosition

@@ -63,7 +63,7 @@ struct TestFieldView: View {
                 }
             }
 
-            Divider()
+            Divider().padding(.vertical, 4)
 
             Text("Suggestion")
 
@@ -107,6 +107,14 @@ struct TestFieldSuggestionView: View {
 
                 Form {
                     Section {
+                        LabeledContent {
+                            Text(
+                                "Line \(store.cursorPosition.line + 1), Column \(store.cursorPosition.character)"
+                            )
+                        } label: {
+                            Text("Cursor Position")
+                        }
+
                         Button(action: {
                             store.send(.generateSuggestionButtonClicked)
                         }) {
@@ -142,7 +150,7 @@ struct TestFieldSuggestionView: View {
                     }
                 }
                 .formStyle(.grouped)
-                .frame(width: 250)
+                .frame(width: 300)
             }
         }
     }

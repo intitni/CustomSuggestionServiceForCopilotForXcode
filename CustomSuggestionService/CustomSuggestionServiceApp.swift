@@ -8,7 +8,7 @@ struct CustomSuggestionServiceApp: App {
             ContentView()
                 .environment(\.updateChecker, UpdateChecker(hostBundle: Bundle.main))
         }
-        .defaultSize(width: 800, height: 800)
+        .defaultSize(width: 800, height: 900)
     }
 }
 

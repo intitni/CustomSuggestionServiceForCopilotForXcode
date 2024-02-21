@@ -10,38 +10,57 @@ let store = StoreOf<TheApp>(
 
 struct ContentView: View {
     @AppStorage(\.chatModelId) var chatModelId
+    @AppStorage(\.installBetaBuild) var installBetaBuild
+    @AppStorage(\.verboseLog) var verboseLog
 
     @State var isEditingCustomModel: Bool = false
-    
+
     @Environment(\.updateChecker) var updateChecker
 
     var body: some View {
         ScrollView {
             WithPerceptionTracking {
-                VStack(alignment: .trailing) {
-                    Button(action: {
-                        updateChecker.checkForUpdates()
-                    }) {
-                        HStack(spacing: 2) {
-                            Image(systemName: "arrow.up.right.circle.fill")
-                            Text("Check for Updates")
-                        }
-                    }
-                    
-                    HStack {
-                        ExistedChatModelPicker()
-                        if CustomModelType(rawValue: chatModelId) != nil {
-                            Button("Edit Model") {
-                                isEditingCustomModel = true
+                VStack {
+                    Form {
+                        HStack {
+                            ExistedChatModelPicker()
+                            if CustomModelType(rawValue: chatModelId) != nil {
+                                Button("Edit Model") {
+                                    isEditingCustomModel = true
+                                }
                             }
                         }
-                    }
 
-                    RequestStrategyPicker()
+                        RequestStrategyPicker()
+
+                        Section {
+                            HStack {
+                                Toggle(isOn: .init(
+                                    get: { updateChecker.automaticallyChecksForUpdates },
+                                    set: { updateChecker.automaticallyChecksForUpdates = $0 }
+                                )) {
+                                    Text("Automatically Check for Update")
+                                }
+                                
+                                Button(action: {
+                                    updateChecker.checkForUpdates()
+                                }) {
+                                    HStack(spacing: 2) {
+                                        Image(systemName: "arrow.up.right.circle.fill")
+                                        Text("Check for Updates")
+                                    }
+                                }
+                            }
+                            
+                            Toggle("Install Beta Build", isOn: $installBetaBuild)
+                            Toggle("Verbose Log (Logs to Console.app)", isOn: $verboseLog)
+                        }
+                    }
+                    .formStyle(.grouped)
 
                     TestFieldView(store: store.scope(state: \.testField, action: \.testField))
+                        .padding(.horizontal, 24)
                 }
-                .padding()
                 .sheet(isPresented: $isEditingCustomModel) {
                     if let type = CustomModelType(rawValue: chatModelId) {
                         switch type {
@@ -119,9 +138,7 @@ struct RequestStrategyPicker: View {
     @AppStorage(\.requestStrategyId) var requestStrategyId
 
     var body: some View {
-        let unknownId: String? =
-            if RequestStrategyOption(rawValue: requestStrategyId) == nil
-        {
+        let unknownId: String? = if RequestStrategyOption(rawValue: requestStrategyId) == nil {
             requestStrategyId
         } else {
             nil
@@ -155,5 +172,6 @@ struct RequestStrategyPicker: View {
 
 #Preview {
     ContentView()
+        .frame(width: 800, height: 1000)
 }
 
