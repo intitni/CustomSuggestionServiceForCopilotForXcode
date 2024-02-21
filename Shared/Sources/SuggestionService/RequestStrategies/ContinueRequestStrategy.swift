@@ -53,7 +53,7 @@ struct ContinueRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode, "\n\n", "}\n"] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
         
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
@@ -108,11 +108,11 @@ struct ContinueRequestStrategy: RequestStrategy {
             """)
 
             let mockResponse = PromptMessage(role: .assistant, content: """
-            \(Tag.openingCode)\(infillBlock)<|stop|>
+            \(Tag.openingCode)\(infillBlock)
             """)
 
             let continuePrompt = PromptMessage(role: .user, content: """
-            Continue generating at <|stop|>. \
+            Continue generating. \
             Don't duplicate existing implementations. \
             Don't try to fix what was written. \
             Don't worry about typos.

@@ -140,7 +140,7 @@ extension SuggestionPrefix {
         func mutate(_ string: String) -> String {
             let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmed.hasSuffix("{") {
-                return string + "\n"
+                return string + " "
             }
             if trimmed.hasSuffix("}") {
                 return string + "\n"

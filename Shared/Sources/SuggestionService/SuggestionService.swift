@@ -23,7 +23,9 @@ public class SuggestionService: SuggestionServiceType {
         _ request: SuggestionRequest,
         workspace: WorkspaceInfo
     ) async throws -> [CodeSuggestion] {
-        try await service.getSuggestions(request, workspace: workspace)
+        let result = try await service.getSuggestions(request, workspace: workspace)
+        dump(result)
+        return result
     }
 }
 

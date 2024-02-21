@@ -50,15 +50,13 @@ struct DefaultRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
-
-        ---
         """
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode, "\n\n", "}\n"] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
         
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
