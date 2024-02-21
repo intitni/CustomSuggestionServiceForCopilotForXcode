@@ -81,7 +81,11 @@ public extension UserDefaultPreferenceKeys {
     }
     
     var installBetaBuild: PreferenceKey<Bool> {
-        .init(defaultValue: false, key: "InstallBetaBuild")
+        .init(defaultValue: false, key: "CustomSuggestionService-InstallBetaBuild")
+    }
+    
+    var verboseLog: PreferenceKey<Bool> {
+        .init(defaultValue: false, key: "CustomSuggestionService-VerboseLog")
     }
 }
 

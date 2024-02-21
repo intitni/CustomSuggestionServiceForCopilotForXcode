@@ -27,6 +27,14 @@ public final class CodeCompletionLogger {
     var prompt: [(message: String, role: String)] = []
     var responses: [String] = []
     let startTime = Date()
+    
+    var shouldLogToConsole: Bool {
+        #if DEBUG
+        return true
+        #else
+        return UserDefaults.shared.value(for: \.verboseLog)
+        #endif
+    }
 
     public init(request: SuggestionRequest) {
         self.request = request
@@ -68,7 +76,7 @@ public final class CodeCompletionLogger {
     }
 
     public func error(_ error: Error) {
-        #if DEBUG
+        guard shouldLogToConsole else { return }
         
         let now = Date()
         let duration = now.timeIntervalSince(startTime)
@@ -80,12 +88,10 @@ public final class CodeCompletionLogger {
         Duration: \(formattedDuration)
         Error: \(error.localizedDescription).
         """)
-        
-        #endif
     }
 
     public func finish() {
-        #if DEBUG
+        guard shouldLogToConsole else { return }
 
         let now = Date()
         let duration = now.timeIntervalSince(startTime)
@@ -111,8 +117,6 @@ public final class CodeCompletionLogger {
 
         \(responses.enumerated().map { "\($0 + 1): \($1)" }.joined(separator: "\n\n"))
         """)
-
-        #endif
     }
 }
 
