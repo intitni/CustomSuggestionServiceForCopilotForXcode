@@ -58,7 +58,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n", "}\n"] }
         
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
@@ -95,7 +95,9 @@ struct DefaultRequestStrategy: RequestStrategy {
             Don't duplicate existing implementations. \
 
             File Path: \(filePath)
-
+            Indentation: \
+            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+            
             ---
 
             Here is the code:

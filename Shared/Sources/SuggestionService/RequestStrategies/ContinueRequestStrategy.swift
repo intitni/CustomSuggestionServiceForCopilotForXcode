@@ -37,7 +37,7 @@ struct ContinueRequestStrategy: RequestStrategy {
         You only respond with code that works and fits seamlessly with surrounding code. \
         Do not include anything else beyond the code.
 
-        When you see the prompt "Continue generating", you should continue generating the response.
+        When you are asked to continue generating, you should continue generating the response.
         For example, if your previous response is:
         ```
         print(Hell
@@ -53,7 +53,7 @@ struct ContinueRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { [Tag.closingCode, "\n\n"] }
+        var stopWords: [String] { [Tag.closingCode, "\n\n", "}\n"] }
         
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
@@ -94,6 +94,8 @@ struct ContinueRequestStrategy: RequestStrategy {
             Make sure your completion has the correct syntax and formatting.
 
             File Path: \(filePath)
+            Indentation: \
+            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
             ---
 
