@@ -142,5 +142,21 @@ struct DefaultRequestStrategy: RequestStrategy {
             )
         }
     }
+    
+    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
+        let suggestion = extractEnclosingSuggestion(
+            from: suggestion,
+            openingTag: Tag.openingCode,
+            closingTag: Tag.closingCode
+        )
+
+        if suggestion.hasPrefix(suggestionPrefix) {
+            var processed = suggestion
+            processed.removeFirst(prefix.count)
+            return processed
+        }
+
+        return suggestionPrefix + suggestion
+    }
 }
 

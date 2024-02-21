@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import Parsing
 import Shared
 
 /// Prompts may behave differently in different LLMs.
@@ -49,20 +50,60 @@ extension RequestStrategy {
 // MARK: - Shared Implementations
 
 extension RequestStrategy {
-    func extractSuggestion(
+    /// Extract suggestions that is enclosed in tags.
+    func extractEnclosingSuggestion(
         from response: String,
         openingTag: String,
         closingTag: String
     ) -> String {
-        // 1. If the first line contains <openingCode>, extract until <closingCode> or the end
+        let case_openingTagAtTheStart_parseEverythingInsideTheTag = Parse(input: Substring.self) {
+            openingTag
 
-        // 2. <openingCode> is not in the first line, remove it and all lines after it.
+            OneOf { // parse until tags or the end
+                Parse {
+                    OneOf {
+                        PrefixUpTo(openingTag)
+                        PrefixUpTo(closingTag)
+                    }
+                    Skip {
+                        Rest()
+                    }
+                }
 
-        // 3. remove <closingCode> and all lines after it.
+                Rest()
+            }
+        }
 
-        return response
+        let case_noTagAtTheStart_parseEverythingBeforeTheTag = Parse(input: Substring.self) {
+            OneOf {
+                PrefixUpTo(openingTag)
+                PrefixUpTo(closingTag)
+            }
+                
+            Skip {
+                Rest()
+            }
+        }
+
+        let parser = Parse(input: Substring.self) {
+            OneOf {
+                case_openingTagAtTheStart_parseEverythingInsideTheTag
+                case_noTagAtTheStart_parseEverythingBeforeTheTag
+                Rest()
+            }
+        }
+
+        var text = response[...]
+        do {
+            let suggestion = try parser.parse(&text)
+            return String(suggestion)
+        } catch {
+            return response
+        }
     }
 }
+
+// MARK: - Suggestion Prefix Helpers
 
 extension SuggestionPrefix {
     func curlyBracesLineBreak() -> SuggestionPrefix {
@@ -76,7 +117,7 @@ extension SuggestionPrefix {
             }
             return string
         }
-        
+
         let infillValue = mutate(infillValue)
         let prependingValue = mutate(prependingValue)
         return .init(original: original, infillValue: infillValue, prependingValue: prependingValue)

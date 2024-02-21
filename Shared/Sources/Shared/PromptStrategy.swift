@@ -33,9 +33,37 @@ public protocol PromptStrategy {
     ) -> [PromptMessage]
 }
 
+/// A meesage in prompt.
+public struct PromptMessage {
+    public enum PromptRole {
+        case user
+        case assistant
+    }
+
+    public var role: PromptRole
+    public var content: String
+
+    public init(role: PromptRole, content: String) {
+        self.role = role
+        self.content = content
+    }
+}
+
+/// The last line of the prefix.
 public struct SuggestionPrefix {
+    /// The original value.
     public var original: String
+    /// The value to be in the prompt. This value can be different than the ``original`` value. Use
+    /// it to tweak the prompt to make the AI model generate a better completion.
+    ///
+    /// For example, it the last character is `{`, we may want to start the generation from the
+    /// next line.
     public var infillValue: String
+    /// The value to be prepended to the response that is generated from the ``infillValue``.
+    ///
+    /// For example, if we appended `// write some code` in the ``infillValue`` to make the model
+    /// generate code instead of comments, we may not want to include this line in the final
+    /// suggestion.
     public var prependingValue: String
 
     public static var empty: SuggestionPrefix {
@@ -53,25 +81,12 @@ public struct SuggestionPrefix {
     }
 }
 
+// MARK: - Default Implementations
+
 public extension PromptStrategy {
     var suggestionPrefix: SuggestionPrefix {
         guard let prefix = prefix.last else { return .empty }
         return .unchanged(prefix)
-    }
-}
-
-public struct PromptMessage {
-    public enum PromptRole {
-        case user
-        case assistant
-    }
-
-    public var role: PromptRole
-    public var content: String
-
-    public init(role: PromptRole, content: String) {
-        self.role = role
-        self.content = content
     }
 }
 

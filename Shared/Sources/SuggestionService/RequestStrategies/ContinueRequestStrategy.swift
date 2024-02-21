@@ -157,7 +157,7 @@ struct ContinueRequestStrategy: RequestStrategy {
     }
 
     func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        let suggestion = extractSuggestion(
+        let suggestion = extractEnclosingSuggestion(
             from: suggestion,
             openingTag: Tag.openingCode,
             closingTag: Tag.closingCode

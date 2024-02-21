@@ -23,6 +23,7 @@ let package = Package(
         ),
         .package(url: "https://github.com/GottaGetSwifty/CodableWrappers", from: "2.0.7"),
         .package(url: "https://github.com/google/generative-ai-swift", from: "0.4.4"),
+        .package(url: "https://github.com/pointfreeco/swift-parsing", from: "0.12.1"),
     ],
     targets: [
         .target(
@@ -32,6 +33,7 @@ let package = Package(
                 .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "GoogleGenerativeAI", package: "generative-ai-swift"),
+                .product(name: "Parsing", package: "swift-parsing"),
             ]
         ),
         .testTarget(
@@ -43,6 +45,7 @@ let package = Package(
             dependencies: [
                 "Shared",
                 .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
+                .product(name: "Parsing", package: "swift-parsing"),
             ]
         ),
         .testTarget(
