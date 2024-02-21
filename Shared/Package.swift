@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/intitni/CopilotForXcodeKit",
-            from: "0.3.0"
+            from: "0.4.0"
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",

@@ -14,7 +14,6 @@ public final class CodeCompletionLogger {
         relativePath: "",
         language: .plaintext,
         content: "",
-        lines: [],
         cursorPosition: .zero,
         tabSize: 0,
         indentSize: 0,

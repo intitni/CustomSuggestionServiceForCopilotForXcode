@@ -100,7 +100,6 @@ struct TestField {
                                 relativePath: "/file.swift",
                                 language: .builtIn(.swift),
                                 content: text,
-                                lines: text.breakLines(),
                                 cursorPosition: position,
                                 tabSize: 4,
                                 indentSize: 4,
