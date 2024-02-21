@@ -46,6 +46,12 @@ struct ContentView: View {
                                 action: \.customCompletionModel
                             ))
                             .frame(width: 800)
+                        case .tabby:
+                            TabbyModelEditView(store: store.scope(
+                                state: \.tabbyModel,
+                                action: \.tabbyModel
+                            ))
+                            .frame(width: 800)
                         }
                     } else {
                         EmptyView()
@@ -85,6 +91,8 @@ struct ExistedChatModelPicker: View {
                         Text("Custom Model (Chat Completion API)").tag($0)
                     case .completionModel:
                         Text("Custom Model (Completion API)").tag($0)
+                    case .tabby:
+                        Text("Tabby").tag($0)
                     }
                 }
 

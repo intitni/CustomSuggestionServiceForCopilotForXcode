@@ -10,7 +10,7 @@ struct BaseURLPicker<TrailingContent: View>: View {
     var body: some View {
         WithPerceptionTracking {
             HStack {
-                TextField("Base URL", text: $store.baseURL, prompt: prompt)
+                TextField(title, text: $store.baseURL, prompt: prompt)
                     .overlay(alignment: .trailing) {
                         Picker(
                             "",
