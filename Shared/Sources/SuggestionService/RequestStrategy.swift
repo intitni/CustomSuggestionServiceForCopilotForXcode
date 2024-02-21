@@ -9,6 +9,9 @@ protocol RequestStrategy {
     associatedtype Prompt: PromptStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String])
+    
+    /// If the request should be skipped.
+    var shouldSkip: Bool { get }
 
     /// Create a prompt to generate code completion.
     func createPrompt() -> Prompt
@@ -42,6 +45,8 @@ extension RequestStrategyOption {
 // MARK: - Default Implementations
 
 extension RequestStrategy {
+    var shouldSkip: Bool { false }
+    
     func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
         suggestionPrefix + suggestion
     }
@@ -79,7 +84,7 @@ extension RequestStrategy {
                 PrefixUpTo(openingTag)
                 PrefixUpTo(closingTag)
             }
-                
+
             Skip {
                 Rest()
             }
@@ -96,6 +101,31 @@ extension RequestStrategy {
         var text = response[...]
         do {
             let suggestion = try parser.parse(&text)
+            return String(suggestion)
+        } catch {
+            return response
+        }
+    }
+
+    /// If the response starts with markdown code block, we should remove it.
+    func removeLeadingAndTrailingMarkdownCodeBlockMark(from response: String) -> String {
+        let removePrefixMarkdownCodeBlockMark = Parse(input: Substring.self) {
+            Skip {
+                "```"
+                PrefixThrough("\n")
+            }
+            OneOf {
+                Parse {
+                    PrefixUpTo("```")
+                    Skip { Rest() }
+                }
+                Rest()
+            }
+        }
+        
+        do {
+            var response = response[...]
+            let suggestion = try removePrefixMarkdownCodeBlockMark.parse(&response)
             return String(suggestion)
         } catch {
             return response

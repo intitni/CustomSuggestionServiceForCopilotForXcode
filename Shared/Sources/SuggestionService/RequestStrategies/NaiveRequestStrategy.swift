@@ -8,6 +8,10 @@ struct NaiveRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
+    
+    var shouldSkip: Bool {
+        prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
+    }
 
     func createPrompt() -> Request {
         Request(

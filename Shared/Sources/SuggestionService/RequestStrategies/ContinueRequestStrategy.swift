@@ -9,6 +9,10 @@ struct ContinueRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
+    
+    var shouldSkip: Bool {
+        prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
+    }
 
     func createPrompt() -> Prompt {
         Prompt(
@@ -27,7 +31,7 @@ struct ContinueRequestStrategy: RequestStrategy {
 
     struct Prompt: PromptStrategy {
         let systemPrompt: String = """
-        You are a senior Swift programer who take the surrounding code and \
+        You are a senior programer who take the surrounding code and \
         references from the codebase into account in order to write high-quality code to \
         complete the code enclosed in \(Tag.openingCode) tags. \
         You only respond with code that works and fits seamlessly with surrounding code. \
@@ -87,18 +91,14 @@ struct ContinueRequestStrategy: RequestStrategy {
             Below is the code from file \(filePath) that you are trying to complete.
             Review the code carefully, detect the functionality, formats, style, patterns, \
             and logics in use and use them to predict the completion. \
-            Make sure your completion has the correct syntax and formatting. \
-            Do not duplicate existing implementations.
+            Make sure your completion has the correct syntax and formatting.
 
             File Path: \(filePath)
-            Language: Swift
-            Indentation: \
-            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
             ---
 
             Here is the code:
-            ```swift
+            ```
             \(summary)
             ```
 
@@ -106,14 +106,14 @@ struct ContinueRequestStrategy: RequestStrategy {
             """)
 
             let mockResponse = PromptMessage(role: .assistant, content: """
-            \(infillBlock)<|stop|>
+            \(Tag.openingCode)\(infillBlock)<|stop|>
             """)
 
             let continuePrompt = PromptMessage(role: .user, content: """
             Continue generating at <|stop|>. \
-            Do not put the response in a markdown code block. \
-            Do not try to fix what was written. \
-            Do not worry about typos.
+            Don't duplicate existing implementations. \
+            Don't try to fix what was written. \
+            Don't worry about typos.
             """)
 
             return [
@@ -158,14 +158,14 @@ struct ContinueRequestStrategy: RequestStrategy {
 
     func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
         let suggestion = extractEnclosingSuggestion(
-            from: suggestion,
+            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
             openingTag: Tag.openingCode,
             closingTag: Tag.closingCode
         )
 
         if suggestion.hasPrefix(suggestionPrefix) {
             var processed = suggestion
-            processed.removeFirst(prefix.count)
+            processed.removeFirst(suggestionPrefix.count)
             return processed
         }
 

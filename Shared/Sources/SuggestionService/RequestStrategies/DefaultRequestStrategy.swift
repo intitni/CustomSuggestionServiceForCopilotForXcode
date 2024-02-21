@@ -10,6 +10,10 @@ struct DefaultRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
+    
+    var shouldSkip: Bool {
+        prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
+    }
 
     func createPrompt() -> Prompt {
         Prompt(
@@ -28,11 +32,11 @@ struct DefaultRequestStrategy: RequestStrategy {
 
     struct Prompt: PromptStrategy {
         let systemPrompt: String = """
-        You are a code completion AI designed to take the surrounding code and \
-        references from the codebase into account in order to predict and suggest \
-        high-quality code to complete the code enclosed in \(Tag.openingCode) tags. \
+        You are a senior programer who take the surrounding code and \
+        references from the codebase into account in order to write high-quality code to \
+        complete the code enclosed in \(Tag.openingCode) tags. \
         You only respond with code that works and fits seamlessly with surrounding code. \
-        Do not include anything else beyond the code.
+        Don't include anything else beyond the code.
 
         Code completion means to keep writing the code. For example, if I tell you to 
         ###
@@ -88,13 +92,9 @@ struct DefaultRequestStrategy: RequestStrategy {
             and logics in use and use them to predict the completion. \
             Make sure your completion has the correct syntax and formatting. \
             Enclose the completion the XML tag \(Tag.openingCode). \
-            Do not duplicate existing implementations. \
-            Start with a line break if needed. \
-            Do not put the response in a markdown code block.
+            Don't duplicate existing implementations. \
 
             File Path: \(filePath)
-            Indentation: \
-            \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
 
             ---
 
@@ -105,8 +105,7 @@ struct DefaultRequestStrategy: RequestStrategy {
 
             Complete code inside \(Tag.openingCode):
 
-            \(Tag.openingCode)
-            \(infillBlock)
+            \(Tag.openingCode)\(infillBlock)
             """
         }
 
@@ -145,14 +144,14 @@ struct DefaultRequestStrategy: RequestStrategy {
     
     func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
         let suggestion = extractEnclosingSuggestion(
-            from: suggestion,
+            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
             openingTag: Tag.openingCode,
             closingTag: Tag.closingCode
         )
 
         if suggestion.hasPrefix(suggestionPrefix) {
             var processed = suggestion
-            processed.removeFirst(prefix.count)
+            processed.removeFirst(suggestionPrefix.count)
             return processed
         }
 

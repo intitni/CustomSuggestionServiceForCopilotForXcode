@@ -59,6 +59,11 @@ actor Service {
                     prefix: previousLines,
                     suffix: nextLines
                 )
+                
+                if strategy.shouldSkip {
+                    throw CancellationError()
+                }
+                
                 let service = CodeCompletionService()
 
                 let promptStrategy = strategy.createPrompt()
@@ -75,9 +80,12 @@ actor Service {
                     .map {
                         CodeSuggestion(
                             id: UUID().uuidString,
-                            text: strategy.postProcessRawSuggestion(
-                                suggestionPrefix: promptStrategy.suggestionPrefix.prependingValue,
-                                suggestion: Self.removeTrailingNewlinesAndWhitespace(from: $0)
+                            text: Self.removeTrailingNewlinesAndWhitespace(
+                                from: strategy.postProcessRawSuggestion(
+                                    suggestionPrefix: promptStrategy
+                                        .suggestionPrefix.prependingValue,
+                                    suggestion: $0
+                                )
                             ),
                             position: request.cursorPosition,
                             range: .init(
