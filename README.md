@@ -12,7 +12,9 @@ This is an extension that provides a custom suggestion service for Copilot for X
 
 ## Settings
 
-It is recommended to use a custom model with completion API, and use the default request strategy. 
+It is recommended to use Tabby since they have been working on the prompt fro a long time. Request strategies will not work for Tabby.
+
+If you don't want to use Tabby, it is recommended to use a custom model with completion API, and use the default request strategy. 
 
 Make sure the format of the prompt is is this simple when using the completion API.
 
