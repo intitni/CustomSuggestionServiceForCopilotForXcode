@@ -8,7 +8,7 @@ actor TabbyService {
         case basic(username: String, password: String)
         case customHeaderField(name: String, value: String)
     }
-    
+
     let url: URL
     let temperature: Double
     let authorizationMode: AuthorizationMode
@@ -32,7 +32,11 @@ extension TabbyService: CodeCompletionServiceType {
         let clipboard = request.relevantCodeSnippets.map(\.content).joined(separator: "\n\n")
         let requestBody = RequestBody(
             language: request.language?.rawValue,
-            segments: .init(prefix: prefix, suffix: suffix, clipboard: clipboard),
+            segments: .init(
+                prefix: clipboard + "\n\n" + prefix,
+                suffix: suffix,
+                clipboard: clipboard // it's seems to be ignored by Tabby
+            ),
             temperature: temperature,
             seed: nil
         )
@@ -89,7 +93,7 @@ extension TabbyService {
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+
         switch authorizationMode {
         case let .basic(username, password):
             let data = "\(username):\(password)".data(using: .utf8)!
@@ -102,7 +106,7 @@ extension TabbyService {
         case .none:
             break
         }
-        
+
         let (result, response) = try await URLSession.shared.data(for: request)
 
         guard let response = response as? HTTPURLResponse else {
@@ -118,7 +122,7 @@ extension TabbyService {
             return body.choices.first?.text ?? ""
         } catch {
             dump(error)
-            throw Error.decodeError(error)
+            throw Error.decodeError(error) 
         }
     }
 }
