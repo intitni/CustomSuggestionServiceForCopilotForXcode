@@ -12,7 +12,15 @@ This is an extension that provides a custom suggestion service for Copilot for X
 
 ## Settings
 
-It is recommended to use a custom model with completion API, and use the default request strategy.
+It is recommended to use a custom model with completion API, and use the default request strategy. 
+
+Make sure the format of the prompt is is this simple when using the completion API.
+
+``` 
+{System}
+{User}
+{Assistant}
+```
 
 ## Strategies
 
