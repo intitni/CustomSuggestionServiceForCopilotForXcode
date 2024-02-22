@@ -1,22 +1,37 @@
-#  Custom Suggestion Service for Copilot for Xcode (WIP)
+#  Custom Suggestion Service for Copilot for Xcode
 
-This is an extension that provides a custom suggestion service for Copilot for Xcode. It enables you to use a chat model to provide suggestions for the code you are writing.
+This extension offers a custom suggestion service for [Copilot for Xcode](https://github.com/intitni/CopilotForXcode), allowing you to leverage a chat model to enhance the suggestions provided as you write code.
 
 ## Installation
 
-1. Install the app to the Applications folder.
-2. Open the app.
-3. Open Copilot for Xcode, and click "Extensions".
-4. Click "Select Extensions" and select this app.
-5. Then you can change the suggestion provider to this app.
+1. Install the application in the Applications folder.
+2. Launch the application.
+3. Open Copilot for Xcode and navigate to "Extensions".
+4. Click "Select Extensions" and enable this extension.
+5. You can now set this application as the suggestion provider in the suggestion settings.
+
+## Update
+
+To update the app, you can do so directly within the app itself. Once updated, you should perform one of the following steps to ensure Copilot for Xcode recognizes the new version:
+
+1. Restart the `CopilotForXcodeExtensionService`.
+2. Alternatively, terminate the "Custom Suggestion Service (CopilotForXcodeExtensionService)" process, open the extension manager in Copilot for Xcode, and click "Restart Extensions".
+
+We are exploring better methods to tweak the update process.
 
 ## Settings
 
-It is recommended to use Tabby since they have been working on the prompt fro a long time. Request strategies will not work for Tabby.
+The app supports three types of suggestion services:
 
-If you don't want to use Tabby, it is recommended to use a custom model with completion API, and use the default request strategy. 
+- Models with chat completions API
+- Models with completions API
+- [Tabby](https://tabby.tabbyml.com)
 
-Make sure the format of the prompt is is this simple when using the completion API.
+It is recommended to use Tabby since they have extensive experience in crafting prompts.
+
+If you choose not to use Tabby, it is advisable to use a custom model with the completions API and employ the default request strategy.
+
+Ensure that the prompt format remains as simple as the following:
 
 ``` 
 {System}
@@ -26,12 +41,12 @@ Make sure the format of the prompt is is this simple when using the completion A
 
 ## Strategies
 
-- Default: This strategy explains everything carefully to the model and ask it to generate a suggestion.
-- Naive: This strategy remixes the code and snippets into the prompt to fool the model that it's writing code at the end of a file.
-- Continue: This strategy use the "Please Continue" technique to fool the model that it has generated a part of the suggestion, but needs to continue to generate the rest. (Only work with the chat completion API).
+- Default: This strategy meticulously explains the context to the model, prompting it to generate a suggestion.
+- Naive: This strategy rearranges the code in a naive way to trick the model into believing it's appending code at the end of a file.
+- Continue: This strategy employs the "Please Continue" technique to persuade the model that it has started a suggestion and must continue to complete it. (Only effective with the chat completion API).
 
 ## Contribution
 
-Prompt engineering is really hard and we really need your help. 
+Prompt engineering is a challenging task, and your assistance is invaluable. 
 
-Most hard things are in the `Shared` package. If you want to add a new model service, please check the file `CodeCompletionService.swift`. If you want to add new request strategies, please check the file `RequestStrategy.swift`.
+The most complex things are located within the `Shared` package. To add a new service, please refer to the `CodeCompletionService.swift` file. To add new request strategies, check out the `RequestStrategy.swift` file.
