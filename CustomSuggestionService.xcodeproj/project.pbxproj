@@ -103,6 +103,7 @@
 		C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLSelection.swift; sourceTree = "<group>"; };
 		C8EA62D42B6BE4BE00E081FC /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		C8F0E4BA2B872B61004B45FB /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
+		C8F0E4BF2B872F9D004B45FB /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +154,7 @@
 				C84794A82B86EC6100483DF4 /* Version.xcconfig */,
 				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
 				C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */,
+				C8F0E4BF2B872F9D004B45FB /* TestPlan.xctestplan */,
 				C8F0E4BA2B872B61004B45FB /* Core */,
 				C8D0114A2B59912700219412 /* CustomSuggestionService */,
 				C8D011612B5A5B4D00219412 /* CopilotForXcodeExtension */,

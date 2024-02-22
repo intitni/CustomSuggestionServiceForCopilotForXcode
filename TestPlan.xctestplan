@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "2CD745CA-E543-4414-9155-E331D21582A0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Core",
+        "identifier" : "SuggestionServiceTests",
+        "name" : "SuggestionServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

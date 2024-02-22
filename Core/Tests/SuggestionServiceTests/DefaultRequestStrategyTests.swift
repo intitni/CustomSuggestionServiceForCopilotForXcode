@@ -1,5 +1,5 @@
 import Foundation
-import Shared
+import Fundamental
 import XCTest
 
 @testable import SuggestionService
@@ -27,7 +27,8 @@ class DefaultRequestStrategyTests: XCTestCase {
 
         guard let (summary, infillBlock) = DefaultRequestStrategy.Prompt.createCodeSummary(
             truncatedPrefix: prefix.breakLines(),
-            truncatedSuffix: []
+            truncatedSuffix: [], 
+            suggestionPrefix: "let cat:"
         ) else {
             XCTFail()
             return
@@ -87,7 +88,8 @@ class DefaultRequestStrategyTests: XCTestCase {
 
         guard let (summary, infillBlock) = DefaultRequestStrategy.Prompt.createCodeSummary(
             truncatedPrefix: prefix.breakLines(),
-            truncatedSuffix: suffix.breakLines()
+            truncatedSuffix: suffix.breakLines(),
+            suggestionPrefix: "let cat:"
         ) else {
             XCTFail()
             return
