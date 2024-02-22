@@ -68,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		C81547D92B8737DF002203B3 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		C81547DB2B873DC1002203B3 /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		C83B83AE2B7DD261007B4442 /* Dependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependency.swift; sourceTree = "<group>"; };
 		C84697502B7B7B3700B8B840 /* TestFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldView.swift; sourceTree = "<group>"; };
 		C84697562B7B8C9000B8B840 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
@@ -157,6 +158,7 @@
 				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
 				C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */,
 				C8F0E4BF2B872F9D004B45FB /* TestPlan.xctestplan */,
+				C81547DB2B873DC1002203B3 /* appcast.xml */,
 				C8F0E4BA2B872B61004B45FB /* Core */,
 				C8D0114A2B59912700219412 /* CustomSuggestionService */,
 				C8D011612B5A5B4D00219412 /* CopilotForXcodeExtension */,
