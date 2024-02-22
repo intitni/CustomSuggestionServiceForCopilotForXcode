@@ -39,6 +39,8 @@ Ensure that the prompt format remains as simple as the following:
 {Assistant}
 ```
 
+If you are new to running a model locally, you can give [LM Studio](https://lmstudio.ai) a try.
+
 ## Strategies
 
 - Default: This strategy meticulously explains the context to the model, prompting it to generate a suggestion.
