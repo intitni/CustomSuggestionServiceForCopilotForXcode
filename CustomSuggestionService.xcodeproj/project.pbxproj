@@ -25,7 +25,7 @@
 		C8D011502B59912800219412 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D0114F2B59912800219412 /* Assets.xcassets */; };
 		C8D011532B59912800219412 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8D011522B59912800219412 /* Preview Assets.xcassets */; };
 		C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */; };
-		C8D011682B5A5B4D00219412 /* CopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C8D011682B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */ = {isa = PBXBuildFile; productRef = C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */; };
 		C8D011752B5A5DC600219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011742B5A5DC600219412 /* Shared */; };
 		C8D011772B5A5DCC00219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011762B5A5DCC00219412 /* Shared */; };
@@ -59,7 +59,7 @@
 			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
 			dstSubfolderSpec = 16;
 			files = (
-				C8D011682B5A5B4D00219412 /* CopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */,
+				C8D011682B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */,
 			);
 			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,7 +88,7 @@
 		C8D011542B59912800219412 /* CustomSuggestionService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CustomSuggestionService.entitlements; sourceTree = "<group>"; };
 		C8D0115A2B5A59D100219412 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.debug.xcconfig; sourceTree = "<group>"; };
-		C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = CopilotForXcodeExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = CustomSuggestionServiceCopilotForXcodeExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotForXcodeExtension.swift; sourceTree = "<group>"; };
 		C8D011642B5A5B4D00219412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopilotForXcodeExtension.entitlements; sourceTree = "<group>"; };
@@ -165,7 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */,
-				C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */,
+				C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -297,7 +297,7 @@
 				C8D011762B5A5DCC00219412 /* Shared */,
 			);
 			productName = CopilotForXcodeExtension;
-			productReference = C8D011602B5A5B4D00219412 /* CopilotForXcodeExtension.appex */;
+			productReference = C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */;
 			productType = "com.apple.product-type.extensionkit-extension";
 		};
 /* End PBXNativeTarget section */
@@ -620,7 +620,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService.CopilotForXcodeExtension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "CustomSuggestionService$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -648,7 +648,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = "$(APP_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_IDENTIFIER_BASE).CustomSuggestionService.CopilotForXcodeExtension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "CustomSuggestionService$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

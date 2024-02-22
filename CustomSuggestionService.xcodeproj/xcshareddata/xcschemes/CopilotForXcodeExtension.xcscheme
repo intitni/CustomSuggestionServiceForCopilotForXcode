@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C8D0115F2B5A5B4D00219412"
-               BuildableName = "CopilotForXcodeExtension.appex"
+               BuildableName = "CustomSuggestionServiceCopilotForXcodeExtension.appex"
                BlueprintName = "CopilotForXcodeExtension"
                ReferencedContainer = "container:CustomSuggestionService.xcodeproj">
             </BuildableReference>

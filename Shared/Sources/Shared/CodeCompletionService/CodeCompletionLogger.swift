@@ -19,7 +19,7 @@ public final class CodeCompletionLogger {
         indentSize: 0,
         usesTabsForIndentation: false,
         relevantCodeSnippets: []
-    ))
+    )) 
 
     let request: SuggestionRequest
     var model = Model(type: "", format: "", modelName: "", baseURL: "")
