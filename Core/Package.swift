@@ -65,6 +65,11 @@ let package = Package(
                 .product(name: "Parsing", package: "swift-parsing"),
             ]
         ),
+
+        .testTarget(
+            name: "FundamentalTests",
+            dependencies: ["Fundamental"]
+        ),
         .testTarget(
             name: "SuggestionServiceTests",
             dependencies: ["SuggestionService"]

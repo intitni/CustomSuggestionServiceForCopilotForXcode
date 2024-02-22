@@ -18,6 +18,13 @@
         "identifier" : "SuggestionServiceTests",
         "name" : "SuggestionServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Core",
+        "identifier" : "FundamentalTests",
+        "name" : "FundamentalTests"
+      }
     }
   ],
   "version" : 1
