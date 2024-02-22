@@ -26,7 +26,7 @@ struct NaiveRequestStrategy: RequestStrategy {
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
-        var filePath: String { sourceRequest.fileURL.path }
+        var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { ["\n\n"] }
         var language: CodeLanguage? { sourceRequest.language }

@@ -103,7 +103,7 @@ extension RequestStrategy {
             let suggestion = try parser.parse(&text)
             return String(suggestion)
         } catch {
-            return response
+            return response 
         }
     }
 
