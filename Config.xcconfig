@@ -1,3 +1,5 @@
+#include "Version.xcconfig"
+
 SLASH = /
 
 MODULE_NAME = Custom Suggestion Service
