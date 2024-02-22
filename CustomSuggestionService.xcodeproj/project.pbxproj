@@ -67,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C81547D92B8737DF002203B3 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		C83B83AE2B7DD261007B4442 /* Dependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependency.swift; sourceTree = "<group>"; };
 		C84697502B7B7B3700B8B840 /* TestFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFieldView.swift; sourceTree = "<group>"; };
 		C84697562B7B8C9000B8B840 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
@@ -150,6 +151,7 @@
 		C8D0113F2B59912700219412 = {
 			isa = PBXGroup;
 			children = (
+				C81547D92B8737DF002203B3 /* LICENSE */,
 				C8A18A672B85038E004188D3 /* README.md */,
 				C84794A82B86EC6100483DF4 /* Version.xcconfig */,
 				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
