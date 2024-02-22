@@ -26,6 +26,7 @@ public final class CodeCompletionLogger {
     var prompt: [(message: String, role: String)] = []
     var responses: [String] = []
     let startTime = Date()
+    let id = UUID()
     
     var shouldLogToConsole: Bool {
         #if DEBUG
@@ -82,7 +83,7 @@ public final class CodeCompletionLogger {
         let formattedDuration = String(format: "%.2f", duration)
         
         Logger.service.info("""
-        [Request] 
+        [Request] \(id)
         
         Duration: \(formattedDuration)
         Error: \(error.localizedDescription).
@@ -97,7 +98,7 @@ public final class CodeCompletionLogger {
         let formattedDuration = String(format: "%.2f", duration)
 
         Logger.service.info("""
-        [Request]
+        [Request] \(id)
 
         Format: \(model.format)
         Model Name: \(model.modelName)
@@ -107,12 +108,16 @@ public final class CodeCompletionLogger {
         File URL: \(request.fileURL)
         Code Snippets: \(request.relevantCodeSnippets.count) snippets
         CursorPosition: \(request.cursorPosition)
-
-        [Prompt]
+        """)
+        
+        Logger.service.info("""
+        [Prompt] \(id)
 
         \(prompt.map { "\($0.role): \($0.message)" }.joined(separator: "\n\n"))
-
-        [Response]
+        """)
+        
+        Logger.service.info("""
+        [Response] \(id)
 
         \(responses.enumerated().map { "\($0 + 1): \($1)" }.joined(separator: "\n\n"))
         """)
