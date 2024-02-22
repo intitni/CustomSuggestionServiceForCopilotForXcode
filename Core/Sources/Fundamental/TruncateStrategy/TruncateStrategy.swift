@@ -1,17 +1,22 @@
 import CopilotForXcodeKit
 import Foundation
 
-protocol TruncateStrategy {
+public protocol TruncateStrategy {
     func createTruncatedPrompt(promptStrategy: PromptStrategy) -> [PromptMessage]
 }
 
-struct DefaultTruncateStrategy: TruncateStrategy {
+public struct DefaultTruncateStrategy: TruncateStrategy {
     let maxTokenLimit: Int
-    let countToken: ([PromptMessage]) -> Int = {
+    let countToken: ([PromptMessage]) -> Int
+
+    public init(maxTokenLimit: Int, countToken: @escaping ([PromptMessage]) -> Int = {
         $0.reduce(0) { $0 + $1.content.count }
+    }) {
+        self.maxTokenLimit = maxTokenLimit
+        self.countToken = countToken
     }
 
-    func createTruncatedPrompt(promptStrategy: PromptStrategy) -> [PromptMessage] {
+    public func createTruncatedPrompt(promptStrategy: PromptStrategy) -> [PromptMessage] {
         var prefix = promptStrategy.prefix
         var suffix = promptStrategy.suffix
         var snippets = promptStrategy.relevantCodeSnippets

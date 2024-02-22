@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import Fundamental
 
 actor TabbyService {
     enum AuthorizationMode {
@@ -122,7 +123,7 @@ extension TabbyService {
             return body.choices.first?.text ?? ""
         } catch {
             dump(error)
-            throw Error.decodeError(error) 
+            throw Error.decodeError(error)
         }
     }
 }

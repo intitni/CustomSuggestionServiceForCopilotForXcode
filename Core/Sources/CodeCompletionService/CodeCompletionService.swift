@@ -1,4 +1,6 @@
 import Foundation
+import Fundamental
+import Storage
 
 protocol CodeCompletionServiceType {
     func getCompletion(
@@ -63,7 +65,7 @@ public struct CodeCompletionService {
                 return .customHeaderField(name: model.authorizationHeaderName, value: apiKey)
             }
         }())
-        
+
         let result = try await service.getCompletions(prompt, count: count)
         try Task.checkCancellation()
         return result

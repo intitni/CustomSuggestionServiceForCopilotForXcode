@@ -1,4 +1,5 @@
 import Foundation
+import Fundamental
 
 public struct UserDefaultPreferenceKeys {
     public init() {}
@@ -79,11 +80,11 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-TabbyModel"
         )
     }
-    
+
     var installBetaBuild: PreferenceKey<Bool> {
         .init(defaultValue: false, key: "CustomSuggestionService-InstallBetaBuild")
     }
-    
+
     var verboseLog: PreferenceKey<Bool> {
         .init(defaultValue: false, key: "CustomSuggestionService-VerboseLog")
     }

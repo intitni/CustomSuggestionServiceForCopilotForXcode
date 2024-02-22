@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import Fundamental
 
 public actor AzureOpenAIService {
     let url: URL
@@ -10,7 +11,7 @@ public actor AzureOpenAIService {
     let apiKey: String
     let stopWords: [String]
 
-    public init(
+    init(
         url: String? = nil,
         endpoint: OpenAIService.Endpoint,
         modelName: String,

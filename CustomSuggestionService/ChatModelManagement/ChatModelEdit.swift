@@ -1,6 +1,8 @@
+import CodeCompletionService
 import ComposableArchitecture
 import Dependencies
-import Shared
+import Fundamental
+import Storage
 import SwiftUI
 
 @Reducer
@@ -64,7 +66,8 @@ struct ChatModelEdit {
 
             case .refreshAvailableModelNames:
                 if state.format == .openAI {
-                    state.availableModelNames = OpenAIService.ChatCompletionModels.allCases.map(\.rawValue)
+                    state.availableModelNames = OpenAIService.ChatCompletionModels.allCases
+                        .map(\.rawValue)
                 }
 
                 return .none
@@ -81,7 +84,9 @@ struct ChatModelEdit {
             case .checkSuggestedMaxTokens:
                 switch state.format {
                 case .openAI:
-                    if let knownModel = OpenAIService.ChatCompletionModels(rawValue: state.modelName) {
+                    if let knownModel = OpenAIService
+                        .ChatCompletionModels(rawValue: state.modelName)
+                    {
                         state.suggestedMaxTokens = knownModel.maxToken
                     } else {
                         state.suggestedMaxTokens = nil

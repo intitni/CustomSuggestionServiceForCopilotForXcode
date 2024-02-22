@@ -27,8 +27,6 @@
 		C8D011632B5A5B4D00219412 /* CopilotForXcodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */; };
 		C8D011682B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */ = {isa = PBXBuildFile; productRef = C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */; };
-		C8D011752B5A5DC600219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011742B5A5DC600219412 /* Shared */; };
-		C8D011772B5A5DCC00219412 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = C8D011762B5A5DCC00219412 /* Shared */; };
 		C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */; };
 		C8EA62D52B6BE5FD00E081FC /* BaseURLSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */; };
 		C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CF2B6BE49E00E081FC /* ChatModelEdit.swift */; };
@@ -40,6 +38,8 @@
 		C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CE2B6BE49500E081FC /* APIKeySubmission.swift */; };
 		C8EA62DD2B6BE60500E081FC /* APIKeyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62CD2B6BE49500E081FC /* APIKeyPicker.swift */; };
 		C8EA62DE2B6BE61500E081FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EA62D42B6BE4BE00E081FC /* Toast.swift */; };
+		C8F0E4BC2B872B97004B45FB /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = C8F0E4BB2B872B97004B45FB /* Core */; };
+		C8F0E4BE2B872B9F004B45FB /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = C8F0E4BD2B872B9F004B45FB /* Core */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,7 +92,6 @@
 		C8D011622B5A5B4D00219412 /* CopilotForXcodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotForXcodeExtension.swift; sourceTree = "<group>"; };
 		C8D011642B5A5B4D00219412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8D011652B5A5B4D00219412 /* CopilotForXcodeExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CopilotForXcodeExtension.entitlements; sourceTree = "<group>"; };
-		C8D011722B5A5DAA00219412 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
 		C8EA62CA2B6BE49500E081FC /* APIKeyManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManagementView.swift; sourceTree = "<group>"; };
 		C8EA62CB2B6BE49500E081FC /* APIKeyManangement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyManangement.swift; sourceTree = "<group>"; };
 		C8EA62CC2B6BE49500E081FC /* APIKeySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeySelection.swift; sourceTree = "<group>"; };
@@ -103,6 +102,7 @@
 		C8EA62D12B6BE4AC00E081FC /* BaseURLPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLPicker.swift; sourceTree = "<group>"; };
 		C8EA62D22B6BE4AC00E081FC /* BaseURLSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLSelection.swift; sourceTree = "<group>"; };
 		C8EA62D42B6BE4BE00E081FC /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		C8F0E4BA2B872B61004B45FB /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +111,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8EA62AC2B6BDA0900E081FC /* ComposableArchitecture in Frameworks */,
+				C8F0E4BC2B872B97004B45FB /* Core in Frameworks */,
 				C89BA4B22B85E6ED008801C5 /* Sparkle in Frameworks */,
-				C8D011752B5A5DC600219412 /* Shared in Frameworks */,
 				C84697542B7B8B8300B8B840 /* STTextView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,7 +122,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8D0116F2B5A5BFF00219412 /* CopilotForXcodeKit in Frameworks */,
-				C8D011772B5A5DCC00219412 /* Shared in Frameworks */,
+				C8F0E4BE2B872B9F004B45FB /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,7 +153,7 @@
 				C84794A82B86EC6100483DF4 /* Version.xcconfig */,
 				C8D0115A2B5A59D100219412 /* Config.xcconfig */,
 				C8D0115B2B5A59D400219412 /* Config.debug.xcconfig */,
-				C8D011722B5A5DAA00219412 /* Shared */,
+				C8F0E4BA2B872B61004B45FB /* Core */,
 				C8D0114A2B59912700219412 /* CustomSuggestionService */,
 				C8D011612B5A5B4D00219412 /* CopilotForXcodeExtension */,
 				C8D011492B59912700219412 /* Products */,
@@ -270,10 +270,10 @@
 			);
 			name = CustomSuggestionService;
 			packageProductDependencies = (
-				C8D011742B5A5DC600219412 /* Shared */,
 				C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */,
 				C84697532B7B8B8300B8B840 /* STTextView */,
 				C89BA4B12B85E6ED008801C5 /* Sparkle */,
+				C8F0E4BB2B872B97004B45FB /* Core */,
 			);
 			productName = CustomSuggestionService;
 			productReference = C8D011482B59912700219412 /* Custom Suggestion Service Debug.app */;
@@ -294,7 +294,7 @@
 			name = CopilotForXcodeExtension;
 			packageProductDependencies = (
 				C8D0116E2B5A5BFF00219412 /* CopilotForXcodeKit */,
-				C8D011762B5A5DCC00219412 /* Shared */,
+				C8F0E4BD2B872B9F004B45FB /* Core */,
 			);
 			productName = CopilotForXcodeExtension;
 			productReference = C8D011602B5A5B4D00219412 /* CustomSuggestionServiceCopilotForXcodeExtension.appex */;
@@ -738,18 +738,18 @@
 			package = C8D0116D2B5A5BFF00219412 /* XCRemoteSwiftPackageReference "CopilotForXcodeKit" */;
 			productName = CopilotForXcodeKit;
 		};
-		C8D011742B5A5DC600219412 /* Shared */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Shared;
-		};
-		C8D011762B5A5DCC00219412 /* Shared */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Shared;
-		};
 		C8EA62AB2B6BDA0900E081FC /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C8EA62AA2B6BDA0900E081FC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		C8F0E4BB2B872B97004B45FB /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
+		};
+		C8F0E4BD2B872B9F004B45FB /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

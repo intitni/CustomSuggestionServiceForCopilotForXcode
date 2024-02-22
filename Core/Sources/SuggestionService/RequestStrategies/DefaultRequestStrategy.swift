@@ -1,6 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
-import Shared
+import Fundamental
 
 /// The default strategy to generate prompts.
 ///

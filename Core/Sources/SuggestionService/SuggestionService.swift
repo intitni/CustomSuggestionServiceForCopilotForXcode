@@ -1,6 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
-import Shared
+import Fundamental
 
 public class SuggestionService: SuggestionServiceType {
     let service = Service()

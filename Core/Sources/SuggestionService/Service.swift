@@ -1,6 +1,7 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
-import Shared
+import Fundamental
 
 actor Service {
     enum Model {

@@ -49,4 +49,7 @@ Ensure that the prompt format remains as simple as the following:
 
 Prompt engineering is a challenging task, and your assistance is invaluable. 
 
-The most complex things are located within the `Shared` package. To add a new service, please refer to the `CodeCompletionService.swift` file. To add new request strategies, check out the `RequestStrategy.swift` file.
+The most complex things are located within the `Core` package. 
+
+- To add a new service, please refer to the `CodeCompletionService` folder. 
+- To add new request strategies, check out the `SuggestionService` folder.

@@ -1,4 +1,5 @@
 import Foundation
+import Fundamental
 import GoogleGenerativeAI
 
 public struct GoogleGeminiService {
@@ -8,7 +9,7 @@ public struct GoogleGeminiService {
     let stopWords: [String]
     let apiKey: String
 
-    public init(
+    init(
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,

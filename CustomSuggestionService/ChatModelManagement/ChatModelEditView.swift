@@ -1,5 +1,6 @@
+import CodeCompletionService
 import ComposableArchitecture
-import Shared
+import Fundamental
 import SwiftUI
 
 @MainActor
@@ -316,5 +317,4 @@ public extension View {
         modifier(DynamicHeightTextInFormWorkaroundModifier())
     }
 }
-
 

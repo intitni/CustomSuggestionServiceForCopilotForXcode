@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import Fundamental
 
 public actor OpenAIService {
     let url: URL
@@ -15,7 +16,7 @@ public actor OpenAIService {
         case chatCompletion
     }
 
-    public init(
+    init(
         url: String? = nil,
         endpoint: Endpoint,
         modelName: String,
@@ -112,7 +113,7 @@ extension OpenAIService {
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
-            .init(role: .system, content: request.systemPrompt)
+            .init(role: .system, content: request.systemPrompt),
         ] + prompts.map { prompt in
             switch prompt.role {
             case .user:

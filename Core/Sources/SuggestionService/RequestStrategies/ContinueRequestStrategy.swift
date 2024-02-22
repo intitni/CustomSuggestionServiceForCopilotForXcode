@@ -1,6 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
-import Shared
+import Fundamental
 
 /// This strategy tries to fool the AI model that it has generated a part of the response but fail
 /// to complete because of token limit. The strategy will append a user message "Continue" to let
@@ -9,7 +9,7 @@ struct ContinueRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
-    
+
     var shouldSkip: Bool {
         prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
     }
@@ -55,7 +55,7 @@ struct ContinueRequestStrategy: RequestStrategy {
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { [Tag.closingCode, "\n\n"] }
         var language: CodeLanguage? { sourceRequest.language }
-        
+
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
             return .unchanged(prefix).curlyBracesLineBreak()

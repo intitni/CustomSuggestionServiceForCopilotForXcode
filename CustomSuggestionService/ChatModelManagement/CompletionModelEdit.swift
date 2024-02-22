@@ -1,6 +1,8 @@
+import CodeCompletionService
 import ComposableArchitecture
 import Dependencies
-import Shared
+import Fundamental
+import Storage
 import SwiftUI
 
 @Reducer
@@ -64,7 +66,8 @@ struct CompletionModelEdit {
 
             case .refreshAvailableModelNames:
                 if state.format == .openAI {
-                    state.availableModelNames = OpenAIService.ChatCompletionModels.allCases.map(\.rawValue)
+                    state.availableModelNames = OpenAIService.ChatCompletionModels.allCases
+                        .map(\.rawValue)
                 }
 
                 return .none

@@ -1,5 +1,6 @@
 import CopilotForXcodeKit
 import Foundation
+import Fundamental
 
 public final class CodeCompletionLogger {
     struct Model {
@@ -19,7 +20,7 @@ public final class CodeCompletionLogger {
         indentSize: 0,
         usesTabsForIndentation: false,
         relevantCodeSnippets: []
-    )) 
+    ))
 
     let request: SuggestionRequest
     var model = Model(type: "", format: "", modelName: "", baseURL: "")
@@ -27,7 +28,7 @@ public final class CodeCompletionLogger {
     var responses: [String] = []
     let startTime = Date()
     let id = UUID()
-    
+
     var shouldLogToConsole: Bool {
         #if DEBUG
         return true
@@ -57,7 +58,7 @@ public final class CodeCompletionLogger {
             baseURL: completionModel.info.baseURL
         )
     }
-    
+
     public func logModel(_ tabbyModel: TabbyModel) {
         model = .init(
             type: "Tabby",
@@ -77,14 +78,14 @@ public final class CodeCompletionLogger {
 
     public func error(_ error: Error) {
         guard shouldLogToConsole else { return }
-        
+
         let now = Date()
         let duration = now.timeIntervalSince(startTime)
         let formattedDuration = String(format: "%.2f", duration)
-        
+
         Logger.service.info("""
         [Request] \(id)
-        
+
         Duration: \(formattedDuration)
         Error: \(error.localizedDescription).
         """)
@@ -109,13 +110,13 @@ public final class CodeCompletionLogger {
         Code Snippets: \(request.relevantCodeSnippets.count) snippets
         CursorPosition: \(request.cursorPosition)
         """)
-        
+
         Logger.service.info("""
         [Prompt] \(id)
 
         \(prompt.map { "\($0.role): \($0.message)" }.joined(separator: "\n\n"))
         """)
-        
+
         Logger.service.info("""
         [Response] \(id)
 

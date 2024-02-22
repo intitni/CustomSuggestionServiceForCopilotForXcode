@@ -1,7 +1,8 @@
 import ComposableArchitecture
 import CopilotForXcodeKit
 import Foundation
-import Shared
+import Fundamental
+import Storage
 
 @Reducer
 struct TestField {

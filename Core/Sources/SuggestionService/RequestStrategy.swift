@@ -1,7 +1,7 @@
 import CopilotForXcodeKit
 import Foundation
+import Fundamental
 import Parsing
-import Shared
 
 /// Prompts may behave differently in different LLMs.
 /// This protocol allows for different strategies to be used to generate prompts.
@@ -9,7 +9,7 @@ protocol RequestStrategy {
     associatedtype Prompt: PromptStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String])
-    
+
     /// If the request should be skipped.
     var shouldSkip: Bool { get }
 
@@ -46,7 +46,7 @@ extension RequestStrategyOption {
 
 extension RequestStrategy {
     var shouldSkip: Bool { false }
-    
+
     func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
         suggestionPrefix + suggestion
     }
@@ -103,7 +103,7 @@ extension RequestStrategy {
             let suggestion = try parser.parse(&text)
             return String(suggestion)
         } catch {
-            return response 
+            return response
         }
     }
 
@@ -122,7 +122,7 @@ extension RequestStrategy {
                 Rest()
             }
         }
-        
+
         do {
             var response = response[...]
             let suggestion = try removePrefixMarkdownCodeBlockMark.parse(&response)

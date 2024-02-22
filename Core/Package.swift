@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Shared",
+    name: "Core",
     platforms: [.macOS(.v13)],
     products: [
         .library(
-            name: "Shared",
-            targets: ["Shared", "SuggestionService"]
+            name: "Core",
+            targets: ["Storage", "SuggestionService", "Fundamental"]
         ),
     ],
     dependencies: [
@@ -27,7 +27,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Shared",
+            name: "Fundamental",
             dependencies: [
                 .product(name: "CodableWrappers", package: "CodableWrappers"),
                 .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
@@ -36,14 +36,31 @@ let package = Package(
                 .product(name: "Parsing", package: "swift-parsing"),
             ]
         ),
-        .testTarget(
-            name: "SharedTests",
-            dependencies: ["Shared"]
+        .target(
+            name: "Storage",
+            dependencies: [
+                "Fundamental",
+                .product(name: "CodableWrappers", package: "CodableWrappers"),
+                .product(name: "Dependencies", package: "swift-dependencies"),
+            ]
+        ),
+        .target(
+            name: "CodeCompletionService",
+            dependencies: [
+                "Storage",
+                "Fundamental",
+                .product(name: "CodableWrappers", package: "CodableWrappers"),
+                .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
+                .product(name: "Dependencies", package: "swift-dependencies"),
+                .product(name: "GoogleGenerativeAI", package: "generative-ai-swift"),
+            ]
         ),
         .target(
             name: "SuggestionService",
             dependencies: [
-                "Shared",
+                "Fundamental",
+                "CodeCompletionService",
+                "Storage",
                 .product(name: "CopilotForXcodeKit", package: "CopilotForXcodeKit"),
                 .product(name: "Parsing", package: "swift-parsing"),
             ]

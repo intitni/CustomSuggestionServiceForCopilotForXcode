@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Shared"
-               BuildableName = "Shared"
-               BlueprintName = "Shared"
+               BlueprintIdentifier = "Core"
+               BuildableName = "Core"
+               BlueprintName = "Core"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -49,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Shared"
-            BuildableName = "Shared"
-            BlueprintName = "Shared"
+            BlueprintIdentifier = "Core"
+            BuildableName = "Core"
+            BlueprintName = "Core"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
