@@ -31,14 +31,6 @@ It is recommended to use Tabby since they have extensive experience in crafting 
 
 If you choose not to use Tabby, it is advisable to use a custom model with the completions API and employ the default request strategy.
 
-Ensure that the prompt format remains as simple as the following:
-
-``` 
-{System}
-{User}
-{Assistant}
-```
-
 If you are new to running a model locally, you can try [LM Studio](https://lmstudio.ai).
 
 ## Strategies
