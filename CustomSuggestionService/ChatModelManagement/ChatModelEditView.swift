@@ -25,6 +25,8 @@ struct ChatModelEditView: View {
                             openAICompatible
                         case .googleAI:
                             googleAI
+                        case .ollama:
+                            ollama
                         case .unknown:
                             EmptyView()
                         }
@@ -77,6 +79,8 @@ struct ChatModelEditView: View {
                         Text("OpenAI Compatible").tag(format)
                     case .googleAI:
                         Text("Google Generative AI").tag(format)
+                    case .ollama:
+                        Text("Ollama").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -257,6 +261,20 @@ struct ChatModelEditView: View {
                 )
                 .frame(width: 20)
             }
+
+        maxTokensTextField
+    }
+    
+    @ViewBuilder
+    var ollama: some View {
+        baseURLTextField(
+            title: "",
+            prompt: Text("https://127.0.0.1:11434/api/chat")
+        ) {
+            Text("/api/chat")
+        }
+
+        TextField("Model Name", text: $store.modelName)
 
         maxTokensTextField
     }
