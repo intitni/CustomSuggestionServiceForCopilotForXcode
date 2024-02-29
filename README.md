@@ -29,7 +29,14 @@ The app supports three types of suggestion services:
 
 It is recommended to use Tabby since they have extensive experience in crafting prompts.
 
-If you choose not to use Tabby, it is advisable to use a custom model with the completions API and employ the default request strategy.
+If you choose not to use Tabby, it is advisable to use a custom model with the completions API and employ the default request strategy. If the result looks like a response of chat, try another model or set the model template to something like (if possible):
+
+```
+{{ .System }}
+{{ .Prompt }}{{ .Response }}
+```
+
+The template format differs in different tools.
 
 If you are new to running a model locally, you can try [LM Studio](https://lmstudio.ai).
 
