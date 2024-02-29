@@ -115,6 +115,16 @@ public struct CodeCompletionService {
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .chatCompletion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
         case .unknown:
             throw Error.unknownFormat
         }
@@ -146,6 +156,16 @@ public struct CodeCompletionService {
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .completion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords
             )
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
