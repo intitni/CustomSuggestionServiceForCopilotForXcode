@@ -9,6 +9,13 @@ public actor OllamaService {
     let maxToken: Int
     let temperature: Double
     let stopWords: [String]
+    let keepAlive: String
+    let format: ResponseFormat
+    
+    public enum ResponseFormat: String {
+        case none = ""
+        case json = "json"
+    }
 
     public enum Endpoint {
         case completion
@@ -21,7 +28,9 @@ public actor OllamaService {
         modelName: String,
         maxToken: Int? = nil,
         temperature: Double = 0.2,
-        stopWords: [String] = []
+        stopWords: [String] = [],
+        keepAlive: String = "",
+        format: ResponseFormat = .none
     ) {
         self.url = url.flatMap(URL.init(string:)) ?? {
             switch endpoint {
@@ -37,6 +46,8 @@ public actor OllamaService {
         self.maxToken = maxToken ?? 4096
         self.temperature = temperature
         self.stopWords = stopWords
+        self.keepAlive = keepAlive
+        self.format = format
     }
 }
 
@@ -112,6 +123,8 @@ extension OllamaService {
         var messages: [Message]
         var stream: Bool
         var options: Options
+        var keep_alive: String?
+        var format: String?
     }
 
     struct ChatCompletionResponseChunk: Decodable {
@@ -156,7 +169,9 @@ extension OllamaService {
                 temperature: temperature,
                 stop: stopWords,
                 num_predict: 300
-            )
+            ),
+            keep_alive: keepAlive.isEmpty ? nil : keepAlive,
+            format: format == .none ? nil : format.rawValue
         )
 
         var request = URLRequest(url: url)
@@ -189,6 +204,8 @@ extension OllamaService {
         var prompt: String
         var stream: Bool
         var options: ChatCompletionRequestBody.Options
+        var keep_alive: String?
+        var format: String?
     }
 
     func createPrompt(from request: PromptStrategy) -> String {
@@ -209,7 +226,9 @@ extension OllamaService {
                 temperature: temperature,
                 stop: stopWords,
                 num_predict: 300
-            )
+            ),
+            keep_alive: keepAlive.isEmpty ? nil : keepAlive,
+            format: format == .none ? nil : format.rawValue
         )
 
         var request = URLRequest(url: url)

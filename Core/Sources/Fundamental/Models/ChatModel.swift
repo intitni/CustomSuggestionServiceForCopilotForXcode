@@ -46,6 +46,8 @@ public struct ChatModel: Codable, Equatable, Identifiable {
             get { modelName }
             set { modelName = newValue }
         }
+        @FallbackDecoding<EmptyString>
+        public var ollamaKeepAlive: String
 
         public init(
             apiKeyName: String = "",
@@ -54,7 +56,8 @@ public struct ChatModel: Codable, Equatable, Identifiable {
             maxTokens: Int = 4000,
             supportsFunctionCalling: Bool = true,
             supportsOpenAIAPI2023_11: Bool = false,
-            modelName: String = ""
+            modelName: String = "",
+            ollamaKeepAlive: String = ""
         ) {
             self.apiKeyName = apiKeyName
             self.baseURL = baseURL
@@ -63,6 +66,7 @@ public struct ChatModel: Codable, Equatable, Identifiable {
             self.supportsFunctionCalling = supportsFunctionCalling
             self.supportsOpenAIAPI2023_11 = supportsOpenAIAPI2023_11
             self.modelName = modelName
+            self.ollamaKeepAlive = ollamaKeepAlive
         }
     }
 

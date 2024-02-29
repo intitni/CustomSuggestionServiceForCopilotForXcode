@@ -277,6 +277,17 @@ struct ChatModelEditView: View {
         TextField("Model Name", text: $store.modelName)
 
         maxTokensTextField
+        
+        TextField(text: $store.ollamaKeepAlive, prompt: Text("Default Value")) {
+            Text("Keep Alive")
+        }
+        
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                " For more details, please visit [https://ollama.com](https://ollama.com)"
+            )
+        }
+        .padding(.vertical)
     }
 }
 

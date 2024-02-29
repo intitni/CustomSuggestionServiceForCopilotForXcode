@@ -120,7 +120,9 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
-                stopWords: prompt.stopWords
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaKeepAlive,
+                format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
@@ -165,7 +167,9 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .completion,
                 modelName: model.info.modelName,
-                stopWords: prompt.stopWords
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaKeepAlive,
+                format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()

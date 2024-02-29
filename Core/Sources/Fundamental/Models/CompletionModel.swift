@@ -41,19 +41,23 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
             get { modelName }
             set { modelName = newValue }
         }
+        @FallbackDecoding<EmptyString>
+        public var ollamaKeepAlive: String
 
         public init(
             apiKeyName: String = "",
             baseURL: String = "",
             isFullURL: Bool = false,
             maxTokens: Int = 4000,
-            modelName: String = ""
+            modelName: String = "",
+            ollamaKeepAlive: String = ""
         ) {
             self.apiKeyName = apiKeyName
             self.baseURL = baseURL
             self.isFullURL = isFullURL
             self.maxTokens = maxTokens
             self.modelName = modelName
+            self.ollamaKeepAlive = ollamaKeepAlive
         }
     }
 
