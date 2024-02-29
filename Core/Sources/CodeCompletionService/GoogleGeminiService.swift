@@ -25,12 +25,22 @@ public struct GoogleGeminiService {
 }
 
 extension GoogleGeminiService: CodeCompletionServiceType {
-    func getCompletion(_ request: PromptStrategy) async throws -> String {
+    func getCompletion(_ request: PromptStrategy) async throws -> AsyncStream<String> {
         let messages = createMessages(from: request)
         CodeCompletionLogger.logger.logPrompt(messages.map {
             ($0.parts.first?.text ?? "N/A", $0.role ?? "N/A")
         })
-        return try await sendMessages(messages)
+        return AsyncStream<String> { continuation in
+            let task = Task {
+                let result = try await sendMessages(messages)
+                try Task.checkCancellation()
+                continuation.yield(result)
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in
+                task.cancel()
+            }
+        }
     }
 }
 

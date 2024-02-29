@@ -39,18 +39,38 @@ public actor AzureOpenAIService {
 }
 
 extension AzureOpenAIService: CodeCompletionServiceType {
-    func getCompletion(_ request: PromptStrategy) async throws -> String {
+    func getCompletion(_ request: PromptStrategy) async throws -> AsyncStream<String> {
         switch endpoint {
         case .chatCompletion:
             let messages = createMessages(from: request)
             CodeCompletionLogger.logger.logPrompt(messages.map {
                 ($0.content, $0.role.rawValue)
             })
-            return try await sendMessages(messages)
+            return AsyncStream<String> { continuation in
+                let task = Task {
+                    let result = try await sendMessages(messages)
+                    try Task.checkCancellation()
+                    continuation.yield(result)
+                    continuation.finish()
+                }
+                continuation.onTermination = { _ in
+                    task.cancel()
+                }
+            }
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            return try await sendPrompt(prompt)
+            return AsyncStream<String> { continuation in
+                let task = Task {
+                    let result = try await sendPrompt(prompt)
+                    try Task.checkCancellation()
+                    continuation.yield(result)
+                    continuation.finish()
+                }
+                continuation.onTermination = { _ in
+                    task.cancel()
+                }
+            }
         }
     }
 }
