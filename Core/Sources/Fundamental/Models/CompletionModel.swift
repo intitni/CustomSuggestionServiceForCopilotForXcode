@@ -21,7 +21,8 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
         case openAI
         case azureOpenAI
         case openAICompatible
-        
+        case ollama
+
         case unknown
     }
 
@@ -73,6 +74,10 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
             let version = "2023-07-01-preview"
             if baseURL.isEmpty { return "" }
             return "\(baseURL)/openai/deployments/\(deployment)/completions?api-version=\(version)"
+        case .ollama:
+            let baseURL = info.baseURL
+            if baseURL.isEmpty { return "http://localhost:11434/api/generate" }
+            return "\(baseURL)/api/generate"
         case .unknown:
             return ""
         }
