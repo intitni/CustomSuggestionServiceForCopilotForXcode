@@ -20,6 +20,7 @@ struct CompletionModelEdit {
         var suggestedMaxTokens: Int?
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
+        var ollamaKeepAlive: String = ""
     }
 
     enum Action: Equatable, BindableAction {
@@ -143,7 +144,8 @@ extension CompletionModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL)
+            baseURLSelection: .init(baseURL: info.baseURL),
+            ollamaKeepAlive: info.ollamaKeepAlive
         )
     }
 
@@ -156,7 +158,8 @@ extension CompletionModel {
                 apiKeyName: state.apiKeyName,
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 maxTokens: state.maxTokens,
-                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
+                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
+                ollamaKeepAlive: state.ollamaKeepAlive
             )
         )
     }

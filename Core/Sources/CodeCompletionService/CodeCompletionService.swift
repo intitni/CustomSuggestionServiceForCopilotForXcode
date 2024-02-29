@@ -3,9 +3,9 @@ import Fundamental
 import Storage
 
 protocol CodeCompletionServiceType {
-    func getCompletion(
-        _ request: PromptStrategy
-    ) async throws -> AsyncStream<String>
+    associatedtype CompletionSequence: AsyncSequence where CompletionSequence.Element == String
+
+    func getCompletion(_ request: PromptStrategy) async throws -> CompletionSequence
 }
 
 extension CodeCompletionServiceType {
@@ -115,6 +115,18 @@ public struct CodeCompletionService {
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .chatCompletion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaKeepAlive,
+                format: .none
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
         case .unknown:
             throw Error.unknownFormat
         }
@@ -146,6 +158,18 @@ public struct CodeCompletionService {
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .completion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaKeepAlive,
+                format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
