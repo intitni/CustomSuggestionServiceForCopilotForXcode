@@ -11,18 +11,15 @@ struct ResponseStream<Chunk: Decodable>: AsyncSequence {
 
     let stream: Stream
 
-    init(result: URLSession.AsyncBytes) {
+    init(result: URLSession.AsyncBytes, lineExtractor: @escaping (String) -> String? = { $0 }) {
         stream = AsyncThrowingStream<Chunk, Error> { continuation in
             let task = Task {
                 do {
                     for try await line in result.lines {
                         if Task.isCancelled { break }
-                        let prefix = "data: "
-                        guard line.hasPrefix(prefix),
-                              let content = line.dropFirst(prefix.count).data(using: .utf8),
-                              let chunk = try? JSONDecoder()
-                              .decode(Chunk.self, from: content)
+                        guard let content = lineExtractor(line)?.data(using: .utf8)
                         else { continue }
+                        let chunk = try JSONDecoder().decode(Chunk.self, from: content)
                         continuation.yield(chunk)
                     }
                     continuation.finish()
