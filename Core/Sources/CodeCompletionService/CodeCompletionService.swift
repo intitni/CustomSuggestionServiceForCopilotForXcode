@@ -5,7 +5,7 @@ import Storage
 protocol CodeCompletionServiceType {
     func getCompletion(
         _ request: PromptStrategy
-    ) async throws -> String
+    ) async throws -> AsyncStream<String>
 }
 
 extension CodeCompletionServiceType {
@@ -16,7 +16,12 @@ extension CodeCompletionServiceType {
         try await withThrowingTaskGroup(of: String.self) { group in
             for _ in 0..<max(1, count) {
                 _ = group.addTaskUnlessCancelled {
-                    try await getCompletion(request)
+                    var result = ""
+                    let stream = try await getCompletion(request)
+                    for try await response in stream {
+                        result.append(response)
+                    }
+                    return result
                 }
             }
 

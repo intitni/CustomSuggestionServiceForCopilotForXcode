@@ -27,7 +27,7 @@ actor TabbyService {
 }
 
 extension TabbyService: CodeCompletionServiceType {
-    func getCompletion(_ request: PromptStrategy) async throws -> String {
+    func getCompletion(_ request: PromptStrategy) async throws -> AsyncStream<String> {
         let prefix = request.prefix.joined()
         let suffix = request.suffix.joined()
         let clipboard = request.relevantCodeSnippets.map(\.content).joined(separator: "\n\n")
@@ -46,7 +46,17 @@ extension TabbyService: CodeCompletionServiceType {
             (suffix, "suffix"),
             (clipboard, "clipboard"),
         ])
-        return try await send(requestBody)
+        return AsyncStream<String> { continuation in
+            let task = Task {
+                let result = try await send(requestBody)
+                try Task.checkCancellation()
+                continuation.yield(result)
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in
+                task.cancel()
+            }
+        }
     }
 }
 
