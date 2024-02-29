@@ -3,9 +3,9 @@ import Fundamental
 import Storage
 
 protocol CodeCompletionServiceType {
-    func getCompletion(
-        _ request: PromptStrategy
-    ) async throws -> AsyncStream<String>
+    associatedtype CompletionSequence: AsyncSequence where CompletionSequence.Element == String
+
+    func getCompletion(_ request: PromptStrategy) async throws -> CompletionSequence
 }
 
 extension CodeCompletionServiceType {
