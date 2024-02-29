@@ -22,6 +22,7 @@ public struct ChatModel: Codable, Equatable, Identifiable {
         case azureOpenAI
         case openAICompatible
         case googleAI
+        case ollama
         
         case unknown
     }
@@ -86,6 +87,10 @@ public struct ChatModel: Codable, Equatable, Identifiable {
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "https://generativelanguage.googleapis.com/v1" }
             return "\(baseURL)/v1/chat/completions"
+        case .ollama:
+            let baseURL = info.baseURL
+            if baseURL.isEmpty { return "http://localhost:11434/api/chat" }
+            return "\(baseURL)/api/chat"
         case .unknown:
             return ""
         }
