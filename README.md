@@ -27,7 +27,7 @@ The app supports three types of suggestion services:
 - Models with completions API
 - [Tabby](https://tabby.tabbyml.com)
 
-If you are new to running a model locally, you can try [LM Studio](https://lmstudio.ai).
+If you are new to running a model locally, you can try [Ollama](https://ollama.com) and [LM Studio](https://lmstudio.ai).
 
 ### Recommended Settings
 
