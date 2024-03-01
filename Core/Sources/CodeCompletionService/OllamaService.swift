@@ -221,6 +221,7 @@ extension OllamaService {
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     func sendPrompt(_ prompt: String) async throws -> ResponseStream<ChatCompletionResponseChunk> {

@@ -66,6 +66,10 @@ struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingSt
         openingTag: String,
         closingTag: String
     ) -> String {
+        guard !openingTag.isEmpty, !closingTag.isEmpty else {
+            return response
+        }
+        
         let case_openingTagAtTheStart_parseEverythingInsideTheTag = Parse(input: Substring.self) {
             openingTag
 

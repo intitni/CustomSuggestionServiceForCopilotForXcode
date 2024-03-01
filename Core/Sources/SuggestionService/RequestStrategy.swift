@@ -26,6 +26,8 @@ public enum RequestStrategyOption: String, CaseIterable, Codable {
     case `default` = ""
     case naive
     case `continue`
+    case codeLlamaFillInTheMiddle
+    case codeLlamaFillInTheMiddleWithSystemPrompt
 }
 
 extension RequestStrategyOption {
@@ -37,6 +39,10 @@ extension RequestStrategyOption {
             return NaiveRequestStrategy.self
         case .continue:
             return ContinueRequestStrategy.self
+        case .codeLlamaFillInTheMiddle:
+            return CodeLlamaFillInTheMiddleRequestStrategy.self
+        case .codeLlamaFillInTheMiddleWithSystemPrompt:
+            return CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy.self
         }
     }
 }

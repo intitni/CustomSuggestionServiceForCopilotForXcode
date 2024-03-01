@@ -177,6 +177,14 @@ struct RequestStrategyPicker: View {
                         Text("Naive").tag(option.rawValue)
                     case .continue:
                         Text("Continue").tag(option.rawValue)
+                    case .codeLlamaFillInTheMiddle:
+                        Text(
+                            "CodeLlama Fill-in-the-Middle (Good for Codellama:xb-code and other models with Fill-in-the-Middle support)"
+                        )
+                        .tag(option.rawValue)
+                    case .codeLlamaFillInTheMiddleWithSystemPrompt:
+                        Text("CodeLlama Fill-in-the-Middle with System Prompt")
+                            .tag(option.rawValue)
                     }
                 }
             }
