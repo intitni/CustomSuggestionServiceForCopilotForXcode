@@ -21,6 +21,13 @@ struct ContinueRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
+    
+    func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
+        DefaultRawSuggestionPostProcessingStrategy(
+            openingCodeTag: Tag.openingCode,
+            closingCodeTag: Tag.closingCode
+        )
+    }
 
     enum Tag {
         public static let openingCode = "<Code3721>"
@@ -157,22 +164,6 @@ struct ContinueRequestStrategy: RequestStrategy {
                 infillBlock: promptLines.joined()
             )
         }
-    }
-
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        let suggestion = extractEnclosingSuggestion(
-            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
-            openingTag: Tag.openingCode,
-            closingTag: Tag.closingCode
-        )
-
-        if suggestion.hasPrefix(suggestionPrefix) {
-            var processed = suggestion
-            processed.removeFirst(suggestionPrefix.count)
-            return processed
-        }
-
-        return suggestionPrefix + suggestion
     }
 }
 

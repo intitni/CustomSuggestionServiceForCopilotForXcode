@@ -44,7 +44,8 @@ actor Service {
 
                     let service = CodeCompletionService()
 
-                    let promptStrategy = strategy.createPrompt()
+                    let prompt = strategy.createPrompt()
+                    let postProcessor = strategy.createRawSuggestionPostProcessor()
 
                     let suggestedCodeSnippets: [String]
 
@@ -52,21 +53,21 @@ actor Service {
                     case let .chatModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
-                            promptStrategy,
+                            prompt,
                             model: model,
                             count: 1
                         )
                     case let .completionModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
-                            promptStrategy,
+                            prompt,
                             model: model,
                             count: 1
                         )
                     case let .tabbyModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
-                            promptStrategy,
+                            prompt,
                             model: model,
                             count: 1
                         )
@@ -80,8 +81,8 @@ actor Service {
                             CodeSuggestion(
                                 id: UUID().uuidString,
                                 text: Self.removeTrailingNewlinesAndWhitespace(
-                                    from: strategy.postProcessRawSuggestion(
-                                        suggestionPrefix: promptStrategy
+                                    from: postProcessor.postProcessRawSuggestion(
+                                        suggestionPrefix: prompt
                                             .suggestionPrefix.prependingValue,
                                         suggestion: $0
                                     )
