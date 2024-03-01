@@ -11,10 +11,10 @@ public actor OllamaService {
     let stopWords: [String]
     let keepAlive: String
     let format: ResponseFormat
-    
+
     public enum ResponseFormat: String {
         case none = ""
-        case json = "json"
+        case json
     }
 
     public enum Endpoint {
@@ -192,7 +192,13 @@ extension OllamaService {
             throw Error.otherError(text)
         }
 
-        return ResponseStream(result: result)
+        return ResponseStream(result: result) {
+            let chunk = try JSONDecoder().decode(
+                ChatCompletionResponseChunk.self,
+                from: $0.data(using: .utf8) ?? Data()
+            )
+            return .init(chunk: chunk, done: chunk.done)
+        }
     }
 }
 
@@ -249,7 +255,13 @@ extension OllamaService {
             throw Error.otherError(text)
         }
 
-        return ResponseStream(result: result)
+        return ResponseStream(result: result) {
+            let chunk = try JSONDecoder().decode(
+                ChatCompletionResponseChunk.self,
+                from: $0.data(using: .utf8) ?? Data()
+            )
+            return .init(chunk: chunk, done: chunk.done)
+        }
     }
 
     func countToken(_ message: Message) -> Int {
