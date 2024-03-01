@@ -57,7 +57,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
-        """
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
@@ -114,7 +114,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             Complete code inside \(Tag.openingCode):
 
             \(Tag.openingCode)\(infillBlock)
-            """
+            """.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
         static func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {

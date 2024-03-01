@@ -75,7 +75,7 @@ struct NaiveRequestStrategy: RequestStrategy {
             ---
             
             \(code)
-            """)]
+            """.trimmingCharacters(in: .whitespacesAndNewlines))]
         }
     }
 }
