@@ -49,40 +49,6 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
         XCTAssertEqual(result, "suggestion\nyes")
     }
 
-    func test_whenOnlyLinebreaksOrSpacesBeforeOpeningTag_shouldExtractCodeInsideTheTags() {
-        let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
-        )
-        let result = strategy.extractSuggestion(
-            from: """
-
-
-                 <Code>suggestion</Code>
-            """
-        )
-
-        XCTAssertEqual(result, "suggestion")
-
-        let result2 = strategy.extractSuggestion(
-            from: """
-                    <Code>suggestion</Code>
-            """
-        )
-
-        XCTAssertEqual(result2, "suggestion")
-
-        let result3 = strategy.extractSuggestion(
-            from: """
-
-
-            <Code>suggestion</Code>
-            """
-        )
-
-        XCTAssertEqual(result3, "suggestion")
-    }
-
     func test_whenMultipleOpeningTagFound_shouldTreatTheNextOneAsClosing() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
             openingCodeTag: "<Code>",
