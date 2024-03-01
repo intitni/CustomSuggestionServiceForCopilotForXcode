@@ -109,7 +109,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result, "suggestion")
+        XCTAssertEqual(result, "suggestion\n")
     }
 
     func test_whenOnlyLinebreaksOrSpacesBeforeMarkdownCodeBlock_shouldExtractCodeInside() {
@@ -127,7 +127,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result, "suggestion")
+        XCTAssertEqual(result, "suggestion\n")
 
         let result2 = strategy.extractSuggestion(
             from: """
@@ -137,7 +137,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result2, "suggestion")
+        XCTAssertEqual(result2, "suggestion\n")
 
         let result3 = strategy.extractSuggestion(
             from: """
@@ -149,7 +149,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result3, "suggestion")
+        XCTAssertEqual(result3, "suggestion\n")
     }
 
     func test_whenMarkdownCodeBlockAndCodeTagFound_firstlyExtractCodeTag_thenCodeTag() {
@@ -211,7 +211,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result, "suggestion")
+        XCTAssertEqual(result, "suggestion\n")
     }
 
     func test_whenSuggestionHasTheSamePrefix_inTags_removeThePrefix() {

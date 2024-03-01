@@ -116,9 +116,31 @@ struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingSt
     fileprivate func removeLeadingAndTrailingMarkdownCodeBlockMark(from response: String)
         -> String
     {
+        let leadingMarkdownCodeBlockMarkParser = Parse(input: Substring.self) {
+            Skip {
+                Many {
+                    OneOf {
+                        " "
+                        "\n"
+                    }
+                }
+                "```"
+            }
+        }
+        
+        let messagePrefixingMarkdownCodeBlockMarkParser = Parse(input: Substring.self) {
+            Skip {
+                PrefixThrough(":")
+                "\n```"
+            }
+        }
+        
         let removePrefixMarkdownCodeBlockMark = Parse(input: Substring.self) {
             Skip {
-                "```"
+                OneOf {
+                    leadingMarkdownCodeBlockMarkParser
+                    messagePrefixingMarkdownCodeBlockMarkParser
+                }
                 PrefixThrough("\n")
             }
             OneOf {
