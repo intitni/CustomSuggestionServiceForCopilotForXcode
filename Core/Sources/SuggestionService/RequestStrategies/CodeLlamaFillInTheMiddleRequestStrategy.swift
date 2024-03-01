@@ -31,20 +31,13 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
     }
 
     struct Prompt: PromptStrategy {
-        let systemPrompt: String = """
-        You are a senior programer who take the surrounding code and \
-        references from the codebase into account in order to write high-quality code to \
-        complete the code enclosed in the given code. \
-        You only respond with code that works and fits seamlessly with surrounding code. \
-        Don't include anything else beyond the code. \
-        The prefix will follow the PRE tag and the suffix will follow the SUF tag.
-        """
+        fileprivate(set) var systemPrompt: String = ""
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
         var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { ["\n\n"] }
+        var stopWords: [String] { ["\n\n", "<EOT>"] }
         var language: CodeLanguage? { sourceRequest.language }
 
         var suggestionPrefix: SuggestionPrefix {
@@ -57,6 +50,7 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
             truncatedSuffix: [String],
             includedSnippets: [RelevantCodeSnippet]
         ) -> [PromptMessage] {
+            let suffix = truncatedSuffix.joined()
             return [
                 .init(
                     role: .user,
@@ -67,12 +61,39 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
                     \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
                     \(includedSnippets.map(\.content).joined(separator: "\n\n"))
                     \(truncatedPrefix.joined()) \
-                    \(Tag.suffix)\(truncatedSuffix.joined()) \
+                    \(Tag.suffix)\(suffix.isEmpty ? "\n// End of file" : suffix) \
                     \(Tag.middle)
                     """.trimmingCharacters(in: .whitespacesAndNewlines)
                 ),
             ]
         }
+    }
+}
+
+struct CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
+    let strategy: CodeLlamaFillInTheMiddleRequestStrategy
+
+    init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String]) {
+        strategy = .init(sourceRequest: sourceRequest, prefix: prefix, suffix: suffix)
+    }
+
+    func createPrompt() -> some PromptStrategy {
+        var prompt = strategy.createPrompt()
+        prompt.systemPrompt = """
+        You are a senior programer who take the surrounding code and \
+        references from the codebase into account in order to write high-quality code to \
+        complete the code enclosed in the given code. \
+        You only respond with code that works and fits seamlessly with surrounding code. \
+        Don't include anything else beyond the code. \
+        The prefix will follow the PRE tag and the suffix will follow the SUF tag. \
+        You should write the code that fits seamlessly after the MID tag.
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return prompt
+    }
+
+    func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
+        strategy.createRawSuggestionPostProcessor()
     }
 }
 
