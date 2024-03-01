@@ -20,6 +20,10 @@ struct NaiveRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
+    
+    func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
+        NoOpRawSuggestionPostProcessingStrategy()
+    }
 
     struct Request: PromptStrategy {
         let systemPrompt: String = ""
