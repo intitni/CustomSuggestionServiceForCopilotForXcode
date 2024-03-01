@@ -80,12 +80,10 @@ actor Service {
                         .map {
                             CodeSuggestion(
                                 id: UUID().uuidString,
-                                text: Self.removeTrailingNewlinesAndWhitespace(
-                                    from: postProcessor.postProcessRawSuggestion(
-                                        suggestionPrefix: prompt
-                                            .suggestionPrefix.prependingValue,
-                                        suggestion: $0
-                                    )
+                                text: postProcessor.postProcess(
+                                    rawSuggestion: $0,
+                                    infillPrefix: prompt.suggestionPrefix.prependingValue,
+                                    suffix: prompt.suffix
                                 ),
                                 position: request.cursorPosition,
                                 range: .init(
@@ -172,14 +170,6 @@ actor Service {
         }()
 
         return (previousLines, nextLines)
-    }
-
-    static func removeTrailingNewlinesAndWhitespace(from string: String) -> String {
-        var text = string[...]
-        while let last = text.last, last.isNewline || last.isWhitespace {
-            text = text.dropLast(1)
-        }
-        return String(text)
     }
 }
 

@@ -1,8 +1,8 @@
 import Foundation
 
 struct NoOpRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingStrategy {
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        suggestionPrefix + suggestion
+    func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String {
+        removeTrailingNewlinesAndWhitespace(from: infillPrefix + rawSuggestion)
     }
 }
 

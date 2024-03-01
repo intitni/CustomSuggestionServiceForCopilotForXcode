@@ -2,31 +2,66 @@ import Foundation
 import Parsing
 
 protocol RawSuggestionPostProcessingStrategy {
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String
+    func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String
+}
+
+extension RawSuggestionPostProcessingStrategy {
+    func removeTrailingNewlinesAndWhitespace(from string: String) -> String {
+        var text = string[...]
+        while let last = text.last, last.isNewline || last.isWhitespace {
+            text = text.dropLast(1)
+        }
+        return String(text)
+    }
 }
 
 struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingStrategy {
     let openingCodeTag: String
     let closingCodeTag: String
 
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        let suggestion = extractEnclosingSuggestion(
-            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
+    func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String {
+        var suggestion = extractSuggestion(from: rawSuggestion)
+        removePrefix(from: &suggestion, infillPrefix: infillPrefix)
+        removeSuffix(from: &suggestion, suffix: suffix)
+        return removeTrailingNewlinesAndWhitespace(from: infillPrefix + suggestion)
+    }
+
+    func extractSuggestion(from response: String) -> String {
+        let escapedMarkdownCodeBlock = removeLeadingAndTrailingMarkdownCodeBlockMark(from: response)
+        let escapedTags = extractEnclosingSuggestion(
+            from: escapedMarkdownCodeBlock,
             openingTag: openingCodeTag,
             closingTag: closingCodeTag
         )
 
-        if suggestion.hasPrefix(suggestionPrefix) {
-            var processed = suggestion
-            processed.removeFirst(suggestionPrefix.count)
-            return processed
-        }
+        return escapedTags
+    }
 
-        return suggestionPrefix + suggestion
+    func removePrefix(from suggestion: inout String, infillPrefix: String) {
+        if suggestion.hasPrefix(infillPrefix) {
+            suggestion.removeFirst(infillPrefix.count)
+        }
+    }
+
+    /// Window-mapping the lines in suggestion and the suffix to remove the common suffix.
+    func removeSuffix(from suggestion: inout String, suffix: [String]) {
+        let suggestionLines = suggestion.breakLines(appendLineBreakToLastLine: true)
+        if let last = suggestionLines.last, let lastIndex = suffix.firstIndex(of: last) {
+            var i = lastIndex - 1
+            var j = suggestionLines.endIndex - 2
+            while i >= 0, j >= 0, suffix[i] == suggestionLines[j] {
+                i -= 1
+                j -= 1
+            }
+            if i < 0 {
+                let endIndex = max(j, 0)
+                suggestion = suggestionLines[...endIndex].joined()
+            }
+        }
     }
 
     /// Extract suggestions that is enclosed in tags.
-    func extractEnclosingSuggestion(
+    fileprivate func extractEnclosingSuggestion(
         from response: String,
         openingTag: String,
         closingTag: String
@@ -78,7 +113,9 @@ struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingSt
     }
 
     /// If the response starts with markdown code block, we should remove it.
-    func removeLeadingAndTrailingMarkdownCodeBlockMark(from response: String) -> String {
+    fileprivate func removeLeadingAndTrailingMarkdownCodeBlockMark(from response: String)
+        -> String
+    {
         let removePrefixMarkdownCodeBlockMark = Parse(input: Substring.self) {
             Skip {
                 "```"
