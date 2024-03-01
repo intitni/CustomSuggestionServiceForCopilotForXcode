@@ -128,6 +128,15 @@ actor Service {
         suffix: [String]
     ) -> any RequestStrategy {
         let id = UserDefaults.shared.value(for: \.requestStrategyId)
+        if let type = CustomModelType(rawValue: UserDefaults.shared.value(for: \.chatModelId)),
+           type == .tabby
+        {
+            return TabbyRequestStrategy(
+                sourceRequest: sourceRequest,
+                prefix: prefix,
+                suffix: suffix
+            )
+        }
         let strategyOption = RequestStrategyOption(rawValue: id) ?? .default
         return strategyOption.strategy.init(
             sourceRequest: sourceRequest,
