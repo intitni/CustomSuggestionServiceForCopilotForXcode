@@ -128,7 +128,7 @@ struct ChatModelEditView: View {
             )
 
             TextField(text: textFieldBinding) {
-                Text("Max Tokens (Including Reply)")
+                Text("Context Window")
                     .multilineTextAlignment(.trailing)
             }
             .overlay(alignment: .trailing) {
@@ -269,7 +269,7 @@ struct ChatModelEditView: View {
     var ollama: some View {
         baseURLTextField(
             title: "",
-            prompt: Text("https://127.0.0.1:11434/api/chat")
+            prompt: Text("http://127.0.0.1:11434")
         ) {
             Text("/api/chat")
         }
@@ -284,7 +284,7 @@ struct ChatModelEditView: View {
         
         VStack(alignment: .leading, spacing: 8) {
             Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
-                " For more details, please visit [https://ollama.com](https://ollama.com)"
+                " For more details, please visit [https://ollama.com](https://ollama.com)."
             )
         }
         .padding(.vertical)
