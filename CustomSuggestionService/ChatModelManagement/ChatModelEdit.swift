@@ -154,7 +154,7 @@ extension ChatModel {
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
             baseURLSelection: .init(baseURL: info.baseURL),
-            ollamaKeepAlive: info.ollamaKeepAlive
+            ollamaKeepAlive: info.ollamaInfo.keepAlive
         )
     }
 
@@ -169,7 +169,7 @@ extension ChatModel {
                 maxTokens: state.maxTokens,
                 supportsFunctionCalling: false,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
-                ollamaKeepAlive: state.ollamaKeepAlive
+                ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
             )
         )
     }

@@ -145,7 +145,7 @@ extension CompletionModel {
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
             baseURLSelection: .init(baseURL: info.baseURL),
-            ollamaKeepAlive: info.ollamaKeepAlive
+            ollamaKeepAlive: info.ollamaInfo.keepAlive
         )
     }
 
@@ -159,7 +159,7 @@ extension CompletionModel {
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 maxTokens: state.maxTokens,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
-                ollamaKeepAlive: state.ollamaKeepAlive
+                ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
             )
         )
     }

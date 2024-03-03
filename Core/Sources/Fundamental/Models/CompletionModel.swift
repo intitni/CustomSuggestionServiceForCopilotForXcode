@@ -27,6 +27,9 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
     }
 
     public struct Info: Codable, Equatable {
+        public typealias OllamaInfo = ChatModel.Info.OllamaInfo
+        public typealias OpenAIInfo = ChatModel.Info.OpenAIInfo
+        
         @FallbackDecoding<EmptyString>
         public var apiKeyName: String
         @FallbackDecoding<EmptyString>
@@ -37,12 +40,11 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
         public var maxTokens: Int
         @FallbackDecoding<EmptyString>
         public var modelName: String
-        public var azureOpenAIDeploymentName: String {
-            get { modelName }
-            set { modelName = newValue }
-        }
-        @FallbackDecoding<EmptyString>
-        public var ollamaKeepAlive: String
+       
+        @FallbackDecoding<EmptyChatModelOpenAIInfo>
+        public var openAIInfo: OpenAIInfo
+        @FallbackDecoding<EmptyChatModelOllamaInfo>
+        public var ollamaInfo: OllamaInfo
 
         public init(
             apiKeyName: String = "",
@@ -50,14 +52,16 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
             isFullURL: Bool = false,
             maxTokens: Int = 4000,
             modelName: String = "",
-            ollamaKeepAlive: String = ""
+            openAIInfo: OpenAIInfo = OpenAIInfo(),
+            ollamaInfo: OllamaInfo = OllamaInfo()
         ) {
             self.apiKeyName = apiKeyName
             self.baseURL = baseURL
             self.isFullURL = isFullURL
             self.maxTokens = maxTokens
             self.modelName = modelName
-            self.ollamaKeepAlive = ollamaKeepAlive
+            self.openAIInfo = openAIInfo
+            self.ollamaInfo = ollamaInfo
         }
     }
 
@@ -74,7 +78,7 @@ public struct CompletionModel: Codable, Equatable, Identifiable {
             return "\(baseURL)/v1/completions"
         case .azureOpenAI:
             let baseURL = info.baseURL
-            let deployment = info.azureOpenAIDeploymentName
+            let deployment = info.modelName
             let version = "2023-07-01-preview"
             if baseURL.isEmpty { return "" }
             return "\(baseURL)/openai/deployments/\(deployment)/completions?api-version=\(version)"

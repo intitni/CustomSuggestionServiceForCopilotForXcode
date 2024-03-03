@@ -121,7 +121,7 @@ public struct CodeCompletionService {
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
-                keepAlive: model.info.ollamaKeepAlive,
+                keepAlive: model.info.ollamaInfo.keepAlive,
                 format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
@@ -168,7 +168,7 @@ public struct CodeCompletionService {
                 endpoint: .completion,
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
-                keepAlive: model.info.ollamaKeepAlive,
+                keepAlive: model.info.ollamaInfo.keepAlive,
                 format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
