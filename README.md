@@ -45,9 +45,6 @@ Ensure that the prompt format remains as simple as the following:
 {User}
 {Assistant}
 ```
-{{ .System }}
-{{ .Prompt }}{{ .Response }}
-```
 
 The template format differs in different tools.
 
