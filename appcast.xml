@@ -3,6 +3,18 @@
     <channel>
         <title>Custom Suggestion Service</title>
         <item>
+            <title>0.2.0</title>
+            <pubDate>Mon, 04 Mar 2024 12:50:34 +0800</pubDate>
+            <sparkle:version>20</sparkle:version>
+            <sparkle:shortVersionString>0.2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>
+                https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.2.0
+            </sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.2.0/Custom.Suggestion.Service.app.zip" length="6556150" type="application/octet-stream" sparkle:edSignature="BC9S9lkh8o8DhMG0txy3AKrqQul574SWVgQD9eEf4D2H10/00kebMEEgKjJjxLvSQjSsyuXOgwCCkCJ8/rZqCA=="/>
+        </item>
+        
+        <item>
             <title>0.1.0</title>
             <pubDate>Thu, 22 Feb 2024 16:20:36 +0800</pubDate>
             <sparkle:version>12</sparkle:version>
@@ -11,7 +23,7 @@
             <sparkle:releaseNotesLink>
                 https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.1.0
             </sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/Custom.Suggestion.Service.app.zip" length="6339668" type="application/octet-stream" sparkle:edSignature="MDRwpJLvF+a4RLRxwWei1PD7XQh5uO6aavXO8IvBq6viO8NLxs0kc1n3QFPjz1F0Pkft1sATb4towbejHCdjAg=="/>
+            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.1.0/Custom.Suggestion.Service.app.zip" length="6339668" type="application/octet-stream" sparkle:edSignature="MDRwpJLvF+a4RLRxwWei1PD7XQh5uO6aavXO8IvBq6viO8NLxs0kc1n3QFPjz1F0Pkft1sATb4towbejHCdjAg=="/>
         </item>
     </channel>
 </rss>
