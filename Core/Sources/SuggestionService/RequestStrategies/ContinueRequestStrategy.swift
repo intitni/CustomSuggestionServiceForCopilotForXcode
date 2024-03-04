@@ -21,6 +21,13 @@ struct ContinueRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
+    
+    func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
+        DefaultRawSuggestionPostProcessingStrategy(
+            openingCodeTag: Tag.openingCode,
+            closingCodeTag: Tag.closingCode
+        )
+    }
 
     enum Tag {
         public static let openingCode = "<Code3721>"
@@ -47,7 +54,7 @@ struct ContinueRequestStrategy: RequestStrategy {
         ```
         o World)
         ```
-        """
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
@@ -106,18 +113,18 @@ struct ContinueRequestStrategy: RequestStrategy {
             ```
 
             Complete code inside \(Tag.openingCode)
-            """)
+            """.trimmingCharacters(in: .whitespacesAndNewlines))
 
             let mockResponse = PromptMessage(role: .assistant, content: """
             \(Tag.openingCode)\(infillBlock)
-            """)
+            """.trimmingCharacters(in: .whitespacesAndNewlines))
 
             let continuePrompt = PromptMessage(role: .user, content: """
             Continue generating. \
             Don't duplicate existing implementations. \
             Don't try to fix what was written. \
             Don't worry about typos.
-            """)
+            """.trimmingCharacters(in: .whitespacesAndNewlines))
 
             return [
                 initialPrompt,
@@ -157,22 +164,6 @@ struct ContinueRequestStrategy: RequestStrategy {
                 infillBlock: promptLines.joined()
             )
         }
-    }
-
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        let suggestion = extractEnclosingSuggestion(
-            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
-            openingTag: Tag.openingCode,
-            closingTag: Tag.closingCode
-        )
-
-        if suggestion.hasPrefix(suggestionPrefix) {
-            var processed = suggestion
-            processed.removeFirst(suggestionPrefix.count)
-            return processed
-        }
-
-        return suggestionPrefix + suggestion
     }
 }
 

@@ -20,6 +20,7 @@ struct ChatModelEdit {
         var suggestedMaxTokens: Int?
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
+        var ollamaKeepAlive: String = ""
     }
 
     enum Action: Equatable, BindableAction {
@@ -152,7 +153,8 @@ extension ChatModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL)
+            baseURLSelection: .init(baseURL: info.baseURL),
+            ollamaKeepAlive: info.ollamaInfo.keepAlive
         )
     }
 
@@ -166,7 +168,8 @@ extension ChatModel {
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 maxTokens: state.maxTokens,
                 supportsFunctionCalling: false,
-                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
+                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
+                ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
             )
         )
     }

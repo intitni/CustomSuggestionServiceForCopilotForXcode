@@ -3,9 +3,9 @@ import Fundamental
 import Storage
 
 protocol CodeCompletionServiceType {
-    func getCompletion(
-        _ request: PromptStrategy
-    ) async throws -> String
+    associatedtype CompletionSequence: AsyncSequence where CompletionSequence.Element == String
+
+    func getCompletion(_ request: PromptStrategy) async throws -> CompletionSequence
 }
 
 extension CodeCompletionServiceType {
@@ -16,7 +16,12 @@ extension CodeCompletionServiceType {
         try await withThrowingTaskGroup(of: String.self) { group in
             for _ in 0..<max(1, count) {
                 _ = group.addTaskUnlessCancelled {
-                    try await getCompletion(request)
+                    var result = ""
+                    let stream = try await getCompletion(request)
+                    for try await response in stream {
+                        result.append(response)
+                    }
+                    return result
                 }
             }
 
@@ -110,6 +115,18 @@ public struct CodeCompletionService {
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()
             return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .chatCompletion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaInfo.keepAlive,
+                format: .none
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
         case .unknown:
             throw Error.unknownFormat
         }
@@ -141,6 +158,18 @@ public struct CodeCompletionService {
                 modelName: model.info.modelName,
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
+            )
+            let result = try await service.getCompletions(prompt, count: count)
+            try Task.checkCancellation()
+            return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .completion,
+                modelName: model.info.modelName,
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaInfo.keepAlive,
+                format: .none
             )
             let result = try await service.getCompletions(prompt, count: count)
             try Task.checkCancellation()

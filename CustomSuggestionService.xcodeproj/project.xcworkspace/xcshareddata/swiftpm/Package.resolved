@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/intitni/CopilotForXcodeKit.git",
       "state" : {
-        "revision" : "91b252bd30691a5e02d600ba175eb4e69e4d4dfc",
-        "version" : "0.4.0"
+        "revision" : "05d5992a1dca572cf16019b23dfb4fca3be2109b",
+        "version" : "0.5.0"
       }
     },
     {

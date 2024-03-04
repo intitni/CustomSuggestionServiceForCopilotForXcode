@@ -106,7 +106,11 @@ struct TestField {
                                 indentSize: 4,
                                 usesTabsForIndentation: false,
                                 relevantCodeSnippets: [
-                                    .init(content: relevantCodeSnippet, priority: 999),
+                                    .init(
+                                        content: relevantCodeSnippet,
+                                        priority: 999,
+                                        filePath: ""
+                                    ),
                                 ]
                             ),
                             workspace: workspace

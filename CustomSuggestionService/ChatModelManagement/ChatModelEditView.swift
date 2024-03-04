@@ -25,6 +25,8 @@ struct ChatModelEditView: View {
                             openAICompatible
                         case .googleAI:
                             googleAI
+                        case .ollama:
+                            ollama
                         case .unknown:
                             EmptyView()
                         }
@@ -77,6 +79,8 @@ struct ChatModelEditView: View {
                         Text("OpenAI Compatible").tag(format)
                     case .googleAI:
                         Text("Google Generative AI").tag(format)
+                    case .ollama:
+                        Text("Ollama").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -124,7 +128,7 @@ struct ChatModelEditView: View {
             )
 
             TextField(text: textFieldBinding) {
-                Text("Max Tokens (Including Reply)")
+                Text("Context Window")
                     .multilineTextAlignment(.trailing)
             }
             .overlay(alignment: .trailing) {
@@ -259,6 +263,31 @@ struct ChatModelEditView: View {
             }
 
         maxTokensTextField
+    }
+    
+    @ViewBuilder
+    var ollama: some View {
+        baseURLTextField(
+            title: "",
+            prompt: Text("http://127.0.0.1:11434")
+        ) {
+            Text("/api/chat")
+        }
+
+        TextField("Model Name", text: $store.modelName)
+
+        maxTokensTextField
+        
+        TextField(text: $store.ollamaKeepAlive, prompt: Text("Default Value")) {
+            Text("Keep Alive")
+        }
+        
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                " For more details, please visit [https://ollama.com](https://ollama.com)."
+            )
+        }
+        .padding(.vertical)
     }
 }
 

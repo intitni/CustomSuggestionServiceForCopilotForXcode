@@ -8,7 +8,11 @@ public class SuggestionService: SuggestionServiceType {
     public init() {}
 
     public var configuration: SuggestionServiceConfiguration {
-        .init(acceptsRelevantCodeSnippets: true, mixRelevantCodeSnippetsInSource: false)
+        .init(
+            acceptsRelevantCodeSnippets: true,
+            mixRelevantCodeSnippetsInSource: false,
+            acceptsRelevantSnippetsFromOpenedFiles: true
+        )
     }
 
     public func notifyAccepted(_ suggestion: CodeSuggestion, workspace: WorkspaceInfo) async {}

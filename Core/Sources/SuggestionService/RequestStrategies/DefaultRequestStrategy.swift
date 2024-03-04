@@ -22,6 +22,13 @@ struct DefaultRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
+    
+    func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
+        DefaultRawSuggestionPostProcessingStrategy(
+            openingCodeTag: Tag.openingCode,
+            closingCodeTag: Tag.closingCode
+        )
+    }
 
     enum Tag {
         public static let openingCode = "<Code3721>"
@@ -50,7 +57,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         ###
          World")\(Tag.closingCode)
         ###
-        """
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
         var sourceRequest: SuggestionRequest
         var prefix: [String]
         var suffix: [String]
@@ -107,7 +114,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             Complete code inside \(Tag.openingCode):
 
             \(Tag.openingCode)\(infillBlock)
-            """
+            """.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
         static func createSnippetsPrompt(includedSnippets: [RelevantCodeSnippet]) -> String {
@@ -141,22 +148,6 @@ struct DefaultRequestStrategy: RequestStrategy {
                 infillBlock: promptLines.joined()
             )
         }
-    }
-    
-    func postProcessRawSuggestion(suggestionPrefix: String, suggestion: String) -> String {
-        let suggestion = extractEnclosingSuggestion(
-            from: removeLeadingAndTrailingMarkdownCodeBlockMark(from: suggestion),
-            openingTag: Tag.openingCode,
-            closingTag: Tag.closingCode
-        )
-
-        if suggestion.hasPrefix(suggestionPrefix) {
-            var processed = suggestion
-            processed.removeFirst(suggestionPrefix.count)
-            return processed
-        }
-
-        return suggestionPrefix + suggestion
     }
 }
 
