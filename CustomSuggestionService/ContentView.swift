@@ -14,6 +14,7 @@ struct ContentView: View {
         @AppStorage(\.chatModelId) var chatModelId
         @AppStorage(\.installBetaBuild) var installBetaBuild
         @AppStorage(\.verboseLog) var verboseLog
+        @AppStorage(\.maxNumberOfLinesOfSuggestion) var maxNumberOfLinesOfSuggestion
     }
 
     @StateObject var settings = Settings()
@@ -26,16 +27,26 @@ struct ContentView: View {
             WithPerceptionTracking {
                 VStack {
                     Form {
-                        HStack {
-                            ExistedChatModelPicker()
-                            if CustomModelType(rawValue: settings.chatModelId) != nil {
-                                Button("Edit Model") {
-                                    isEditingCustomModel = true
+                        Section {
+                            HStack {
+                                ExistedChatModelPicker()
+                                if CustomModelType(rawValue: settings.chatModelId) != nil {
+                                    Button("Edit Model") {
+                                        isEditingCustomModel = true
+                                    }
                                 }
                             }
-                        }
 
-                        RequestStrategyPicker()
+                            RequestStrategyPicker()
+
+                            NumberInput(
+                                value: settings.$maxNumberOfLinesOfSuggestion,
+                                range: 1...Int.max,
+                                step: 1
+                            ) {
+                                Text("Suggestion Line Limit")
+                            }
+                        }
 
                         Section {
                             HStack {
@@ -189,6 +200,47 @@ struct RequestStrategyPicker: View {
                 }
             }
         )
+    }
+}
+
+struct NumberInput<V: Strideable, Label: View>: View {
+    @Binding var value: V
+    let formatter = NumberFormatter()
+    let range: ClosedRange<V>
+    let step: V.Stride
+    @ViewBuilder var label: () -> Label
+
+    var body: some View {
+        TextField(value: .init(get: {
+            if value > range.upperBound {
+                return range.upperBound
+            } else if value < range.lowerBound {
+                return range.lowerBound
+            } else {
+                return value
+            }
+        }, set: { newValue in
+            if newValue > range.upperBound {
+                value = range.upperBound
+            } else if newValue < range.lowerBound {
+                value = range.lowerBound
+            } else {
+                value = newValue
+            }
+        }), formatter: formatter, prompt: nil) {
+            label()
+        }
+        .padding(.trailing)
+        .overlay(alignment: .trailing) {
+            Stepper(
+                value: $value,
+                in: range,
+                step: step
+            ) {
+                EmptyView()
+            }
+        }
+        .padding(.trailing, 4)
     }
 }
 

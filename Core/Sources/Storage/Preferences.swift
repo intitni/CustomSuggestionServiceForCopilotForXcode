@@ -80,6 +80,13 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-TabbyModel"
         )
     }
+    
+    var maxNumberOfLinesOfSuggestion: PreferenceKey<Int> {
+        .init(
+            defaultValue: 99999,
+            key: "CustomSuggestionService-MaxNumberOfLinesOfSuggestion"
+        )
+    }
 
     var installBetaBuild: PreferenceKey<Bool> {
         .init(defaultValue: false, key: "CustomSuggestionService-InstallBetaBuild")
