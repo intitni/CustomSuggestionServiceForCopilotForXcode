@@ -10,7 +10,7 @@ struct DefaultRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
-    
+
     var shouldSkip: Bool {
         prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
     }
@@ -22,12 +22,12 @@ struct DefaultRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
-    
+
     func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
-        DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: Tag.openingCode,
-            closingCodeTag: Tag.closingCode
-        )
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: (
+            Tag.openingCode,
+            Tag.closingCode
+        ))
     }
 
     enum Tag {
@@ -65,7 +65,7 @@ struct DefaultRequestStrategy: RequestStrategy {
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { [Tag.closingCode, "\n\n"] }
         var language: CodeLanguage? { sourceRequest.language }
-        
+
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
             return .unchanged(prefix).curlyBracesLineBreak()
@@ -103,7 +103,7 @@ struct DefaultRequestStrategy: RequestStrategy {
             File Path: \(filePath)
             Indentation: \
             \(sourceRequest.indentSize) \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-            
+
             ---
 
             Here is the code:

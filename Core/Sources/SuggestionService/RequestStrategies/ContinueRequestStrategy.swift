@@ -23,10 +23,10 @@ struct ContinueRequestStrategy: RequestStrategy {
     }
     
     func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
-        DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: Tag.openingCode,
-            closingCodeTag: Tag.closingCode
-        )
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: (
+            Tag.openingCode,
+            Tag.closingCode
+        ))
     }
 
     enum Tag {

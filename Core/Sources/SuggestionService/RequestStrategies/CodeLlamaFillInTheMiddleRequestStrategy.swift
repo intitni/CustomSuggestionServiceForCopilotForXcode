@@ -20,8 +20,8 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
         )
     }
 
-    func createRawSuggestionPostProcessor() -> NoOpRawSuggestionPostProcessingStrategy {
-        NoOpRawSuggestionPostProcessingStrategy()
+    func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
     enum Tag {
@@ -93,7 +93,7 @@ struct CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy 
     }
 
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
-        DefaultRawSuggestionPostProcessingStrategy(openingCodeTag: "", closingCodeTag: "")
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 }
 

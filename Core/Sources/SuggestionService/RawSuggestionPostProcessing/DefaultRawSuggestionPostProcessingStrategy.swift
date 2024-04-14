@@ -16,8 +16,7 @@ extension RawSuggestionPostProcessingStrategy {
 }
 
 struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingStrategy {
-    let openingCodeTag: String
-    let closingCodeTag: String
+    let codeWrappingTags: (opening: String, closing: String)?
 
     func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String {
         var suggestion = extractSuggestion(from: rawSuggestion)
@@ -28,13 +27,16 @@ struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingSt
 
     func extractSuggestion(from response: String) -> String {
         let escapedMarkdownCodeBlock = removeLeadingAndTrailingMarkdownCodeBlockMark(from: response)
-        let escapedTags = extractEnclosingSuggestion(
-            from: escapedMarkdownCodeBlock,
-            openingTag: openingCodeTag,
-            closingTag: closingCodeTag
-        )
-
-        return escapedTags
+        if let tags = codeWrappingTags {
+            let escapedTags = extractEnclosingSuggestion(
+                from: escapedMarkdownCodeBlock,
+                openingTag: tags.opening,
+                closingTag: tags.closing
+            )
+            return escapedTags
+        } else {
+            return escapedMarkdownCodeBlock
+        }
     }
 
     func removePrefix(from suggestion: inout String, infillPrefix: String) {
