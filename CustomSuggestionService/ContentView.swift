@@ -41,10 +41,10 @@ struct ContentView: View {
 
                             NumberInput(
                                 value: settings.$maxNumberOfLinesOfSuggestion,
-                                range: 1...Int.max,
+                                range: 0...Int.max,
                                 step: 1
                             ) {
-                                Text("Suggestion Line Limit")
+                                Text("Suggestion Line Limit (0 for unlimited)")
                             }
                         }
 
