@@ -46,6 +46,7 @@ actor Service {
 
                     let prompt = strategy.createPrompt()
                     let postProcessor = strategy.createRawSuggestionPostProcessor()
+                    let stopStream = strategy.createStreamStopStrategy()
 
                     let suggestedCodeSnippets: [String]
 
@@ -54,6 +55,7 @@ actor Service {
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )
@@ -61,6 +63,7 @@ actor Service {
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )
@@ -68,6 +71,7 @@ actor Service {
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )
@@ -78,13 +82,21 @@ actor Service {
                     return suggestedCodeSnippets
                         .filter { !$0.allSatisfy { $0.isWhitespace || $0.isNewline } }
                         .map {
-                            CodeSuggestion(
-                                id: UUID().uuidString,
-                                text: postProcessor.postProcess(
+                            let suggestionText = postProcessor
+                                .postProcess(
                                     rawSuggestion: $0,
                                     infillPrefix: prompt.suggestionPrefix.prependingValue,
                                     suffix: prompt.suffix
-                                ),
+                                )
+                                .keepLines(
+                                    count: UserDefaults.shared
+                                        .value(for: \.maxNumberOfLinesOfSuggestion)
+                                )
+                                .removeTrailingNewlinesAndWhitespace()
+
+                            return CodeSuggestion(
+                                id: UUID().uuidString,
+                                text: suggestionText,
                                 position: request.cursorPosition,
                                 range: .init(
                                     start: .init(
@@ -179,6 +191,22 @@ actor Service {
         }()
 
         return (previousLines, nextLines)
+    }
+}
+
+extension String {
+    func keepLines(count: Int) -> String {
+        if count <= 0 { return self }
+        let lines = breakLines()
+        return lines.prefix(count).joined()
+    }
+
+    func removeTrailingNewlinesAndWhitespace() -> String {
+        var text = self[...]
+        while let last = text.last, last.isNewline || last.isWhitespace {
+            text = text.dropLast(1)
+        }
+        return String(text)
     }
 }
 

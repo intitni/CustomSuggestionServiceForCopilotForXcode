@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -20,8 +21,12 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
         )
     }
 
-    func createRawSuggestionPostProcessor() -> NoOpRawSuggestionPostProcessingStrategy {
-        NoOpRawSuggestionPostProcessingStrategy()
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        FIMStreamStopStrategy(prefix: prefix)
+    }
+
+    func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
     enum Tag {
@@ -92,8 +97,41 @@ struct CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy 
         return prompt
     }
 
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        strategy.createStreamStopStrategy()
+    }
+
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
-        DefaultRawSuggestionPostProcessingStrategy(openingCodeTag: "", closingCodeTag: "")
+        strategy.createRawSuggestionPostProcessor()
+    }
+}
+
+struct FIMStreamStopStrategy: StreamStopStrategy {
+    let prefix: [String]
+
+    func shouldStop(
+        existedLines: [String],
+        currentLine: String,
+        proposedLineLimit: Int
+    ) -> StreamStopStrategyResult {
+        if let prefixLastLine = prefix.last {
+            if let lastLineIndex = existedLines.lastIndex(of: prefixLastLine) {
+                if existedLines.count >= lastLineIndex + 1 + proposedLineLimit {
+                    return .stop(appendingNewContent: true)
+                }
+                return .continue
+            } else {
+                if existedLines.count >= proposedLineLimit {
+                    return .stop(appendingNewContent: true)
+                }
+                return .continue
+            }
+        } else {
+            if existedLines.count >= proposedLineLimit {
+                return .stop(appendingNewContent: true)
+            }
+            return .continue
+        }
     }
 }
 

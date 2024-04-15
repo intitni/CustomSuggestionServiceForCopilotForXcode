@@ -67,6 +67,10 @@ let package = Package(
         ),
 
         .testTarget(
+            name: "CodeCompletionServiceTests",
+            dependencies: ["CodeCompletionService"]
+        ),
+        .testTarget(
             name: "FundamentalTests",
             dependencies: ["Fundamental"]
         ),

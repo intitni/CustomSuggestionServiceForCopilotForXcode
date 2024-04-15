@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -21,11 +22,18 @@ struct ContinueRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
-    
+
     func createRawSuggestionPostProcessor() -> DefaultRawSuggestionPostProcessingStrategy {
-        DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: Tag.openingCode,
-            closingCodeTag: Tag.closingCode
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: (
+            Tag.openingCode,
+            Tag.closingCode
+        ))
+    }
+
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        OpeningTagBasedStreamStopStrategy(
+            openingTag: Tag.openingCode,
+            toleranceIfNoOpeningTagFound: 4
         )
     }
 

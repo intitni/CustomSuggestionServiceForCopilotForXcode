@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:Core",
-        "identifier" : "SuggestionServiceTests",
-        "name" : "SuggestionServiceTests"
+        "identifier" : "CodeCompletionServiceTests",
+        "name" : "CodeCompletionServiceTests"
       }
     },
     {
@@ -24,6 +24,13 @@
         "containerPath" : "container:Core",
         "identifier" : "FundamentalTests",
         "name" : "FundamentalTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Core",
+        "identifier" : "SuggestionServiceTests",
+        "name" : "SuggestionServiceTests"
       }
     }
   ],

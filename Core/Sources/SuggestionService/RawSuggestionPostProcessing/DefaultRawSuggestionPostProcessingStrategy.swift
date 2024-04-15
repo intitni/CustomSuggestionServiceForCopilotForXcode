@@ -5,36 +5,28 @@ protocol RawSuggestionPostProcessingStrategy {
     func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String
 }
 
-extension RawSuggestionPostProcessingStrategy {
-    func removeTrailingNewlinesAndWhitespace(from string: String) -> String {
-        var text = string[...]
-        while let last = text.last, last.isNewline || last.isWhitespace {
-            text = text.dropLast(1)
-        }
-        return String(text)
-    }
-}
-
 struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingStrategy {
-    let openingCodeTag: String
-    let closingCodeTag: String
+    let codeWrappingTags: (opening: String, closing: String)?
 
     func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String {
         var suggestion = extractSuggestion(from: rawSuggestion)
         removePrefix(from: &suggestion, infillPrefix: infillPrefix)
         removeSuffix(from: &suggestion, suffix: suffix)
-        return removeTrailingNewlinesAndWhitespace(from: infillPrefix + suggestion)
+        return infillPrefix + suggestion
     }
 
     func extractSuggestion(from response: String) -> String {
         let escapedMarkdownCodeBlock = removeLeadingAndTrailingMarkdownCodeBlockMark(from: response)
-        let escapedTags = extractEnclosingSuggestion(
-            from: escapedMarkdownCodeBlock,
-            openingTag: openingCodeTag,
-            closingTag: closingCodeTag
-        )
-
-        return escapedTags
+        if let tags = codeWrappingTags {
+            let escapedTags = extractEnclosingSuggestion(
+                from: escapedMarkdownCodeBlock,
+                openingTag: tags.opening,
+                closingTag: tags.closing
+            )
+            return escapedTags
+        } else {
+            return escapedMarkdownCodeBlock
+        }
     }
 
     func removePrefix(from suggestion: inout String, infillPrefix: String) {

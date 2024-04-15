@@ -3,6 +3,18 @@
     <channel>
         <title>Custom Suggestion Service</title>
         <item>
+            <title>0.3.0</title>
+            <pubDate>Tue, 16 Apr 2024 00:16:25 +0800</pubDate>
+            <sparkle:version>30</sparkle:version>
+            <sparkle:shortVersionString>0.3.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>
+                https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.3.0
+            </sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.3.0/Custom.Suggestion.Service.app.zip" length="6584455" type="application/octet-stream" sparkle:edSignature="HEeUsDcuq3Yt7pwAOO4WWuS9aamCEVOZjhSrRbTXiLYajv9ybRkhFiYXQv74JMvTdf6JmIweQjYjHQIXs38lBA=="/>
+        </item>
+
+        <item>
             <title>0.2.0</title>
             <pubDate>Mon, 04 Mar 2024 12:50:34 +0800</pubDate>
             <sparkle:version>20</sparkle:version>
