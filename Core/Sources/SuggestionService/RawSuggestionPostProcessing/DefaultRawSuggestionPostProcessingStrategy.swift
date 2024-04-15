@@ -5,16 +5,6 @@ protocol RawSuggestionPostProcessingStrategy {
     func postProcess(rawSuggestion: String, infillPrefix: String, suffix: [String]) -> String
 }
 
-extension RawSuggestionPostProcessingStrategy {
-    func removeTrailingNewlinesAndWhitespace(from string: String) -> String {
-        var text = string[...]
-        while let last = text.last, last.isNewline || last.isWhitespace {
-            text = text.dropLast(1)
-        }
-        return String(text)
-    }
-}
-
 struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingStrategy {
     let codeWrappingTags: (opening: String, closing: String)?
 
@@ -22,7 +12,7 @@ struct DefaultRawSuggestionPostProcessingStrategy: RawSuggestionPostProcessingSt
         var suggestion = extractSuggestion(from: rawSuggestion)
         removePrefix(from: &suggestion, infillPrefix: infillPrefix)
         removeSuffix(from: &suggestion, suffix: suffix)
-        return removeTrailingNewlinesAndWhitespace(from: infillPrefix + suggestion)
+        return infillPrefix + suggestion
     }
 
     func extractSuggestion(from response: String) -> String {
