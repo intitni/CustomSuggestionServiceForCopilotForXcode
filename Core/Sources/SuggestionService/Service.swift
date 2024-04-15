@@ -46,6 +46,7 @@ actor Service {
 
                     let prompt = strategy.createPrompt()
                     let postProcessor = strategy.createRawSuggestionPostProcessor()
+                    let stopStream = strategy.createStreamStopStrategy()
 
                     let suggestedCodeSnippets: [String]
 
@@ -53,7 +54,8 @@ actor Service {
                     case let .chatModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
-                            prompt,
+                            prompt, 
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )
@@ -61,6 +63,7 @@ actor Service {
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )
@@ -68,6 +71,7 @@ actor Service {
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
+                            streamStopStrategy: stopStream,
                             model: model,
                             count: 1
                         )

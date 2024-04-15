@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -8,6 +9,7 @@ import Parsing
 protocol RequestStrategy {
     associatedtype Prompt: PromptStrategy
     associatedtype RawSuggestionPostProcessor: RawSuggestionPostProcessingStrategy
+    associatedtype SomeStreamStopStrategy: StreamStopStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String])
 
@@ -16,6 +18,9 @@ protocol RequestStrategy {
 
     /// Create a prompt to generate code completion.
     func createPrompt() -> Prompt
+
+    /// Control how a stream should stop early.
+    func createStreamStopStrategy() -> SomeStreamStopStrategy
 
     /// The AI model may not return a suggestion in a ideal format. You can use it to reformat the
     /// suggestions.

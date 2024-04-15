@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -22,6 +23,10 @@ struct TabbyRequestStrategy: RequestStrategy {
 
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
         NoOpRawSuggestionPostProcessingStrategy()
+    }
+
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        NeverStreamStopStrategy()
     }
 
     struct Prompt: PromptStrategy {

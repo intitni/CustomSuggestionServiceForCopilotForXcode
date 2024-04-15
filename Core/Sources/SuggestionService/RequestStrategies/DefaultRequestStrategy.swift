@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -20,6 +21,13 @@ struct DefaultRequestStrategy: RequestStrategy {
             sourceRequest: sourceRequest,
             prefix: prefix,
             suffix: suffix
+        )
+    }
+
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        OpeningTagBasedStreamStopStrategy(
+            openingTag: Tag.openingCode,
+            toleranceIfNoOpeningTagFound: 4
         )
     }
 

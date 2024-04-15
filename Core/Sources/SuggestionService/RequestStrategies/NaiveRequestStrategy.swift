@@ -1,3 +1,4 @@
+import CodeCompletionService
 import CopilotForXcodeKit
 import Foundation
 import Fundamental
@@ -8,7 +9,7 @@ struct NaiveRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
-    
+
     var shouldSkip: Bool {
         prefix.last?.trimmingCharacters(in: .whitespaces) == "}"
     }
@@ -20,9 +21,13 @@ struct NaiveRequestStrategy: RequestStrategy {
             suffix: suffix
         )
     }
-    
+
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
         NoOpRawSuggestionPostProcessingStrategy()
+    }
+
+    func createStreamStopStrategy() -> some StreamStopStrategy {
+        DefaultStreamStopStrategy()
     }
 
     struct Request: PromptStrategy {
@@ -34,7 +39,7 @@ struct NaiveRequestStrategy: RequestStrategy {
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { ["\n\n"] }
         var language: CodeLanguage? { sourceRequest.language }
-        
+
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
             return .unchanged(prefix).curlyBracesLineBreak()
@@ -71,9 +76,9 @@ struct NaiveRequestStrategy: RequestStrategy {
 
             return [.init(role: .user, content: """
             File path: \(filePath)
-            
+
             ---
-            
+
             \(code)
             """.trimmingCharacters(in: .whitespacesAndNewlines))]
         }
