@@ -83,7 +83,7 @@ public extension UserDefaultPreferenceKeys {
     
     var maxNumberOfLinesOfSuggestion: PreferenceKey<Int> {
         .init(
-            defaultValue: 99999,
+            defaultValue: 0,
             key: "CustomSuggestionService-MaxNumberOfLinesOfSuggestion"
         )
     }

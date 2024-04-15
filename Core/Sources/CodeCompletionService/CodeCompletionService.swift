@@ -11,17 +11,20 @@ protocol CodeCompletionServiceType {
 extension CodeCompletionServiceType {
     func getCompletions(
         _ request: PromptStrategy,
+        streamStopStrategy: StreamStopStrategy,
         count: Int
     ) async throws -> [String] {
         try await withThrowingTaskGroup(of: String.self) { group in
             for _ in 0..<max(1, count) {
                 _ = group.addTaskUnlessCancelled {
-                    var result = ""
+                    let limiter = StreamLineLimiter(strategy: streamStopStrategy)
                     let stream = try await getCompletion(request)
                     for try await response in stream {
-                        result.append(response)
+                        if case let .finish(result) = limiter.push(response) {
+                            return result
+                        }
                     }
-                    return result
+                    return limiter.result
                 }
             }
 
@@ -53,6 +56,7 @@ public struct CodeCompletionService {
 
     public func getCompletions(
         _ prompt: PromptStrategy,
+        streamStopStrategy: StreamStopStrategy,
         model: TabbyModel,
         count: Int
     ) async throws -> [String] {
@@ -71,13 +75,18 @@ public struct CodeCompletionService {
             }
         }())
 
-        let result = try await service.getCompletions(prompt, count: count)
+        let result = try await service.getCompletions(
+            prompt,
+            streamStopStrategy: streamStopStrategy,
+            count: count
+        )
         try Task.checkCancellation()
         return result
     }
 
     public func getCompletions(
         _ prompt: PromptStrategy,
+        streamStopStrategy: StreamStopStrategy,
         model: ChatModel,
         count: Int
     ) async throws -> [String] {
@@ -92,7 +101,11 @@ public struct CodeCompletionService {
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .azureOpenAI:
@@ -103,7 +116,11 @@ public struct CodeCompletionService {
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .googleAI:
@@ -112,7 +129,11 @@ public struct CodeCompletionService {
                 maxToken: model.info.maxTokens,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .ollama:
@@ -124,7 +145,11 @@ public struct CodeCompletionService {
                 keepAlive: model.info.ollamaInfo.keepAlive,
                 format: .none
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .unknown:
@@ -134,6 +159,7 @@ public struct CodeCompletionService {
 
     public func getCompletions(
         _ prompt: PromptStrategy,
+        streamStopStrategy: StreamStopStrategy,
         model: CompletionModel,
         count: Int
     ) async throws -> [String] {
@@ -148,7 +174,11 @@ public struct CodeCompletionService {
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .azureOpenAI:
@@ -159,7 +189,11 @@ public struct CodeCompletionService {
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .ollama:
@@ -171,7 +205,11 @@ public struct CodeCompletionService {
                 keepAlive: model.info.ollamaInfo.keepAlive,
                 format: .none
             )
-            let result = try await service.getCompletions(prompt, count: count)
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
             try Task.checkCancellation()
             return result
         case .unknown:
