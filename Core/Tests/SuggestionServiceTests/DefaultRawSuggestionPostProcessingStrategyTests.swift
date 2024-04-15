@@ -6,8 +6,7 @@ import XCTest
 class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
     func test_whenSuggestionHasCodeTagAtTheFirstLine_shouldExtractCodeInside() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -21,8 +20,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
     func test_whenSuggestionHasCodeTagAtTheFirstLine_closingTagInOtherLines_shouldExtractCodeInside(
     ) {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -36,8 +34,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenSuggestionHasCodeTag_butNoClosingTag_shouldExtractCodeAfterTheTag() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -51,8 +48,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenMultipleOpeningTagFound_shouldTreatTheNextOneAsClosing() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -64,8 +60,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenMarkdownCodeBlockFound_shouldExtractCodeInside() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -80,8 +75,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenOnlyLinebreaksOrSpacesBeforeMarkdownCodeBlock_shouldExtractCodeInside() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -120,8 +114,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenMarkdownCodeBlockAndCodeTagFound_firstlyExtractCodeTag_thenCodeTag() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -137,8 +130,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
     func test_whenMarkdownCodeBlockAndCodeTagFound_butNoClosingTag_firstlyExtractCodeTag_thenCodeTag(
     ) {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -153,8 +145,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenSuggestionHasTheSamePrefix_removeThePrefix() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: "suggestion"
@@ -165,8 +156,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenSuggestionLooksLikeAMessage_parseItCorrectly() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.extractSuggestion(
             from: """
@@ -182,8 +172,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenSuggestionHasTheSamePrefix_inTags_removeThePrefix() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         var suggestion = "prefix suggestion"
         strategy.removePrefix(from: &suggestion, infillPrefix: "prefix")
@@ -193,8 +182,7 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
     func test_whenSuggestionHasTheSameSuffix_removeTheSuffix() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         var suggestion = "suggestion\na\nb"
         strategy.removeSuffix(from: &suggestion, suffix: [
@@ -214,11 +202,10 @@ class DefaultRawSuggestionPostProcessingStrategyTests: XCTestCase {
 
         XCTAssertEqual(suggestion3, "suggestion\na\n")
     }
-    
+
     func test_case_1() {
         let strategy = DefaultRawSuggestionPostProcessingStrategy(
-            openingCodeTag: "<Code>",
-            closingCodeTag: "</Code>"
+            codeWrappingTags: ("<Code>", "</Code>")
         )
         let result = strategy.postProcess(
             rawSuggestion: """
