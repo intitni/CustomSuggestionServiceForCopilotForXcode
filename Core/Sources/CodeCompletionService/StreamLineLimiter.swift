@@ -30,11 +30,15 @@ final class StreamLineLimiter {
             currentLine = lastLine ?? ""
         }
 
-        let stopResult = strategy.shouldStop(
-            existedLines: existedLines,
-            currentLine: currentLine,
-            proposedLineLimit: lineLimit
-        )
+        let stopResult = if lineLimit <= 0 {
+            StreamStopStrategyResult.continue
+        } else {
+            strategy.shouldStop(
+                existedLines: existedLines,
+                currentLine: currentLine,
+                proposedLineLimit: lineLimit
+            )
+        }
 
         switch stopResult {
         case .continue:
