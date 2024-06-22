@@ -4,7 +4,7 @@ import Foundation
 import Fundamental
 
 /// A special strategy for FIM endpoints.
-struct FIMRequestStrategy: RequestStrategy {
+struct FIMEndpointRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
@@ -22,11 +22,11 @@ struct FIMRequestStrategy: RequestStrategy {
     }
 
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
-        NoOpRawSuggestionPostProcessingStrategy()
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
     func createStreamStopStrategy() -> some StreamStopStrategy {
-        NeverStreamStopStrategy()
+        FIMStreamStopStrategy(prefix: prefix)
     }
 
     struct Prompt: PromptStrategy {

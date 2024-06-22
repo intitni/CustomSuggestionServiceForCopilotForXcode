@@ -160,7 +160,7 @@ actor Service {
             )
         }
         if let type, type == .fimModel {
-            return FIMRequestStrategy(
+            return FIMEndpointRequestStrategy(
                 sourceRequest: sourceRequest,
                 prefix: prefix,
                 suffix: suffix
