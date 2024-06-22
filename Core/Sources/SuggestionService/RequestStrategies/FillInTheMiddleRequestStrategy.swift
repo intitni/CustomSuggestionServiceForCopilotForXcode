@@ -30,9 +30,6 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
     }
 
     enum Tag {
-        public static var prefix: String { UserDefaults.shared.value(for: \.fimPrefixToken) }
-        public static var suffix: String { UserDefaults.shared.value(for: \.fimSuffixToken) }
-        public static var middle: String { UserDefaults.shared.value(for: \.fimMiddleToken) }
         public static var stop: String { UserDefaults.shared.value(for: \.fimStopToken) }
     }
 
@@ -43,7 +40,7 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { ["\n\n", Tag.stop] }
+        var stopWords: [String] { ["\n\n", Tag.stop].filter { !$0.isEmpty } }
         var language: CodeLanguage? { sourceRequest.language }
 
         var suggestionPrefix: SuggestionPrefix {
@@ -57,19 +54,27 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
             includedSnippets: [RelevantCodeSnippet]
         ) -> [PromptMessage] {
             let suffix = truncatedSuffix.joined()
+            var template = UserDefaults.shared.value(for: \.fimTemplate)
+            if template.isEmpty { template = UserDefaults.shared.defaultValue(for: \.fimTemplate) }
+            
+            let prefixContent = """
+            // File Path: \(filePath)
+            // Indentation: \
+            \(sourceRequest.indentSize) \
+            \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
+            \(truncatedPrefix.joined())
+            """
+            
+            let suffixContent = suffix.isEmpty ? "\n// End of file" : suffix
+            
             return [
                 .init(
                     role: .user,
-                    content: """
-                    \(Tag.prefix) // File Path: \(filePath)
-                    // Indentation: \
-                    \(sourceRequest.indentSize) \
-                    \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-                    \(includedSnippets.map(\.content).joined(separator: "\n\n"))
-                    \(truncatedPrefix.joined()) \
-                    \(Tag.suffix)\(suffix.isEmpty ? "\n// End of file" : suffix) \
-                    \(Tag.middle)
-                    """.trimmingCharacters(in: .whitespacesAndNewlines)
+                    content: template
+                        .replacingOccurrences(of: "{prefix}", with: prefixContent)
+                        .replacingOccurrences(of: "{suffix}", with: suffixContent)
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
                 ),
             ]
         }
