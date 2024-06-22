@@ -140,7 +140,7 @@ extension FIMModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL)
+            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL)
         )
     }
 
@@ -151,7 +151,8 @@ extension FIMModel {
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,
-                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
+                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines), 
+                isFullURL: state.baseURLSelection.isFullURL,
                 maxTokens: state.maxTokens,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
             )

@@ -55,6 +55,7 @@ public struct FIMModel: Codable, Equatable, Identifiable {
         case .mistral:
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "https://api.mistral.ai/v1/fim/completions" }
+            if info.isFullURL { return baseURL }
             return "\(baseURL)/v1/fim/completions"
         case .unknown:
             return ""

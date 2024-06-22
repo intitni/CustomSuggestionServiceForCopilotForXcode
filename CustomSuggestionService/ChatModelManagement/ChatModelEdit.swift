@@ -153,7 +153,7 @@ extension ChatModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL),
+            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL),
             ollamaKeepAlive: info.ollamaInfo.keepAlive
         )
     }
@@ -164,8 +164,9 @@ extension ChatModel {
             name: "Custom Model (Chat Completion API)",
             format: state.format,
             info: .init(
-                apiKeyName: state.apiKeyName,
+                apiKeyName: state.apiKeyName, 
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
+                isFullURL: state.baseURLSelection.isFullURL,
                 maxTokens: state.maxTokens,
                 supportsFunctionCalling: false,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
