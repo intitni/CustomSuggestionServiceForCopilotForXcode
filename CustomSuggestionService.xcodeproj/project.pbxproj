@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C80AC8F32C274ADD00669BDE /* FIMModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80AC8F12C274ADD00669BDE /* FIMModelEdit.swift */; };
+		C80AC8F42C274ADD00669BDE /* FIMModelEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80AC8F22C274ADD00669BDE /* FIMModelEditView.swift */; };
 		C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83B83AE2B7DD261007B4442 /* Dependency.swift */; };
 		C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697502B7B7B3700B8B840 /* TestFieldView.swift */; };
 		C84697542B7B8B8300B8B840 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = C84697532B7B8B8300B8B840 /* STTextView */; };
@@ -67,6 +69,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C80AC8F12C274ADD00669BDE /* FIMModelEdit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIMModelEdit.swift; sourceTree = "<group>"; };
+		C80AC8F22C274ADD00669BDE /* FIMModelEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIMModelEditView.swift; sourceTree = "<group>"; };
 		C81547D92B8737DF002203B3 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		C81547DB2B873DC1002203B3 /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		C83B83AE2B7DD261007B4442 /* Dependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependency.swift; sourceTree = "<group>"; };
@@ -227,6 +231,8 @@
 				C8EA62C92B6BE49500E081FC /* APIKeyManagement */,
 				C8EA62CF2B6BE49E00E081FC /* ChatModelEdit.swift */,
 				C8EA62D02B6BE49E00E081FC /* ChatModelEditView.swift */,
+				C80AC8F12C274ADD00669BDE /* FIMModelEdit.swift */,
+				C80AC8F22C274ADD00669BDE /* FIMModelEditView.swift */,
 				C8774F462B83A009008FF699 /* CompletionModelEdit.swift */,
 				C8774F472B83A009008FF699 /* CompletionModelEditView.swift */,
 				C89BA4B72B860193008801C5 /* TabbyModelEdit.swift */,
@@ -385,6 +391,8 @@
 				C89BA4BA2B860193008801C5 /* TabbyModelEditView.swift in Sources */,
 				C867A1302B7BDBA500875400 /* TestField.swift in Sources */,
 				C84697572B7B8C9000B8B840 /* TutorialView.swift in Sources */,
+				C80AC8F32C274ADD00669BDE /* FIMModelEdit.swift in Sources */,
+				C80AC8F42C274ADD00669BDE /* FIMModelEditView.swift in Sources */,
 				C8774F492B83A009008FF699 /* CompletionModelEditView.swift in Sources */,
 				C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */,
 				C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */,
