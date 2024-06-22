@@ -8,6 +8,7 @@ actor Service {
         case chatModel(ChatModel)
         case completionModel(CompletionModel)
         case tabbyModel(TabbyModel)
+        case fimModel(FIMModel)
     }
 
     var onGoingTask: Task<[CodeSuggestion], Error>?
@@ -75,6 +76,14 @@ actor Service {
                             model: model,
                             count: 1
                         )
+                    case let .fimModel(model):
+                        CodeCompletionLogger.logger.logModel(model)
+                        suggestedCodeSnippets = try await service.getCompletions(
+                            prompt,
+                            streamStopStrategy: stopStream,
+                            model: model,
+                            count: 1
+                        )
                     }
 
                     CodeCompletionLogger.logger.finish()
@@ -131,6 +140,8 @@ actor Service {
             return .completionModel(UserDefaults.shared.value(for: \.customCompletionModel))
         case .tabby:
             return .tabbyModel(UserDefaults.shared.value(for: \.tabbyModel))
+        case .fimModel:
+            return .fimModel(UserDefaults.shared.value(for: \.customFIMModel))
         }
     }
 
@@ -140,10 +151,16 @@ actor Service {
         suffix: [String]
     ) -> any RequestStrategy {
         let id = UserDefaults.shared.value(for: \.requestStrategyId)
-        if let type = CustomModelType(rawValue: UserDefaults.shared.value(for: \.chatModelId)),
-           type == .tabby
-        {
+        let type = CustomModelType(rawValue: UserDefaults.shared.value(for: \.chatModelId))
+        if let type, type == .tabby {
             return TabbyRequestStrategy(
+                sourceRequest: sourceRequest,
+                prefix: prefix,
+                suffix: suffix
+            )
+        }
+        if let type, type == .fimModel {
+            return FIMRequestStrategy(
                 sourceRequest: sourceRequest,
                 prefix: prefix,
                 suffix: suffix

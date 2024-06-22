@@ -67,6 +67,15 @@ public final class CodeCompletionLogger {
             baseURL: tabbyModel.url
         )
     }
+    
+    public func logModel(_ fimModel: FIMModel) {
+        model = .init(
+            type: "FIM",
+            format: fimModel.format.rawValue,
+            modelName: fimModel.info.modelName,
+            baseURL: fimModel.info.baseURL
+        )
+    }
 
     public func logPrompt(_ prompt: [(message: String, role: String)]) {
         self.prompt = prompt
