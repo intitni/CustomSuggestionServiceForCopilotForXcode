@@ -45,9 +45,9 @@ extension RequestStrategyOption {
         case .continue:
             return ContinueRequestStrategy.self
         case .codeLlamaFillInTheMiddle:
-            return CodeLlamaFillInTheMiddleRequestStrategy.self
+            return FillInTheMiddleRequestStrategy.self
         case .codeLlamaFillInTheMiddleWithSystemPrompt:
-            return CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy.self
+            return FillInTheMiddleWithSystemPromptRequestStrategy.self
         }
     }
 }

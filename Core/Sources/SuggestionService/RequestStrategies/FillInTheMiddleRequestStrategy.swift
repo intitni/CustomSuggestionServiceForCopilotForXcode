@@ -4,7 +4,7 @@ import Foundation
 import Fundamental
 
 /// https://ollama.com/library/codellama
-struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
+struct FillInTheMiddleRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
@@ -30,9 +30,7 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
     }
 
     enum Tag {
-        public static let prefix = "<PRE>"
-        public static let suffix = "<SUF>"
-        public static let middle = "<MID>"
+        public static var stop: String { UserDefaults.shared.value(for: \.fimStopToken) }
     }
 
     struct Prompt: PromptStrategy {
@@ -42,7 +40,7 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { ["\n\n", "<EOT>"] }
+        var stopWords: [String] { ["\n\n", Tag.stop].filter { !$0.isEmpty } }
         var language: CodeLanguage? { sourceRequest.language }
 
         var suggestionPrefix: SuggestionPrefix {
@@ -56,27 +54,35 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
             includedSnippets: [RelevantCodeSnippet]
         ) -> [PromptMessage] {
             let suffix = truncatedSuffix.joined()
+            var template = UserDefaults.shared.value(for: \.fimTemplate)
+            if template.isEmpty { template = UserDefaults.shared.defaultValue(for: \.fimTemplate) }
+            
+            let prefixContent = """
+            // File Path: \(filePath)
+            // Indentation: \
+            \(sourceRequest.indentSize) \
+            \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
+            \(truncatedPrefix.joined())
+            """
+            
+            let suffixContent = suffix.isEmpty ? "\n// End of file" : suffix
+            
             return [
                 .init(
                     role: .user,
-                    content: """
-                    \(Tag.prefix) // File Path: \(filePath)
-                    // Indentation: \
-                    \(sourceRequest.indentSize) \
-                    \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-                    \(includedSnippets.map(\.content).joined(separator: "\n\n"))
-                    \(truncatedPrefix.joined()) \
-                    \(Tag.suffix)\(suffix.isEmpty ? "\n// End of file" : suffix) \
-                    \(Tag.middle)
-                    """.trimmingCharacters(in: .whitespacesAndNewlines)
+                    content: template
+                        .replacingOccurrences(of: "{prefix}", with: prefixContent)
+                        .replacingOccurrences(of: "{suffix}", with: suffixContent)
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
                 ),
             ]
         }
     }
 }
 
-struct CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
-    let strategy: CodeLlamaFillInTheMiddleRequestStrategy
+struct FillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
+    let strategy: FillInTheMiddleRequestStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String]) {
         strategy = .init(sourceRequest: sourceRequest, prefix: prefix, suffix: suffix)

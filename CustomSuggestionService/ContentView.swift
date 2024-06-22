@@ -156,14 +156,15 @@ struct ExistedChatModelPicker: View {
 struct RequestStrategyPicker: View {
     final class Settings: ObservableObject {
         @AppStorage(\.requestStrategyId) var requestStrategyId
+        @AppStorage(\.fimTemplate) var fimTemplate
+        @AppStorage(\.fimStopToken) var fimStopToken
     }
 
     @StateObject var settings = Settings()
 
     var body: some View {
-        let unknownId: String? =
-            if RequestStrategyOption(rawValue: settings.requestStrategyId) == nil
-        {
+        let option = RequestStrategyOption(rawValue: settings.requestStrategyId)
+        let unknownId: String? = if option == nil {
             settings.requestStrategyId
         } else {
             nil
@@ -190,16 +191,26 @@ struct RequestStrategyPicker: View {
                         Text("Continue").tag(option.rawValue)
                     case .codeLlamaFillInTheMiddle:
                         Text(
-                            "CodeLlama Fill-in-the-Middle (Good for Codellama:xb-code and other models with Fill-in-the-Middle support)"
+                            "Fill-in-the-Middle (Good for Codellama:xb-code and other models with Fill-in-the-Middle support)"
                         )
                         .tag(option.rawValue)
                     case .codeLlamaFillInTheMiddleWithSystemPrompt:
-                        Text("CodeLlama Fill-in-the-Middle with System Prompt")
+                        Text("Fill-in-the-Middle with System Prompt")
                             .tag(option.rawValue)
                     }
                 }
             }
         )
+
+        if option == .codeLlamaFillInTheMiddle
+            || option == .codeLlamaFillInTheMiddleWithSystemPrompt
+        {
+            TextField(
+                text: $settings.fimTemplate,
+                prompt: Text(UserDefaults.shared.defaultValue(for: \.fimTemplate))
+            ) { Text("FIM Template") }
+            TextField(text: $settings.fimStopToken) { Text("FIM Stop Token") }
+        }
     }
 }
 
