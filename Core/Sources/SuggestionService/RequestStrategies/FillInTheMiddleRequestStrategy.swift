@@ -4,7 +4,7 @@ import Foundation
 import Fundamental
 
 /// https://ollama.com/library/codellama
-struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
+struct FillInTheMiddleRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
@@ -30,9 +30,10 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
     }
 
     enum Tag {
-        public static let prefix = "<PRE>"
-        public static let suffix = "<SUF>"
-        public static let middle = "<MID>"
+        public static var prefix: String { UserDefaults.shared.value(for: \.fimPrefixToken) }
+        public static var suffix: String { UserDefaults.shared.value(for: \.fimSuffixToken) }
+        public static var middle: String { UserDefaults.shared.value(for: \.fimMiddleToken) }
+        public static var stop: String { UserDefaults.shared.value(for: \.fimStopToken) }
     }
 
     struct Prompt: PromptStrategy {
@@ -42,7 +43,7 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { ["\n\n", "<EOT>"] }
+        var stopWords: [String] { ["\n\n", Tag.stop] }
         var language: CodeLanguage? { sourceRequest.language }
 
         var suggestionPrefix: SuggestionPrefix {
@@ -75,8 +76,8 @@ struct CodeLlamaFillInTheMiddleRequestStrategy: RequestStrategy {
     }
 }
 
-struct CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
-    let strategy: CodeLlamaFillInTheMiddleRequestStrategy
+struct FillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
+    let strategy: FillInTheMiddleRequestStrategy
 
     init(sourceRequest: SuggestionRequest, prefix: [String], suffix: [String]) {
         strategy = .init(sourceRequest: sourceRequest, prefix: prefix, suffix: suffix)

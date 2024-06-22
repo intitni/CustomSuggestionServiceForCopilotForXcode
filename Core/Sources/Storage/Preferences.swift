@@ -95,5 +95,33 @@ public extension UserDefaultPreferenceKeys {
     var verboseLog: PreferenceKey<Bool> {
         .init(defaultValue: false, key: "CustomSuggestionService-VerboseLog")
     }
+    
+    var fimPrefixToken: PreferenceKey<String> {
+        .init(
+            defaultValue: "<PRE>",
+            key: "CustomSuggestionService-FimPrefixToken"
+        )
+    }
+    
+    var fimSuffixToken: PreferenceKey<String> {
+        .init(
+            defaultValue: "<SUF>",
+            key: "CustomSuggestionService-FimSuffixToken"
+        )
+    }
+    
+    var fimMiddleToken: PreferenceKey<String> {
+        .init(
+            defaultValue: "<MID>",
+            key: "CustomSuggestionService-FimMiddleToken"
+        )
+    }
+    
+    var fimStopToken: PreferenceKey<String> {
+        .init(
+            defaultValue: "<EOF>",
+            key: "CustomSuggestionService-FimStopToken"
+        )
+    }
 }
 
