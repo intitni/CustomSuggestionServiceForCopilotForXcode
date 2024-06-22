@@ -11,6 +11,8 @@ struct TheApp {
             .value(for: \.customCompletionModel).toState()
         var tabbyModel: TabbyModelEdit.State = UserDefaults.shared.value(for: \.tabbyModel)
             .toState()
+        var fimModel: FIMModelEdit.State = UserDefaults.shared.value(for: \.customFIMModel)
+            .toState()
         var testField: TestField.State = .init()
     }
 
@@ -18,6 +20,7 @@ struct TheApp {
         case customChatModel(ChatModelEdit.Action)
         case customCompletionModel(CompletionModelEdit.Action)
         case tabbyModel(TabbyModelEdit.Action)
+        case fimModel(FIMModelEdit.Action)
         case testField(TestField.Action)
     }
 
@@ -32,6 +35,10 @@ struct TheApp {
 
         Scope(state: \.tabbyModel, action: \.tabbyModel) {
             TabbyModelEdit()
+        }
+        
+        Scope(state: \.fimModel, action: \.fimModel) {
+            FIMModelEdit()
         }
 
         Scope(state: \.testField, action: \.testField) {
