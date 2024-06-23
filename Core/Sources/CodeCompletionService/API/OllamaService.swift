@@ -171,7 +171,7 @@ extension OllamaService {
             options: .init(
                 temperature: temperature,
                 stop: stopWords,
-                num_predict: 300
+                num_predict: maxToken
             ),
             keep_alive: keepAlive.isEmpty ? nil : keepAlive,
             format: format == .none ? nil : format.rawValue
@@ -235,7 +235,7 @@ extension OllamaService {
             options: .init(
                 temperature: temperature,
                 stop: stopWords,
-                num_predict: 300
+                num_predict: maxToken
             ),
             keep_alive: keepAlive.isEmpty ? nil : keepAlive,
             format: format == .none ? nil : format.rawValue

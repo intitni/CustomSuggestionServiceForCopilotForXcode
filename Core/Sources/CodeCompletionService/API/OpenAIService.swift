@@ -138,7 +138,7 @@ extension OpenAIService {
             temperature: temperature,
             stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)
@@ -277,7 +277,7 @@ extension OpenAIService {
             temperature: temperature,
             stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)

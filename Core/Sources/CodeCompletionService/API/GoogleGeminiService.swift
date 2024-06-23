@@ -95,7 +95,7 @@ extension GoogleGeminiService {
             apiKey: apiKey,
             generationConfig: .init(GenerationConfig(
                 temperature: Float(temperature),
-                maxOutputTokens: 300,
+                maxOutputTokens: maxToken,
                 stopSequences: stopWords
             ))
         )
