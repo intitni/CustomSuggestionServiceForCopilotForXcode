@@ -162,6 +162,8 @@ private struct StylingPlugin: STPlugin {
         let textView = context.textView
         let paragraph = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         paragraph.lineHeightMultiple = 1.1
+        textView.textColor = .textColor
+        textView.backgroundColor = .white
         textView.typingAttributes[.paragraphStyle] = paragraph
     }
 }
