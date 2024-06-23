@@ -8,7 +8,8 @@ public actor MistralFIMService {
     let temperature: Double
     let stopWords: [String]
     let apiKey: String
-    let maxTokens: Int
+    let contextWindow: Int
+    let maxToken: Int
 
     init(
         url: URL? = nil,
@@ -16,14 +17,16 @@ public actor MistralFIMService {
         temperature: Double,
         stopWords: [String] = [],
         apiKey: String,
-        maxTokens: Int
+        contextWindow: Int,
+        maxToken: Int
     ) {
         self.url = url ?? URL(string: "https://api.mistral.ai/v1/fim/completions")!
         self.model = model
         self.temperature = temperature
         self.stopWords = stopWords
         self.apiKey = apiKey
-        self.maxTokens = maxTokens
+        self.contextWindow = contextWindow
+        self.maxToken = maxToken
     }
 }
 
@@ -82,8 +85,14 @@ extension MistralFIMService {
     }
 
     func send(_ request: any PromptStrategy) async throws -> ResponseStream<StreamDataChunk> {
-        let prefix = request.prefix.joined()
-        let suffix = request.suffix.joined()
+        let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
+        ))
+        let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
+        
+        let prefix = prompts.first { $0.role == .prefix }?.content ?? ""
+        let suffix = prompts.last { $0.role == .suffix }?.content ?? ""
         
         CodeCompletionLogger.logger.logPrompt([
             (prefix, "prefix"),
@@ -97,7 +106,7 @@ extension MistralFIMService {
             suffix: suffix,
             stream: true,
             temperature: temperature,
-            max_tokens: maxTokens
+            max_tokens: maxToken
         )
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(requestBody)

@@ -7,6 +7,7 @@ public actor OllamaService {
     let endpoint: Endpoint
     let modelName: String
     let maxToken: Int
+    let contextWindow: Int
     let temperature: Double
     let stopWords: [String]
     let keepAlive: String
@@ -26,7 +27,8 @@ public actor OllamaService {
         url: String? = nil,
         endpoint: Endpoint,
         modelName: String,
-        maxToken: Int? = nil,
+        contextWindow: Int,
+        maxToken: Int,
         temperature: Double = 0.2,
         stopWords: [String] = [],
         keepAlive: String = "",
@@ -43,11 +45,12 @@ public actor OllamaService {
 
         self.endpoint = endpoint
         self.modelName = modelName
-        self.maxToken = maxToken ?? 4096
+        self.maxToken = maxToken
         self.temperature = temperature
         self.stopWords = stopWords
         self.keepAlive = keepAlive
         self.format = format
+        self.contextWindow = contextWindow
     }
 }
 
@@ -142,8 +145,8 @@ extension OllamaService {
 
     func createMessages(from request: PromptStrategy) -> [Message] {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
@@ -216,8 +219,8 @@ extension OllamaService {
 
     func createPrompt(from request: PromptStrategy) -> String {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")

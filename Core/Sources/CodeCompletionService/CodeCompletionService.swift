@@ -98,7 +98,9 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
-                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), stopWords: prompt.stopWords,
+                contextWindow: model.info.maxTokens,
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), 
+                stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
             let result = try await service.getCompletions(
@@ -112,7 +114,8 @@ public struct CodeCompletionService {
             let service = AzureOpenAIService(
                 url: model.endpoint,
                 endpoint: .chatCompletion,
-                modelName: model.info.modelName,
+                modelName: model.info.modelName, 
+                contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
@@ -127,6 +130,7 @@ public struct CodeCompletionService {
         case .googleAI:
             let service = GoogleGeminiService(
                 modelName: model.info.modelName,
+                contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 apiKey: apiKey
             )
@@ -142,6 +146,7 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
+                contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 keepAlive: model.info.ollamaInfo.keepAlive,
@@ -173,7 +178,9 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .completion,
                 modelName: model.info.modelName,
-                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), stopWords: prompt.stopWords,
+                contextWindow: model.info.maxTokens,
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), 
+                stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
             let result = try await service.getCompletions(
@@ -188,6 +195,7 @@ public struct CodeCompletionService {
                 url: model.endpoint,
                 endpoint: .completion,
                 modelName: model.info.modelName,
+                contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
@@ -203,7 +211,8 @@ public struct CodeCompletionService {
             let service = OllamaService(
                 url: model.endpoint,
                 endpoint: .completion,
-                modelName: model.info.modelName,
+                modelName: model.info.modelName, 
+                contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 keepAlive: model.info.ollamaInfo.keepAlive,
@@ -237,7 +246,8 @@ public struct CodeCompletionService {
                 temperature: 0,
                 stopWords: prompt.stopWords,
                 apiKey: apiKey,
-                maxTokens: UserDefaults.shared.value(for: \.maxGenerationToken)
+                contextWindow: model.info.maxTokens,
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken)
             )
             let result = try await service.getCompletions(
                 prompt,

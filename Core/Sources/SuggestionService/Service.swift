@@ -44,14 +44,14 @@ actor Service {
                     }
 
                     let service = CodeCompletionService()
-
+                    let model = getModel()
                     let prompt = strategy.createPrompt()
                     let postProcessor = strategy.createRawSuggestionPostProcessor()
-                    let stopStream = strategy.createStreamStopStrategy()
+                    let stopStream = strategy.createStreamStopStrategy(model: model)
 
                     let suggestedCodeSnippets: [String]
 
-                    switch getModel() {
+                    switch model {
                     case let .chatModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(

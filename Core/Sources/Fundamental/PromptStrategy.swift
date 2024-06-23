@@ -40,6 +40,8 @@ public struct PromptMessage {
     public enum PromptRole {
         case user
         case assistant
+        public static var prefix: PromptRole { .user }
+        public static var suffix: PromptRole { .assistant }
     }
 
     public var role: PromptRole

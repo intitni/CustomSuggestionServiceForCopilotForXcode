@@ -25,7 +25,7 @@ struct FIMEndpointRequestStrategy: RequestStrategy {
         DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
-    func createStreamStopStrategy() -> some StreamStopStrategy {
+    func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
         FIMStreamStopStrategy(prefix: prefix)
     }
 
@@ -54,13 +54,27 @@ struct FIMEndpointRequestStrategy: RequestStrategy {
             self.suffix = suffix
         }
 
-        /// Not used by FIM services.
         func createPrompt(
             truncatedPrefix: [String],
             truncatedSuffix: [String],
             includedSnippets: [RelevantCodeSnippet]
         ) -> [PromptMessage] {
-            []
+            let suffix = truncatedSuffix.joined()
+            let prefixContent = """
+            // File Path: \(filePath)
+            // Indentation: \
+            \(sourceRequest.indentSize) \
+            \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
+            \(truncatedPrefix.joined())
+            """
+            
+            let suffixContent = suffix.isEmpty ? "\n// End of file" : suffix
+            
+            return [
+                .init(role: .prefix, content: prefixContent),
+                .init(role: .suffix, content: suffixContent)
+            ]
         }
     }
 }

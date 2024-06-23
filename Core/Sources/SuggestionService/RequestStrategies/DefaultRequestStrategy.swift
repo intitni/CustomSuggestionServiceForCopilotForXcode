@@ -24,10 +24,10 @@ struct DefaultRequestStrategy: RequestStrategy {
         )
     }
 
-    func createStreamStopStrategy() -> some StreamStopStrategy {
+    func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
         OpeningTagBasedStreamStopStrategy(
             openingTag: Tag.openingCode,
-            toleranceIfNoOpeningTagFound: 4
+            toleranceIfNoOpeningTagFound: { if case .chatModel = model { 4 } else { 0 } }()
         )
     }
 
@@ -145,7 +145,9 @@ struct DefaultRequestStrategy: RequestStrategy {
         ) -> (summary: String, infillBlock: String)? {
             guard !(truncatedPrefix.isEmpty && truncatedSuffix.isEmpty) else { return nil }
             let promptLinesCount = min(10, max(truncatedPrefix.count, 2))
-            let prefixLines = truncatedPrefix.prefix(truncatedPrefix.count - promptLinesCount)
+            let prefixLines = truncatedPrefix.prefix(
+                max(0, truncatedPrefix.count - promptLinesCount)
+            )
             let promptLines: [String] = {
                 let proposed = truncatedPrefix.suffix(promptLinesCount)
                 return Array(proposed.dropLast()) + [suggestionPrefix]

@@ -110,7 +110,7 @@ public extension UserDefaultPreferenceKeys {
     
     var fimStopToken: PreferenceKey<String> {
         .init(
-            defaultValue: "<EOF>",
+            defaultValue: "<EOT>",
             key: "CustomSuggestionService-FimStopToken"
         )
     }

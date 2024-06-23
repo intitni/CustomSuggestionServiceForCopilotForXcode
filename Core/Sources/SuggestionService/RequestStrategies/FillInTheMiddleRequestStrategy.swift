@@ -21,7 +21,7 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
         )
     }
 
-    func createStreamStopStrategy() -> some StreamStopStrategy {
+    func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
         FIMStreamStopStrategy(prefix: prefix)
     }
 
@@ -103,8 +103,8 @@ struct FillInTheMiddleWithSystemPromptRequestStrategy: RequestStrategy {
         return prompt
     }
 
-    func createStreamStopStrategy() -> some StreamStopStrategy {
-        strategy.createStreamStopStrategy()
+    func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
+        strategy.createStreamStopStrategy(model: model)
     }
 
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
