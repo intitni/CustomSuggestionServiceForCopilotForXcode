@@ -82,8 +82,14 @@ extension MistralFIMService {
     }
 
     func send(_ request: any PromptStrategy) async throws -> ResponseStream<StreamDataChunk> {
-        let prefix = request.prefix.joined()
-        let suffix = request.suffix.joined()
+        let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
+        ))
+        let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
+        
+        let prefix = prompts.first { $0.role == .prefix }?.content ?? ""
+        let suffix = prompts.last { $0.role == .suffix }?.content ?? ""
         
         CodeCompletionLogger.logger.logPrompt([
             (prefix, "prefix"),
