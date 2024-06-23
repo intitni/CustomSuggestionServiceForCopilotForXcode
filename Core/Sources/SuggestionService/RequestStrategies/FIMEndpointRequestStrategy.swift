@@ -25,7 +25,7 @@ struct FIMEndpointRequestStrategy: RequestStrategy {
         DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
-    func createStreamStopStrategy() -> some StreamStopStrategy {
+    func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
         FIMStreamStopStrategy(prefix: prefix)
     }
 
