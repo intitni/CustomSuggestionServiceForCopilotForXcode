@@ -15,6 +15,7 @@ struct ContentView: View {
         @AppStorage(\.installBetaBuild) var installBetaBuild
         @AppStorage(\.verboseLog) var verboseLog
         @AppStorage(\.maxNumberOfLinesOfSuggestion) var maxNumberOfLinesOfSuggestion
+        @AppStorage(\.maxGenerationToken) var maxGenerationToken
     }
 
     @StateObject var settings = Settings()
@@ -25,6 +26,7 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             WithPerceptionTracking {
+                let modelType = CustomModelType(rawValue: settings.chatModelId)
                 VStack {
                     Form {
                         Section {
@@ -37,7 +39,12 @@ struct ContentView: View {
                                 }
                             }
 
-                            RequestStrategyPicker()
+                            switch modelType {
+                            case .chatModel, .completionModel, nil:
+                                RequestStrategyPicker()
+                            case .tabby, .fimModel:
+                                EmptyView()
+                            }
 
                             NumberInput(
                                 value: settings.$maxNumberOfLinesOfSuggestion,
@@ -45,6 +52,14 @@ struct ContentView: View {
                                 step: 1
                             ) {
                                 Text("Suggestion Line Limit (0 for unlimited)")
+                            }
+                            
+                            NumberInput(
+                                value: settings.$maxGenerationToken,
+                                range: 0...Int.max,
+                                step: 100
+                            ) {
+                                Text("Suggestion Token Limit")
                             }
                         }
 
@@ -77,7 +92,7 @@ struct ContentView: View {
                         .padding(.horizontal, 24)
                 }
                 .sheet(isPresented: $isEditingCustomModel) {
-                    if let type = CustomModelType(rawValue: settings.chatModelId) {
+                    if let type = modelType {
                         switch type {
                         case .chatModel:
                             ChatModelEditView(store: store.scope(
@@ -95,6 +110,12 @@ struct ContentView: View {
                             TabbyModelEditView(store: store.scope(
                                 state: \.tabbyModel,
                                 action: \.tabbyModel
+                            ))
+                            .frame(width: 800)
+                        case .fimModel:
+                            FIMModelEditView(store: store.scope(
+                                state: \.fimModel,
+                                action: \.fimModel
                             ))
                             .frame(width: 800)
                         }
@@ -142,6 +163,8 @@ struct ExistedChatModelPicker: View {
                         Text("Custom Model (Completion API)").tag($0)
                     case .tabby:
                         Text("Tabby").tag($0)
+                    case .fimModel:
+                        Text("Custom Model (FIM API)").tag($0)
                     }
                 }
 
@@ -156,14 +179,15 @@ struct ExistedChatModelPicker: View {
 struct RequestStrategyPicker: View {
     final class Settings: ObservableObject {
         @AppStorage(\.requestStrategyId) var requestStrategyId
+        @AppStorage(\.fimTemplate) var fimTemplate
+        @AppStorage(\.fimStopToken) var fimStopToken
     }
 
     @StateObject var settings = Settings()
 
     var body: some View {
-        let unknownId: String? =
-            if RequestStrategyOption(rawValue: settings.requestStrategyId) == nil
-        {
+        let option = RequestStrategyOption(rawValue: settings.requestStrategyId)
+        let unknownId: String? = if option == nil {
             settings.requestStrategyId
         } else {
             nil
@@ -190,16 +214,26 @@ struct RequestStrategyPicker: View {
                         Text("Continue").tag(option.rawValue)
                     case .codeLlamaFillInTheMiddle:
                         Text(
-                            "CodeLlama Fill-in-the-Middle (Good for Codellama:xb-code and other models with Fill-in-the-Middle support)"
+                            "Fill-in-the-Middle (Good for Codellama:xb-code and other models with Fill-in-the-Middle support)"
                         )
                         .tag(option.rawValue)
                     case .codeLlamaFillInTheMiddleWithSystemPrompt:
-                        Text("CodeLlama Fill-in-the-Middle with System Prompt")
+                        Text("Fill-in-the-Middle with System Prompt")
                             .tag(option.rawValue)
                     }
                 }
             }
         )
+
+        if option == .codeLlamaFillInTheMiddle
+            || option == .codeLlamaFillInTheMiddleWithSystemPrompt
+        {
+            TextField(
+                text: $settings.fimTemplate,
+                prompt: Text(UserDefaults.shared.defaultValue(for: \.fimTemplate))
+            ) { Text("FIM Template") }
+            TextField(text: $settings.fimStopToken) { Text("FIM Stop Token") }
+        }
     }
 }
 

@@ -6,11 +6,11 @@ import Storage
 import SwiftUI
 
 @Reducer
-struct CompletionModelEdit {
+struct FIMModelEdit {
     @ObservableState
     struct State: Equatable, Identifiable {
         var id: String = "Custom"
-        var format: CompletionModel.Format
+        var format: FIMModel.Format
         var maxTokens: Int = 4000
         var modelName: String = ""
         var apiKeyName: String { apiKeySelection.apiKeyName }
@@ -20,7 +20,6 @@ struct CompletionModelEdit {
         var suggestedMaxTokens: Int?
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
-        var ollamaKeepAlive: String = ""
     }
 
     enum Action: Equatable, BindableAction {
@@ -60,21 +59,23 @@ struct CompletionModelEdit {
                 }
 
             case .saveButtonClicked:
-                let model = CompletionModel(state: state)
+                let model = FIMModel(state: state)
                 return .run { _ in
-                    UserDefaults.shared.set(model, for: \.customCompletionModel)
+                    UserDefaults.shared.set(model, for: \.customFIMModel)
                 }
 
             case .refreshAvailableModelNames:
-                if state.format == .openAI {
-                    state.availableModelNames = OpenAIService.ChatCompletionModels.allCases
-                        .map(\.rawValue)
+                if state.format == .mistral {
+                    state.availableModelNames = [
+                        "codestral-latest",
+                        "codestral-2405",
+                    ]
                 }
 
                 return .none
 
             case .readCustomModelFromDisk:
-                let model = UserDefaults.shared.value(for: \.customCompletionModel)
+                let model = UserDefaults.shared.value(for: \.customFIMModel)
                 state = model.toState()
 
                 return .run { send in
@@ -84,12 +85,7 @@ struct CompletionModelEdit {
 
             case .checkSuggestedMaxTokens:
                 switch state.format {
-                case .openAI:
-                    if let knownModel = OpenAIService.CompletionModels(rawValue: state.modelName) {
-                        state.suggestedMaxTokens = knownModel.maxToken
-                    } else {
-                        state.suggestedMaxTokens = nil
-                    }
+                case .mistral:
                     return .none
                 default:
                     state.suggestedMaxTokens = nil
@@ -120,21 +116,21 @@ struct CompletionModelEdit {
     }
 
     func persistState(
-        _: CompletionModelEdit.State,
-        _ newValue: CompletionModelEdit.State
+        _: FIMModelEdit.State,
+        _ newValue: FIMModelEdit.State
     ) -> some Reducer<State, Action> {
         Reduce { _, _ in
             .run { _ in
-                let model = CompletionModel(state: newValue)
-                UserDefaults.shared.set(model, for: \.customCompletionModel)
+                let model = FIMModel(state: newValue)
+                UserDefaults.shared.set(model, for: \.customFIMModel)
             }
             .debounce(id: DebounceID.save, for: 1, scheduler: DispatchQueue.main)
         }
     }
 }
 
-extension CompletionModel {
-    func toState() -> CompletionModelEdit.State {
+extension FIMModel {
+    func toState() -> FIMModelEdit.State {
         .init(
             id: id,
             format: format,
@@ -144,23 +140,21 @@ extension CompletionModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL),
-            ollamaKeepAlive: info.ollamaInfo.keepAlive
+            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL)
         )
     }
 
-    init(state: CompletionModelEdit.State) {
+    init(state: FIMModelEdit.State) {
         self.init(
             id: state.id,
             name: "Custom Model (Completion API)",
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,
-                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
+                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines), 
                 isFullURL: state.baseURLSelection.isFullURL,
                 maxTokens: state.maxTokens,
-                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
-                ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
+                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
             )
         )
     }

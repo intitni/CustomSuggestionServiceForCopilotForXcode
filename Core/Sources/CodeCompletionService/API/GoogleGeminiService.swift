@@ -5,19 +5,22 @@ import GoogleGenerativeAI
 public struct GoogleGeminiService {
     let modelName: String
     let maxToken: Int
+    let contextWindow: Int
     let temperature: Double
     let stopWords: [String]
     let apiKey: String
 
     init(
         modelName: String,
-        maxToken: Int? = nil,
+        contextWindow: Int,
+        maxToken: Int,
         temperature: Double = 0.2,
         stopWords: [String] = [],
         apiKey: String
     ) {
         self.modelName = modelName
-        self.maxToken = maxToken ?? 4000
+        self.maxToken = maxToken
+        self.contextWindow = contextWindow
         self.temperature = temperature
         self.stopWords = stopWords
         self.apiKey = apiKey
@@ -74,8 +77,8 @@ extension GoogleGeminiService {
 
     func createMessages(from request: PromptStrategy) -> [ModelContent] {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
@@ -92,7 +95,7 @@ extension GoogleGeminiService {
             apiKey: apiKey,
             generationConfig: .init(GenerationConfig(
                 temperature: Float(temperature),
-                maxOutputTokens: 300,
+                maxOutputTokens: maxToken,
                 stopSequences: stopWords
             ))
         )

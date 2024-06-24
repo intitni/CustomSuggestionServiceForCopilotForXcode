@@ -6,6 +6,7 @@ public actor AzureOpenAIService {
     let url: URL
     let endpoint: OpenAIService.Endpoint
     let modelName: String
+    let contextWindow: Int
     let maxToken: Int
     let temperature: Double
     let apiKey: String
@@ -15,7 +16,8 @@ public actor AzureOpenAIService {
         url: String? = nil,
         endpoint: OpenAIService.Endpoint,
         modelName: String,
-        maxToken: Int? = nil,
+        contextWindow: Int,
+        maxToken: Int,
         temperature: Double = 0.2,
         stopWords: [String] = [],
         apiKey: String
@@ -31,7 +33,8 @@ public actor AzureOpenAIService {
 
         self.endpoint = endpoint
         self.modelName = modelName
-        self.maxToken = maxToken ?? 4096
+        self.maxToken = maxToken
+        self.contextWindow = contextWindow
         self.temperature = temperature
         self.stopWords = stopWords
         self.apiKey = apiKey
@@ -46,31 +49,13 @@ extension AzureOpenAIService: CodeCompletionServiceType {
             CodeCompletionLogger.logger.logPrompt(messages.map {
                 ($0.content, $0.role.rawValue)
             })
-            return AsyncStream<String> { continuation in
-                let task = Task {
-                    let result = try await sendMessages(messages)
-                    try Task.checkCancellation()
-                    continuation.yield(result)
-                    continuation.finish()
-                }
-                continuation.onTermination = { _ in
-                    task.cancel()
-                }
-            }
+            let result = try await sendMessages(messages)
+            return result.compactMap { $0.choices?.first?.delta?.content }.eraseToStream()
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            return AsyncStream<String> { continuation in
-                let task = Task {
-                    let result = try await sendPrompt(prompt)
-                    try Task.checkCancellation()
-                    continuation.yield(result)
-                    continuation.finish()
-                }
-                continuation.onTermination = { _ in
-                    task.cancel()
-                }
-            }
+            let result = try await sendPrompt(prompt)
+            return result.compactMap { $0.choices?.first?.text }.eraseToStream()
         }
     }
 }
@@ -82,8 +67,8 @@ extension AzureOpenAIService {
 
     func createMessages(from request: PromptStrategy) -> [Message] {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
@@ -98,13 +83,16 @@ extension AzureOpenAIService {
         }
     }
 
-    func sendMessages(_ messages: [Message]) async throws -> String {
+    func sendMessages(
+        _ messages: [Message]
+    ) async throws -> ResponseStream<OpenAIService.ChatCompletionsStreamDataChunk> {
         let requestBody = OpenAIService.ChatCompletionRequestBody(
             model: modelName,
             messages: messages,
             temperature: temperature,
+            stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)
@@ -113,47 +101,56 @@ extension AzureOpenAIService {
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(apiKey, forHTTPHeaderField: "api-key")
-        let (result, response) = try await URLSession.shared.data(for: request)
+        let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {
             throw CancellationError()
         }
 
         guard response.statusCode == 200 else {
-            if let error = try? JSONDecoder().decode(APIError.self, from: result) {
-                throw Error.apiError(error)
+            let text = try await result.lines.reduce(into: "") { partialResult, current in
+                partialResult += current
             }
-            throw Error.otherError(String(data: result, encoding: .utf8) ?? "Unknown Error")
+            throw Error.otherError(text)
         }
 
-        do {
-            let body = try JSONDecoder().decode(
-                OpenAIService.ChatCompletionResponseBody.self,
-                from: result
-            )
-            return body.choices.first?.message.content ?? ""
-        } catch {
-            dump(error)
-            throw Error.decodeError(error)
+        return ResponseStream(result: result) {
+            var text = $0
+            if text.hasPrefix("data: ") {
+                text = String(text.dropFirst(6))
+            }
+            do {
+                let chunk = try JSONDecoder().decode(
+                    OpenAIService.ChatCompletionsStreamDataChunk.self,
+                    from: text.data(using: .utf8) ?? Data()
+                )
+                return .init(chunk: chunk, done: chunk.choices?.first?.finish_reason != nil)
+            } catch {
+                print(error)
+                throw error
+            }
         }
     }
 
     func createPrompt(from request: PromptStrategy) -> String {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
     }
 
-    func sendPrompt(_ prompt: String) async throws -> String {
+    func sendPrompt(
+        _ prompt: String
+    ) async throws -> ResponseStream<OpenAIService.CompletionsStreamDataChunk> {
         let requestBody = OpenAIService.CompletionRequestBody(
             model: modelName,
             prompt: prompt,
             temperature: temperature,
+            stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)
@@ -162,28 +159,34 @@ extension AzureOpenAIService {
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(apiKey, forHTTPHeaderField: "api-key")
-        let (result, response) = try await URLSession.shared.data(for: request)
+        let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {
             throw CancellationError()
         }
 
         guard response.statusCode == 200 else {
-            if let error = try? JSONDecoder().decode(APIError.self, from: result) {
-                throw Error.apiError(error)
+            let text = try await result.lines.reduce(into: "") { partialResult, current in
+                partialResult += current
             }
-            throw Error.otherError(String(data: result, encoding: .utf8) ?? "Unknown Error")
+            throw Error.otherError(text)
         }
 
-        do {
-            let body = try JSONDecoder().decode(
-                OpenAIService.CompletionResponseBody.self,
-                from: result
-            )
-            return body.choices.first?.text ?? ""
-        } catch {
-            dump(error)
-            throw Error.decodeError(error)
+        return ResponseStream(result: result) {
+            var text = $0
+            if text.hasPrefix("data: ") {
+                text = String(text.dropFirst(6))
+            }
+            do {
+                let chunk = try JSONDecoder().decode(
+                    OpenAIService.CompletionsStreamDataChunk.self,
+                    from: text.data(using: .utf8) ?? Data()
+                )
+                return .init(chunk: chunk, done: chunk.choices?.first?.finish_reason != nil)
+            } catch {
+                print(error)
+                throw error
+            }
         }
     }
 

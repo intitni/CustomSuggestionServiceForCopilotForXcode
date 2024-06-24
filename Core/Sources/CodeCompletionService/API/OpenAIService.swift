@@ -6,6 +6,7 @@ public actor OpenAIService {
     let url: URL
     let endpoint: Endpoint
     let modelName: String
+    let contextWindow: Int
     let maxToken: Int
     let temperature: Double
     let apiKey: String
@@ -20,7 +21,8 @@ public actor OpenAIService {
         url: String? = nil,
         endpoint: Endpoint,
         modelName: String,
-        maxToken: Int? = nil,
+        contextWindow: Int,
+        maxToken: Int,
         temperature: Double = 0.2,
         stopWords: [String] = [],
         apiKey: String
@@ -36,10 +38,11 @@ public actor OpenAIService {
 
         self.endpoint = endpoint
         self.modelName = modelName
-        self.maxToken = maxToken ?? ChatCompletionModels(rawValue: modelName)?.maxToken ?? 4096
+        self.maxToken = maxToken
         self.temperature = temperature
         self.apiKey = apiKey
         self.stopWords = stopWords
+        self.contextWindow = contextWindow
     }
 }
 
@@ -51,31 +54,13 @@ extension OpenAIService: CodeCompletionServiceType {
             CodeCompletionLogger.logger.logPrompt(messages.map {
                 ($0.content, $0.role.rawValue)
             })
-            return AsyncStream<String> { continuation in
-                let task = Task {
-                    let result = try await sendMessages(messages)
-                    try Task.checkCancellation()
-                    continuation.yield(result)
-                    continuation.finish()
-                }
-                continuation.onTermination = { _ in
-                    task.cancel()
-                }
-            }
+            let result = try await sendMessages(messages)
+            return result.compactMap { $0.choices?.first?.delta?.content }.eraseToStream()
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            return AsyncStream<String> { continuation in
-                let task = Task {
-                    let result = try await sendPrompt(prompt)
-                    try Task.checkCancellation()
-                    continuation.yield(result)
-                    continuation.finish()
-                }
-                continuation.onTermination = { _ in
-                    task.cancel()
-                }
-            }
+            let result = try await sendPrompt(prompt)
+            return result.compactMap { $0.choices?.first?.text }.eraseToStream()
         }
     }
 }
@@ -128,8 +113,8 @@ extension OpenAIService {
 
     func createMessages(from request: PromptStrategy) -> [Message] {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return [
@@ -144,13 +129,16 @@ extension OpenAIService {
         }
     }
 
-    func sendMessages(_ messages: [Message]) async throws -> String {
+    func sendMessages(
+        _ messages: [Message]
+    ) async throws -> ResponseStream<ChatCompletionsStreamDataChunk> {
         let requestBody = ChatCompletionRequestBody(
             model: modelName,
             messages: messages,
             temperature: temperature,
+            stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)
@@ -159,25 +147,34 @@ extension OpenAIService {
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        let (result, response) = try await URLSession.shared.data(for: request)
+        let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {
             throw CancellationError()
         }
 
         guard response.statusCode == 200 else {
-            if let error = try? JSONDecoder().decode(APIError.self, from: result) {
-                throw Error.apiError(error)
+            let text = try await result.lines.reduce(into: "") { partialResult, current in
+                partialResult += current
             }
-            throw Error.otherError(String(data: result, encoding: .utf8) ?? "Unknown Error")
+            throw Error.otherError(text)
         }
 
-        do {
-            let body = try JSONDecoder().decode(ChatCompletionResponseBody.self, from: result)
-            return body.choices.first?.message.content ?? ""
-        } catch {
-            dump(error)
-            throw Error.decodeError(error)
+        return ResponseStream(result: result) {
+            var text = $0
+            if text.hasPrefix("data: ") {
+                text = String(text.dropFirst(6))
+            }
+            do {
+                let chunk = try JSONDecoder().decode(
+                    ChatCompletionsStreamDataChunk.self,
+                    from: text.data(using: .utf8) ?? Data()
+                )
+                return .init(chunk: chunk, done: chunk.choices?.first?.delta?.content != nil)
+            } catch {
+                print(error)
+                throw error
+            }
         }
     }
 
@@ -241,6 +238,24 @@ extension OpenAIService {
         var usage: Usage
         var choices: [Choice]
     }
+
+    struct ChatCompletionsStreamDataChunk: Decodable {
+        var id: String?
+        var object: String?
+        var model: String?
+        var choices: [Choice]?
+
+        struct Choice: Decodable {
+            var delta: Delta?
+            var index: Int?
+            var finish_reason: String?
+
+            struct Delta: Decodable {
+                var role: Message.Role?
+                var content: String?
+            }
+        }
+    }
 }
 
 // MARK: - Completion API
@@ -248,20 +263,21 @@ extension OpenAIService {
 extension OpenAIService {
     func createPrompt(from request: PromptStrategy) -> String {
         let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
-            maxToken / 3 * 2,
-            maxToken - 300 - 20
+            contextWindow / 3 * 2,
+            contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
     }
 
-    func sendPrompt(_ prompt: String) async throws -> String {
+    func sendPrompt(_ prompt: String) async throws -> ResponseStream<CompletionsStreamDataChunk> {
         let requestBody = CompletionRequestBody(
             model: modelName,
             prompt: prompt,
             temperature: temperature,
+            stream: true,
             stop: stopWords,
-            max_tokens: 300
+            max_tokens: maxToken
         )
 
         var request = URLRequest(url: url)
@@ -270,25 +286,34 @@ extension OpenAIService {
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        let (result, response) = try await URLSession.shared.data(for: request)
+        let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {
             throw CancellationError()
         }
 
         guard response.statusCode == 200 else {
-            if let error = try? JSONDecoder().decode(APIError.self, from: result) {
-                throw Error.apiError(error)
+            let text = try await result.lines.reduce(into: "") { partialResult, current in
+                partialResult += current
             }
-            throw Error.otherError(String(data: result, encoding: .utf8) ?? "Unknown Error")
+            throw Error.otherError(text)
         }
 
-        do {
-            let body = try JSONDecoder().decode(CompletionResponseBody.self, from: result)
-            return body.choices.first?.text ?? ""
-        } catch {
-            dump(error)
-            throw Error.decodeError(error)
+        return ResponseStream(result: result) {
+            var text = $0
+            if text.hasPrefix("data: ") {
+                text = String(text.dropFirst(6))
+            }
+            do {
+                let chunk = try JSONDecoder().decode(
+                    CompletionsStreamDataChunk.self,
+                    from: text.data(using: .utf8) ?? Data()
+                )
+                return .init(chunk: chunk, done: chunk.choices?.first?.finish_reason != nil)
+            } catch {
+                print(error)
+                throw error
+            }
         }
     }
 
@@ -351,6 +376,19 @@ extension OpenAIService {
         var model: String
         var usage: Usage
         var choices: [Choice]
+    }
+
+    struct CompletionsStreamDataChunk: Decodable {
+        struct Choice: Decodable {
+            var text: String?
+            var index: Int
+            var finish_reason: String?
+        }
+
+        var id: String?
+        var object: String?
+        var model: String?
+        var choices: [Choice]?
     }
 }
 

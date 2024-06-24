@@ -8,6 +8,7 @@ actor Service {
         case chatModel(ChatModel)
         case completionModel(CompletionModel)
         case tabbyModel(TabbyModel)
+        case fimModel(FIMModel)
     }
 
     var onGoingTask: Task<[CodeSuggestion], Error>?
@@ -43,14 +44,14 @@ actor Service {
                     }
 
                     let service = CodeCompletionService()
-
+                    let model = getModel()
                     let prompt = strategy.createPrompt()
                     let postProcessor = strategy.createRawSuggestionPostProcessor()
-                    let stopStream = strategy.createStreamStopStrategy()
+                    let stopStream = strategy.createStreamStopStrategy(model: model)
 
                     let suggestedCodeSnippets: [String]
 
-                    switch getModel() {
+                    switch model {
                     case let .chatModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
@@ -68,6 +69,14 @@ actor Service {
                             count: 1
                         )
                     case let .tabbyModel(model):
+                        CodeCompletionLogger.logger.logModel(model)
+                        suggestedCodeSnippets = try await service.getCompletions(
+                            prompt,
+                            streamStopStrategy: stopStream,
+                            model: model,
+                            count: 1
+                        )
+                    case let .fimModel(model):
                         CodeCompletionLogger.logger.logModel(model)
                         suggestedCodeSnippets = try await service.getCompletions(
                             prompt,
@@ -131,6 +140,8 @@ actor Service {
             return .completionModel(UserDefaults.shared.value(for: \.customCompletionModel))
         case .tabby:
             return .tabbyModel(UserDefaults.shared.value(for: \.tabbyModel))
+        case .fimModel:
+            return .fimModel(UserDefaults.shared.value(for: \.customFIMModel))
         }
     }
 
@@ -140,10 +151,16 @@ actor Service {
         suffix: [String]
     ) -> any RequestStrategy {
         let id = UserDefaults.shared.value(for: \.requestStrategyId)
-        if let type = CustomModelType(rawValue: UserDefaults.shared.value(for: \.chatModelId)),
-           type == .tabby
-        {
+        let type = CustomModelType(rawValue: UserDefaults.shared.value(for: \.chatModelId))
+        if let type, type == .tabby {
             return TabbyRequestStrategy(
+                sourceRequest: sourceRequest,
+                prefix: prefix,
+                suffix: suffix
+            )
+        }
+        if let type, type == .fimModel {
+            return FIMEndpointRequestStrategy(
                 sourceRequest: sourceRequest,
                 prefix: prefix,
                 suffix: suffix

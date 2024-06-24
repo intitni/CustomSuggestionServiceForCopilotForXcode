@@ -3,8 +3,8 @@ import CopilotForXcodeKit
 import Foundation
 import Fundamental
 
-/// A special strategy for Tabby.
-struct TabbyRequestStrategy: RequestStrategy {
+/// A special strategy for FIM endpoints.
+struct FIMEndpointRequestStrategy: RequestStrategy {
     var sourceRequest: SuggestionRequest
     var prefix: [String]
     var suffix: [String]
@@ -22,11 +22,11 @@ struct TabbyRequestStrategy: RequestStrategy {
     }
 
     func createRawSuggestionPostProcessor() -> some RawSuggestionPostProcessingStrategy {
-        NoOpRawSuggestionPostProcessingStrategy()
+        DefaultRawSuggestionPostProcessingStrategy(codeWrappingTags: nil)
     }
 
     func createStreamStopStrategy(model: Service.Model) -> some StreamStopStrategy {
-        NeverStreamStopStrategy()
+        FIMStreamStopStrategy(prefix: prefix)
     }
 
     struct Prompt: PromptStrategy {
@@ -54,13 +54,27 @@ struct TabbyRequestStrategy: RequestStrategy {
             self.suffix = suffix
         }
 
-        /// Not used by ``TabbyService``.
         func createPrompt(
             truncatedPrefix: [String],
             truncatedSuffix: [String],
             includedSnippets: [RelevantCodeSnippet]
         ) -> [PromptMessage] {
-            []
+            let suffix = truncatedSuffix.joined()
+            let prefixContent = """
+            // File Path: \(filePath)
+            // Indentation: \
+            \(sourceRequest.indentSize) \
+            \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
+            \(truncatedPrefix.joined())
+            """
+            
+            let suffixContent = suffix.isEmpty ? "\n// End of file" : suffix
+            
+            return [
+                .init(role: .prefix, content: prefixContent),
+                .init(role: .suffix, content: suffixContent)
+            ]
         }
     }
 }

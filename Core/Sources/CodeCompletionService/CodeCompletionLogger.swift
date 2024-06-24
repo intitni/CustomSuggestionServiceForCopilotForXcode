@@ -14,7 +14,8 @@ public final class CodeCompletionLogger {
         fileURL: .init(filePath: "/"),
         relativePath: "",
         language: .plaintext,
-        content: "",
+        content: "", 
+        originalContent: "",
         cursorPosition: .zero,
         tabSize: 0,
         indentSize: 0,
@@ -65,6 +66,15 @@ public final class CodeCompletionLogger {
             format: "N/A",
             modelName: "N/A",
             baseURL: tabbyModel.url
+        )
+    }
+    
+    public func logModel(_ fimModel: FIMModel) {
+        model = .init(
+            type: "FIM",
+            format: fimModel.format.rawValue,
+            modelName: fimModel.info.modelName,
+            baseURL: fimModel.info.baseURL
         )
     }
 

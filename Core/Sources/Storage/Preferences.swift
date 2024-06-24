@@ -56,6 +56,18 @@ public extension UserDefaultPreferenceKeys {
             key: "CustomSuggestionService-CustomCompletionModel"
         )
     }
+    
+    var customFIMModel: PreferenceKey<StorageBox<FIMModel>> {
+        .init(
+            defaultValue: .init(FIMModel(
+                id: "ID",
+                name: "Custom",
+                format: .mistral,
+                info: .init()
+            )),
+            key: "CustomSuggestionService-CustomFIMModel"
+        )
+    }
 
     var requestStrategyId: PreferenceKey<String> {
         .init(defaultValue: "", key: "CustomSuggestionService-RequestStrategyId")
@@ -94,6 +106,27 @@ public extension UserDefaultPreferenceKeys {
 
     var verboseLog: PreferenceKey<Bool> {
         .init(defaultValue: false, key: "CustomSuggestionService-VerboseLog")
+    }
+    
+    var fimStopToken: PreferenceKey<String> {
+        .init(
+            defaultValue: "<EOT>",
+            key: "CustomSuggestionService-FimStopToken"
+        )
+    }
+    
+    var fimTemplate: PreferenceKey<String> {
+        .init(
+            defaultValue: "<PRE> {prefix} <SUF>{suffix} <MID>",
+            key: "CustomSuggestionService-FimTemplate"
+        )
+    }
+    
+    var maxGenerationToken: PreferenceKey<Int> {
+        .init(
+            defaultValue: 200,
+            key: "CustomSuggestionService-MaxGenerationToken"
+        )
     }
 }
 

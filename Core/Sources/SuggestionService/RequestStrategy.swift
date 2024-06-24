@@ -20,7 +20,7 @@ protocol RequestStrategy {
     func createPrompt() -> Prompt
 
     /// Control how a stream should stop early.
-    func createStreamStopStrategy() -> SomeStreamStopStrategy
+    func createStreamStopStrategy(model: Service.Model) -> SomeStreamStopStrategy
 
     /// The AI model may not return a suggestion in a ideal format. You can use it to reformat the
     /// suggestions.
@@ -45,9 +45,9 @@ extension RequestStrategyOption {
         case .continue:
             return ContinueRequestStrategy.self
         case .codeLlamaFillInTheMiddle:
-            return CodeLlamaFillInTheMiddleRequestStrategy.self
+            return FillInTheMiddleRequestStrategy.self
         case .codeLlamaFillInTheMiddleWithSystemPrompt:
-            return CodeLlamaFillInTheMiddleWithSystemPromptRequestStrategy.self
+            return FillInTheMiddleWithSystemPromptRequestStrategy.self
         }
     }
 }

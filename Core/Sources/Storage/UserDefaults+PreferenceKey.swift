@@ -99,6 +99,13 @@ public extension UserDefaultsType {
         let key = UserDefaultPreferenceKeys()[keyPath: keyPath]
         return (value(forKey: key.key) as? K.Value) ?? key.defaultValue
     }
+    
+    func defaultValue<K: UserDefaultPreferenceKey>(
+        for keyPath: KeyPath<UserDefaultPreferenceKeys, K>
+    ) -> K.Value where K.Value: UserDefaultsStorable {
+        let key = UserDefaultPreferenceKeys()[keyPath: keyPath]
+        return key.defaultValue
+    }
 
     func set<K: UserDefaultPreferenceKey>(
         _ value: K.Value,
