@@ -25,6 +25,7 @@ The app supports three types of suggestion services:
 
 - Models with chat completions API
 - Models with completions API
+- Models with FIM API
 - [Tabby](https://tabby.tabbyml.com)
 
 If you are new to running a model locally, you can try [Ollama](https://ollama.com) and [LM Studio](https://lmstudio.ai).
@@ -32,7 +33,10 @@ If you are new to running a model locally, you can try [Ollama](https://ollama.c
 ### Recommended Settings
 
 - Use Tabby since they have extensive experience in code completion.
-- Use models with completions API with Fill-in-the-Middle support (for example, codellama:7b-code), and use the "Codellama Fill-in-the-Middle" strategy.
+- Use models with completions API with Fill-in-the-Middle support (for example, codellama:7b-code), and use the "Fill-in-the-Middle" strategy.
+- Use models with FIM API.
+
+When using custom models to generate suggestions, it is recommended to setup a lower suggestion limit for faster generation.
 
 ### Others
 
@@ -53,8 +57,8 @@ The template format differs in different tools.
 - Default: This strategy meticulously explains the context to the model, prompting it to generate a suggestion.
 - Naive: This strategy rearranges the code in a naive way to trick the model into believing it's appending code at the end of a file.
 - Continue: This strategy employs the "Please Continue" technique to persuade the model that it has started a suggestion and must continue to complete it. (Only effective with the chat completion API).
-- CodeLlama Fill-in-the-Middle: It uses special tokens to guide the models to generate suggestions. The models need to support FIM to use it (codellama:xb-code, startcoder, etc.). This strategy uses the special tokens documented by CodeLlama.
-- CodeLlama Fill-in-the-Middle with System Prompt: The previous one doesn't have a system prompt telling it what to do. You can try to use it in models that don't support FIM.
+- Fill-in-the-Middle: It uses special tokens to guide the models to generate suggestions. The models need to support FIM to use it (codellama:xb-code, startcoder, etc.). You need to setup a prompt format to allow it to work properly. The default prompt format is for codellama.
+- Fill-in-the-Middle with System Prompt: The previous one doesn't have a system prompt telling it what to do. You can try to use it in models that don't support FIM.
 
 ## Contribution
 
