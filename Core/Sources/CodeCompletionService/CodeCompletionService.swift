@@ -99,7 +99,7 @@ public struct CodeCompletionService {
                 endpoint: .chatCompletion,
                 modelName: model.info.modelName,
                 contextWindow: model.info.maxTokens,
-                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), 
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
@@ -114,7 +114,7 @@ public struct CodeCompletionService {
             let service = AzureOpenAIService(
                 url: model.endpoint,
                 endpoint: .chatCompletion,
-                modelName: model.info.modelName, 
+                modelName: model.info.modelName,
                 contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
@@ -179,7 +179,7 @@ public struct CodeCompletionService {
                 endpoint: .completion,
                 modelName: model.info.modelName,
                 contextWindow: model.info.maxTokens,
-                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken), 
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
                 apiKey: apiKey
             )
@@ -211,7 +211,7 @@ public struct CodeCompletionService {
             let service = OllamaService(
                 url: model.endpoint,
                 endpoint: .completion,
-                modelName: model.info.modelName, 
+                modelName: model.info.modelName,
                 contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
                 stopWords: prompt.stopWords,
@@ -248,6 +248,24 @@ public struct CodeCompletionService {
                 apiKey: apiKey,
                 contextWindow: model.info.maxTokens,
                 maxToken: UserDefaults.shared.value(for: \.maxGenerationToken)
+            )
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
+            try Task.checkCancellation()
+            return result
+        case .ollama:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .completionWithSuffix,
+                modelName: model.info.modelName,
+                contextWindow: model.info.maxTokens,
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaInfo.keepAlive,
+                format: .none
             )
             let result = try await service.getCompletions(
                 prompt,

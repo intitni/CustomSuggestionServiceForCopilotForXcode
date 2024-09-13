@@ -20,6 +20,7 @@ struct FIMModelEdit {
         var suggestedMaxTokens: Int?
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
+        var ollamaKeepAlive: String = ""
     }
 
     enum Action: Equatable, BindableAction {
@@ -140,7 +141,8 @@ extension FIMModel {
                 apiKeyName: info.apiKeyName,
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
-            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL)
+            baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL),
+            ollamaKeepAlive: info.ollamaInfo.keepAlive
         )
     }
 
@@ -154,7 +156,8 @@ extension FIMModel {
                 baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines), 
                 isFullURL: state.baseURLSelection.isFullURL,
                 maxTokens: state.maxTokens,
-                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines)
+                modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
+                ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
             )
         )
     }

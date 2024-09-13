@@ -19,6 +19,8 @@ struct FIMModelEditView: View {
                         switch store.format {
                         case .mistral:
                             mistralForm
+                        case .ollama:
+                            ollama
                         case .unknown:
                             EmptyView()
                         }
@@ -65,6 +67,8 @@ struct FIMModelEditView: View {
                     switch format {
                     case .mistral:
                         Text("Mistral").tag(format)
+                    case .ollama:
+                        Text("Ollama").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -190,6 +194,31 @@ struct FIMModelEditView: View {
             }
 
         maxTokensTextField
+    }
+    
+    @ViewBuilder
+    var ollama: some View {
+        baseURLTextField(
+            title: "",
+            prompt: Text("https://127.0.0.1:11434/api/generate")
+        ) {
+            Text("/api/generate")
+        }
+
+        TextField("Model Name", text: $store.modelName)
+
+        maxTokensTextField
+        
+        TextField(text: $store.ollamaKeepAlive, prompt: Text("Default Value")) {
+            Text("Keep Alive")
+        }
+        
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                " For more details, please visit [https://ollama.com](https://ollama.com)"
+            )
+        }
+        .padding(.vertical)
     }
 }
 
