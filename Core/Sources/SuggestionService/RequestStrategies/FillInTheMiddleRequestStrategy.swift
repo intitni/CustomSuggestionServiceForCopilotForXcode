@@ -42,6 +42,7 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
         var stopWords: [String] { ["\n\n", Tag.stop].filter { !$0.isEmpty } }
         var language: CodeLanguage? { sourceRequest.language }
+        var promptIsRaw: Bool { true }
 
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }

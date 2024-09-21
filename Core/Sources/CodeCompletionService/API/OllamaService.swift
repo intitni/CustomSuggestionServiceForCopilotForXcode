@@ -233,6 +233,7 @@ extension OllamaService {
         var options: ChatCompletionRequestBody.Options
         var keep_alive: String?
         var format: String?
+        var raw: Bool?
         var suffix: String?
     }
 
@@ -248,6 +249,7 @@ extension OllamaService {
 
     func sendPrompt(
         _ prompt: String,
+        raw: Bool? = nil,
         suffix: String? = nil
     ) async throws -> ResponseStream<ChatCompletionResponseChunk> {
         let requestBody = CompletionRequestBody(
@@ -261,6 +263,7 @@ extension OllamaService {
             ),
             keep_alive: keepAlive.isEmpty ? nil : keepAlive,
             format: format == .none ? nil : format.rawValue,
+            raw: raw,
             suffix: suffix
         )
 
