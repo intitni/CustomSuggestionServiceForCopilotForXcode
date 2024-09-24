@@ -3,6 +3,15 @@
     <channel>
         <title>Custom Suggestion Service</title>
         <item>
+            <title>0.5.0</title>
+            <pubDate>Tue, 24 Sep 2024 16:57:22 +0800</pubDate>
+            <sparkle:version>50</sparkle:version>
+            <sparkle:shortVersionString>0.5.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.5.0</sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.5.0/Custom.Suggestion.Service.app.zip" length="6780334" type="application/octet-stream" sparkle:edSignature="xPs4zYq3gVWjR/VAGhT0RyAZsvmq605Cg+JpRM9CF8ap8ETqhJvj7q1VOcc8UdtllRX94+po9AF/92KoSMZ7Dw=="/>
+        </item>
+        <item>
             <title>0.4.0</title>
             <pubDate>Mon, 24 Jun 2024 00:33:39 +0800</pubDate>
             <sparkle:version>40</sparkle:version>
@@ -21,17 +30,6 @@
                 https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.3.0
             </sparkle:releaseNotesLink>
             <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.3.0/Custom.Suggestion.Service.app.zip" length="6584455" type="application/octet-stream" sparkle:edSignature="HEeUsDcuq3Yt7pwAOO4WWuS9aamCEVOZjhSrRbTXiLYajv9ybRkhFiYXQv74JMvTdf6JmIweQjYjHQIXs38lBA=="/>
-        </item>
-        <item>
-            <title>0.2.0</title>
-            <pubDate>Mon, 04 Mar 2024 12:50:34 +0800</pubDate>
-            <sparkle:version>20</sparkle:version>
-            <sparkle:shortVersionString>0.2.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <sparkle:releaseNotesLink>
-                https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/tag/0.2.0
-            </sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/intitni/CustomSuggestionServiceForCopilotForXcode/releases/download/0.2.0/Custom.Suggestion.Service.app.zip" length="6556150" type="application/octet-stream" sparkle:edSignature="BC9S9lkh8o8DhMG0txy3AKrqQul574SWVgQD9eEf4D2H10/00kebMEEgKjJjxLvSQjSsyuXOgwCCkCJ8/rZqCA=="/>
         </item>
     </channel>
 </rss>

@@ -12,6 +12,12 @@ public actor OllamaService {
     let stopWords: [String]
     let keepAlive: String
     let format: ResponseFormat
+    let authenticationMode: AuthenticationMode?
+    
+    enum AuthenticationMode {
+        case bearerToken(String)
+        case header(name: String, value: String)
+    }
 
     public enum ResponseFormat: String {
         case none = ""
@@ -21,6 +27,7 @@ public actor OllamaService {
     public enum Endpoint {
         case completion
         case chatCompletion
+        case completionWithSuffix
     }
 
     init(
@@ -32,13 +39,14 @@ public actor OllamaService {
         temperature: Double = 0.2,
         stopWords: [String] = [],
         keepAlive: String = "",
-        format: ResponseFormat = .none
+        format: ResponseFormat = .none,
+        authenticationMode: AuthenticationMode? = nil
     ) {
         self.url = url.flatMap(URL.init(string:)) ?? {
             switch endpoint {
             case .chatCompletion:
                 URL(string: "https://127.0.0.1:11434/api/chat")!
-            case .completion:
+            case .completion, .completionWithSuffix:
                 URL(string: "https://127.0.0.1:11434/api/generate")!
             }
         }()
@@ -51,6 +59,7 @@ public actor OllamaService {
         self.keepAlive = keepAlive
         self.format = format
         self.contextWindow = contextWindow
+        self.authenticationMode = authenticationMode
     }
 }
 
@@ -74,7 +83,24 @@ extension OllamaService: CodeCompletionServiceType {
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            let stream = try await sendPrompt(prompt)
+            let stream = try await sendPrompt(prompt, raw: request.promptIsRaw)
+            return stream.compactMap { $0.response }
+        case .completionWithSuffix:
+            let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+                contextWindow / 3 * 2,
+                contextWindow - maxToken - 20
+            ))
+            let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
+
+            let prefix = prompts.first { $0.role == .prefix }?.content ?? ""
+            let suffix = prompts.last { $0.role == .suffix }?.content ?? ""
+
+            CodeCompletionLogger.logger.logPrompt([
+                (prefix, "prefix"),
+                (suffix, "suffix"),
+            ])
+
+            let stream = try await sendPrompt(prefix, suffix: suffix)
             return stream.compactMap { $0.response }
         }
     }
@@ -215,6 +241,8 @@ extension OllamaService {
         var options: ChatCompletionRequestBody.Options
         var keep_alive: String?
         var format: String?
+        var raw: Bool?
+        var suffix: String?
     }
 
     func createPrompt(from request: PromptStrategy) -> String {
@@ -227,7 +255,11 @@ extension OllamaService {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func sendPrompt(_ prompt: String) async throws -> ResponseStream<ChatCompletionResponseChunk> {
+    func sendPrompt(
+        _ prompt: String,
+        raw: Bool? = nil,
+        suffix: String? = nil
+    ) async throws -> ResponseStream<ChatCompletionResponseChunk> {
         let requestBody = CompletionRequestBody(
             model: modelName,
             prompt: prompt,
@@ -238,7 +270,9 @@ extension OllamaService {
                 num_predict: maxToken
             ),
             keep_alive: keepAlive.isEmpty ? nil : keepAlive,
-            format: format == .none ? nil : format.rawValue
+            format: format == .none ? nil : format.rawValue,
+            raw: raw,
+            suffix: suffix
         )
 
         var request = URLRequest(url: url)
@@ -246,6 +280,16 @@ extension OllamaService {
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        switch authenticationMode{
+        case .none:
+            break
+        case let .bearerToken(key):
+            request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        case let .header(name, value):
+            request.setValue(value, forHTTPHeaderField: name)
+        }
+        
         let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {

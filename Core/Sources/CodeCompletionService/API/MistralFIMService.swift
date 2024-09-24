@@ -38,7 +38,7 @@ extension MistralFIMService: CodeCompletionServiceType {
     
     func getCompletion(_ request: any PromptStrategy) async throws -> CompletionSequence {
         let result = try await send(request)
-        return result.compactMap { $0.choices?.first?.delta?.content }
+        return result.compactMap { $0.choices?.first?.delta?.content ?? $0.choices?.first?.text }
     }
 }
 
@@ -75,6 +75,7 @@ extension MistralFIMService {
         struct Choice: Decodable {
             var index: Int
             var delta: Delta?
+            var text: String?
             var finish_reason: String?
         }
 
