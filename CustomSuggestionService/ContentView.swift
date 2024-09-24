@@ -125,6 +125,7 @@ struct ContentView: View {
                 }
             }
         }
+        .handleToast()
     }
 }
 
