@@ -75,7 +75,7 @@ extension OllamaService: CodeCompletionServiceType {
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            let stream = try await sendPrompt(prompt)
+            let stream = try await sendPrompt(prompt, raw: request.promptIsRaw)
             return stream.compactMap { $0.response }
         case .completionWithSuffix:
             let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
