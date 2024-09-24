@@ -21,6 +21,8 @@ struct FIMModelEdit {
         var apiKeySelection: APIKeySelection.State = .init()
         var baseURLSelection: BaseURLSelection.State = .init()
         var ollamaKeepAlive: String = ""
+        var authenticationMode: FIMModel.Info.AuthenticationMode = .bearerToken
+        var authenticationHeaderFieldName: String = ""
     }
 
     enum Action: Equatable, BindableAction {
@@ -142,7 +144,9 @@ extension FIMModel {
                 apiKeyManagement: .init(availableAPIKeyNames: [info.apiKeyName])
             ),
             baseURLSelection: .init(baseURL: info.baseURL, isFullURL: info.isFullURL),
-            ollamaKeepAlive: info.ollamaInfo.keepAlive
+            ollamaKeepAlive: info.ollamaInfo.keepAlive,
+            authenticationMode: info.authenticationMode,
+            authenticationHeaderFieldName: info.authenticationHeaderFieldName
         )
     }
 
@@ -153,10 +157,12 @@ extension FIMModel {
             format: state.format,
             info: .init(
                 apiKeyName: state.apiKeyName,
-                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines), 
+                baseURL: state.baseURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 isFullURL: state.baseURLSelection.isFullURL,
                 maxTokens: state.maxTokens,
                 modelName: state.modelName.trimmingCharacters(in: .whitespacesAndNewlines),
+                authenticationMode: state.authenticationMode,
+                authenticationHeaderFieldName: state.authenticationHeaderFieldName,
                 ollamaInfo: .init(keepAlive: state.ollamaKeepAlive)
             )
         )

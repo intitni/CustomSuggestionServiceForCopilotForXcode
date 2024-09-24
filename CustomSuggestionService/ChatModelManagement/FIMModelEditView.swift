@@ -21,6 +21,8 @@ struct FIMModelEditView: View {
                             mistralForm
                         case .ollama:
                             ollama
+                        case .ollamaCompatible:
+                            ollamaCompatible
                         case .unknown:
                             EmptyView()
                         }
@@ -69,6 +71,8 @@ struct FIMModelEditView: View {
                         Text("Mistral").tag(format)
                     case .ollama:
                         Text("Ollama").tag(format)
+                    case .ollamaCompatible:
+                        Text("Ollama Compatible").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -194,13 +198,27 @@ struct FIMModelEditView: View {
             }
 
         maxTokensTextField
+        
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                """
+                 Compatible with:
+                - Mistral FIM API
+                - DeepSeek FIM API
+                
+                or any API that takes a prompt and a suffix and responds with 
+                an OpenAI-compatible streaming response, using bearer token authentication.
+                """
+            )
+        }
+        .padding(.vertical)
     }
-    
+
     @ViewBuilder
     var ollama: some View {
         baseURLTextField(
             title: "",
-            prompt: Text("https://127.0.0.1:11434/api/generate")
+            prompt: Text("https://127.0.0.1:11434")
         ) {
             Text("/api/generate")
         }
@@ -208,14 +226,65 @@ struct FIMModelEditView: View {
         TextField("Model Name", text: $store.modelName)
 
         maxTokensTextField
-        
+
         TextField(text: $store.ollamaKeepAlive, prompt: Text("Default Value")) {
             Text("Keep Alive")
         }
-        
+
         VStack(alignment: .leading, spacing: 8) {
             Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
                 " For more details, please visit [https://ollama.com](https://ollama.com)"
+            )
+        }
+        .padding(.vertical)
+    }
+
+    @ViewBuilder
+    var ollamaCompatible: some View {
+        Picker(
+            selection: $store.baseURLSelection.isFullURL,
+            content: {
+                Text("Base URL").tag(false)
+                Text("Full URL").tag(true)
+            },
+            label: { Text("URL") }
+        )
+        .pickerStyle(.segmented)
+
+        baseURLTextField(
+            title: "",
+            prompt: store.baseURLSelection.isFullURL
+                ? Text("https://127.0.0.1:11434/api/generate")
+                : Text("https://127.0.0.1:11434")
+        ) {
+            if !store.baseURLSelection.isFullURL {
+                Text("/api/generate")
+            }
+        }
+
+        Picker(
+            selection: $store.authenticationMode,
+            content: {
+                Text("Bearer Token").tag(FIMModel.Info.AuthenticationMode.bearerToken)
+                Text("Header Field").tag(FIMModel.Info.AuthenticationMode.header)
+            },
+            label: { Text("Authentication Mode") }
+        )
+        .pickerStyle(.segmented)
+
+        if store.authenticationMode == .header {
+            TextField("Header Field Name", text: $store.authenticationHeaderFieldName)
+        }
+
+        apiKeyNamePicker
+
+        TextField("Model Name", text: $store.modelName)
+
+        maxTokensTextField
+
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                " Use with any API that has the same format as Ollama. For more details, please visit [https://ollama.com](https://ollama.com)"
             )
         }
         .padding(.vertical)
