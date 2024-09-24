@@ -274,6 +274,35 @@ public struct CodeCompletionService {
             )
             try Task.checkCancellation()
             return result
+        case .ollamaCompatible:
+            let service = OllamaService(
+                url: model.endpoint,
+                endpoint: .completionWithSuffix,
+                modelName: model.info.modelName,
+                contextWindow: model.info.maxTokens,
+                maxToken: UserDefaults.shared.value(for: \.maxGenerationToken),
+                stopWords: prompt.stopWords,
+                keepAlive: model.info.ollamaInfo.keepAlive,
+                format: .none,
+                authenticationMode: {
+                    switch model.info.authenticationMode {
+                    case .header:
+                        return .header(
+                            name: model.info.authenticationHeaderFieldName,
+                            value: apiKey
+                        )
+                    case .bearerToken:
+                        return .bearerToken(apiKey)
+                    }
+                }()
+            )
+            let result = try await service.getCompletions(
+                prompt,
+                streamStopStrategy: streamStopStrategy,
+                count: count
+            )
+            try Task.checkCancellation()
+            return result
         case .unknown:
             throw Error.unknownFormat
         }

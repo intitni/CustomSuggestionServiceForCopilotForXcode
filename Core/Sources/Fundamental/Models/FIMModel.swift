@@ -20,6 +20,7 @@ public struct FIMModel: Codable, Equatable, Identifiable {
     public enum Format: String, Codable, Equatable, CaseIterable {
         case mistral
         case ollama
+        case ollamaCompatible
         
         case unknown
     }
@@ -35,6 +36,15 @@ public struct FIMModel: Codable, Equatable, Identifiable {
         public var maxTokens: Int
         @FallbackDecoding<EmptyString>
         public var modelName: String
+        @FallbackDecoding<EmptyFIMModelAuthenticationMode>
+        public var authenticationMode: AuthenticationMode
+        @FallbackDecoding<EmptyString>
+        public var authenticationHeaderFieldName: String
+        
+        public enum AuthenticationMode: Codable, Equatable, CaseIterable {
+            case header
+            case bearerToken
+        }
         
         @FallbackDecoding<EmptyChatModelOllamaInfo>
         public var ollamaInfo: ChatModel.Info.OllamaInfo
@@ -45,6 +55,8 @@ public struct FIMModel: Codable, Equatable, Identifiable {
             isFullURL: Bool = false,
             maxTokens: Int = 4000,
             modelName: String = "",
+            authenticationMode: AuthenticationMode = .bearerToken,
+            authenticationHeaderFieldName: String = "",
             ollamaInfo: ChatModel.Info.OllamaInfo = ChatModel.Info.OllamaInfo()
         ) {
             self.apiKeyName = apiKeyName
@@ -53,6 +65,8 @@ public struct FIMModel: Codable, Equatable, Identifiable {
             self.maxTokens = maxTokens
             self.modelName = modelName
             self.ollamaInfo = ollamaInfo
+            self.authenticationMode = authenticationMode
+            self.authenticationHeaderFieldName = authenticationHeaderFieldName
         }
     }
 
@@ -66,6 +80,11 @@ public struct FIMModel: Codable, Equatable, Identifiable {
         case .ollama:
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "http://localhost:11434/api/generate" }
+            return "\(baseURL)/api/generate"
+        case .ollamaCompatible:
+            let baseURL = info.baseURL
+            if baseURL.isEmpty { return "http://localhost:11434/api/generate" }
+            if info.isFullURL { return baseURL }
             return "\(baseURL)/api/generate"
         case .unknown:
             return ""
@@ -81,3 +100,6 @@ public struct EmptyFIMModelFormat: FallbackValueProvider {
     public static var defaultValue: FIMModel.Format { .unknown }
 }
 
+public struct EmptyFIMModelAuthenticationMode: FallbackValueProvider {
+    public static var defaultValue: FIMModel.Info.AuthenticationMode { .bearerToken }
+}

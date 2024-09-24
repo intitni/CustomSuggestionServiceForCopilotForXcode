@@ -12,6 +12,12 @@ public actor OllamaService {
     let stopWords: [String]
     let keepAlive: String
     let format: ResponseFormat
+    let authenticationMode: AuthenticationMode?
+    
+    enum AuthenticationMode {
+        case bearerToken(String)
+        case header(name: String, value: String)
+    }
 
     public enum ResponseFormat: String {
         case none = ""
@@ -33,7 +39,8 @@ public actor OllamaService {
         temperature: Double = 0.2,
         stopWords: [String] = [],
         keepAlive: String = "",
-        format: ResponseFormat = .none
+        format: ResponseFormat = .none,
+        authenticationMode: AuthenticationMode? = nil
     ) {
         self.url = url.flatMap(URL.init(string:)) ?? {
             switch endpoint {
@@ -52,6 +59,7 @@ public actor OllamaService {
         self.keepAlive = keepAlive
         self.format = format
         self.contextWindow = contextWindow
+        self.authenticationMode = authenticationMode
     }
 }
 
@@ -272,6 +280,16 @@ extension OllamaService {
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(requestBody)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        switch authenticationMode{
+        case .none:
+            break
+        case let .bearerToken(key):
+            request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        case let .header(name, value):
+            request.setValue(value, forHTTPHeaderField: name)
+        }
+        
         let (result, response) = try await URLSession.shared.bytes(for: request)
 
         guard let response = response as? HTTPURLResponse else {
