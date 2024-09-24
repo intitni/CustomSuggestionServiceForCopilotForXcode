@@ -21,6 +21,7 @@ public actor OllamaService {
     public enum Endpoint {
         case completion
         case chatCompletion
+        case completionWithSuffix
     }
 
     init(
@@ -38,7 +39,7 @@ public actor OllamaService {
             switch endpoint {
             case .chatCompletion:
                 URL(string: "https://127.0.0.1:11434/api/chat")!
-            case .completion:
+            case .completion, .completionWithSuffix:
                 URL(string: "https://127.0.0.1:11434/api/generate")!
             }
         }()
@@ -74,7 +75,24 @@ extension OllamaService: CodeCompletionServiceType {
         case .completion:
             let prompt = createPrompt(from: request)
             CodeCompletionLogger.logger.logPrompt([(prompt, "user")])
-            let stream = try await sendPrompt(prompt)
+            let stream = try await sendPrompt(prompt, raw: request.promptIsRaw)
+            return stream.compactMap { $0.response }
+        case .completionWithSuffix:
+            let strategy = DefaultTruncateStrategy(maxTokenLimit: max(
+                contextWindow / 3 * 2,
+                contextWindow - maxToken - 20
+            ))
+            let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
+
+            let prefix = prompts.first { $0.role == .prefix }?.content ?? ""
+            let suffix = prompts.last { $0.role == .suffix }?.content ?? ""
+
+            CodeCompletionLogger.logger.logPrompt([
+                (prefix, "prefix"),
+                (suffix, "suffix"),
+            ])
+
+            let stream = try await sendPrompt(prefix, suffix: suffix)
             return stream.compactMap { $0.response }
         }
     }
@@ -215,6 +233,8 @@ extension OllamaService {
         var options: ChatCompletionRequestBody.Options
         var keep_alive: String?
         var format: String?
+        var raw: Bool?
+        var suffix: String?
     }
 
     func createPrompt(from request: PromptStrategy) -> String {
@@ -227,7 +247,11 @@ extension OllamaService {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func sendPrompt(_ prompt: String) async throws -> ResponseStream<ChatCompletionResponseChunk> {
+    func sendPrompt(
+        _ prompt: String,
+        raw: Bool? = nil,
+        suffix: String? = nil
+    ) async throws -> ResponseStream<ChatCompletionResponseChunk> {
         let requestBody = CompletionRequestBody(
             model: modelName,
             prompt: prompt,
@@ -238,7 +262,9 @@ extension OllamaService {
                 num_predict: maxToken
             ),
             keep_alive: keepAlive.isEmpty ? nil : keepAlive,
-            format: format == .none ? nil : format.rawValue
+            format: format == .none ? nil : format.rawValue,
+            raw: raw,
+            suffix: suffix
         )
 
         var request = URLRequest(url: url)

@@ -122,6 +122,13 @@ public extension UserDefaultPreferenceKeys {
         )
     }
     
+    var fimPromptIsRaw: PreferenceKey<Bool> {
+        .init(
+            defaultValue: false,
+            key: "CustomSuggestionService-FimPromptIsRaw"
+        )
+    }
+    
     var maxGenerationToken: PreferenceKey<Int> {
         .init(
             defaultValue: 200,

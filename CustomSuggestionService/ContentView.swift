@@ -53,7 +53,7 @@ struct ContentView: View {
                             ) {
                                 Text("Suggestion Line Limit (0 for unlimited)")
                             }
-                            
+
                             NumberInput(
                                 value: settings.$maxGenerationToken,
                                 range: 0...Int.max,
@@ -125,6 +125,7 @@ struct ContentView: View {
                 }
             }
         }
+        .handleToast()
     }
 }
 
@@ -180,6 +181,7 @@ struct RequestStrategyPicker: View {
     final class Settings: ObservableObject {
         @AppStorage(\.requestStrategyId) var requestStrategyId
         @AppStorage(\.fimTemplate) var fimTemplate
+        @AppStorage(\.fimPromptIsRaw) var fimPromptIsRaw
         @AppStorage(\.fimStopToken) var fimStopToken
     }
 
@@ -232,6 +234,7 @@ struct RequestStrategyPicker: View {
                 text: $settings.fimTemplate,
                 prompt: Text(UserDefaults.shared.defaultValue(for: \.fimTemplate))
             ) { Text("FIM Template") }
+            Toggle(isOn: $settings.fimPromptIsRaw) { Text("Raw Prompt") }
             TextField(text: $settings.fimStopToken) { Text("FIM Stop Token") }
         }
     }

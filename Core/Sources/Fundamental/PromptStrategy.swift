@@ -17,6 +17,8 @@ public protocol PromptStrategy {
     var stopWords: [String] { get }
     /// The language of the source code.
     var language: CodeLanguage? { get }
+    /// If the prompt generated is raw.
+    var promptIsRaw: Bool { get }
 
     /// Creates a prompt about the source code and relevant code snippets to be sent to the AI
     /// model.
@@ -92,5 +94,7 @@ public extension PromptStrategy {
         guard let prefix = prefix.last else { return .empty }
         return .unchanged(prefix)
     }
+    
+    var promptIsRaw: Bool { false }
 }
 

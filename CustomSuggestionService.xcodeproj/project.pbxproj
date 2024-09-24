@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C80AC8F32C274ADD00669BDE /* FIMModelEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80AC8F12C274ADD00669BDE /* FIMModelEdit.swift */; };
 		C80AC8F42C274ADD00669BDE /* FIMModelEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80AC8F22C274ADD00669BDE /* FIMModelEditView.swift */; };
+		C813647A2CA29924000E2237 /* HandleToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81364792CA29924000E2237 /* HandleToast.swift */; };
 		C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83B83AE2B7DD261007B4442 /* Dependency.swift */; };
 		C84697512B7B7B3700B8B840 /* TestFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84697502B7B7B3700B8B840 /* TestFieldView.swift */; };
 		C84697542B7B8B8300B8B840 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = C84697532B7B8B8300B8B840 /* STTextView */; };
@@ -71,6 +72,7 @@
 /* Begin PBXFileReference section */
 		C80AC8F12C274ADD00669BDE /* FIMModelEdit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIMModelEdit.swift; sourceTree = "<group>"; };
 		C80AC8F22C274ADD00669BDE /* FIMModelEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FIMModelEditView.swift; sourceTree = "<group>"; };
+		C81364792CA29924000E2237 /* HandleToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleToast.swift; sourceTree = "<group>"; };
 		C81547D92B8737DF002203B3 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		C81547DB2B873DC1002203B3 /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		C83B83AE2B7DD261007B4442 /* Dependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependency.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				C8EA62D42B6BE4BE00E081FC /* Toast.swift */,
+				C81364792CA29924000E2237 /* HandleToast.swift */,
 			);
 			path = Toast;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				C8EA62D62B6BE5FD00E081FC /* ChatModelEdit.swift in Sources */,
 				C83B83AF2B7DD261007B4442 /* Dependency.swift in Sources */,
 				C8D0114C2B59912700219412 /* CustomSuggestionServiceApp.swift in Sources */,
+				C813647A2CA29924000E2237 /* HandleToast.swift in Sources */,
 				C8774F482B83A009008FF699 /* CompletionModelEdit.swift in Sources */,
 				C89BA4BC2B861DE4008801C5 /* UpdaterChecker.swift in Sources */,
 				C8EA62DC2B6BE60500E081FC /* APIKeySubmission.swift in Sources */,
