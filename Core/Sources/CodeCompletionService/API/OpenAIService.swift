@@ -170,7 +170,7 @@ extension OpenAIService {
                     ChatCompletionsStreamDataChunk.self,
                     from: text.data(using: .utf8) ?? Data()
                 )
-                return .init(chunk: chunk, done: chunk.choices?.first?.delta?.content != nil)
+                return .init(chunk: chunk, done: chunk.choices?.first?.finish_reason != nil)
             } catch {
                 print(error)
                 throw error
