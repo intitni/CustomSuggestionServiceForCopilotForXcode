@@ -27,6 +27,8 @@ struct ChatModelEditView: View {
                             googleAI
                         case .ollama:
                             ollama
+                        case .anthropic:
+                            anthropic
                         case .unknown:
                             EmptyView()
                         }
@@ -81,6 +83,8 @@ struct ChatModelEditView: View {
                         Text("Google Generative AI").tag(format)
                     case .ollama:
                         Text("Ollama").tag(format)
+                    case .anthropic:
+                        Text("Anthropic").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -285,6 +289,40 @@ struct ChatModelEditView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
                 " For more details, please visit [https://ollama.com](https://ollama.com)."
+            )
+        }
+        .padding(.vertical)
+    }
+
+    @ViewBuilder
+    var anthropic: some View {
+        baseURLTextField(prompt: Text("https://api.anthropic.com")) {
+            Text("/v1/messages")
+        }
+        apiKeyNamePicker
+
+        TextField("Model Name", text: $store.modelName)
+            .overlay(alignment: .trailing) {
+                Picker(
+                    "",
+                    selection: $store.modelName,
+                    content: {
+                        if AnthropicService.Models(rawValue: store.modelName) == nil {
+                            Text("Custom Model").tag(store.modelName)
+                        }
+                        ForEach(AnthropicService.Models.allCases, id: \.self) { model in
+                            Text(model.rawValue).tag(model.rawValue)
+                        }
+                    }
+                )
+                .frame(width: 20)
+            }
+
+        maxTokensTextField
+
+        VStack(alignment: .leading, spacing: 8) {
+            Text(Image(systemName: "exclamationmark.triangle.fill")) + Text(
+                " For more details, please visit [https://anthropic.com](https://anthropic.com)."
             )
         }
         .padding(.vertical)

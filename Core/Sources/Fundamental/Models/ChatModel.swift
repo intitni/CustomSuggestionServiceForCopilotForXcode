@@ -23,6 +23,7 @@ public struct ChatModel: Codable, Equatable, Identifiable {
         case openAICompatible
         case googleAI
         case ollama
+        case anthropic
 
         case unknown
     }
@@ -110,6 +111,10 @@ public struct ChatModel: Codable, Equatable, Identifiable {
             let baseURL = info.baseURL
             if baseURL.isEmpty { return "http://localhost:11434/api/chat" }
             return "\(baseURL)/api/chat"
+        case .anthropic:
+            let baseURL = info.baseURL
+            if baseURL.isEmpty { return "https://api.anthropic.com/v1/messages" }
+            return "\(baseURL)/v1/messages"
         case .unknown:
             return ""
         }
