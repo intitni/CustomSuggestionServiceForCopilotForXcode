@@ -35,11 +35,11 @@ public actor AnthropicService {
         case claude35Sonnet = "claude-3-5-sonnet-latest"
         case claude35Haiku = "claude-3-5-haiku-latest"
 
-        var maxToken: Int {
+        public var maxToken: Int {
             switch self {
-            case .claude3Opus: return 4096
-            case .claude35Sonnet: return 4096
-            case .claude35Haiku: return 4096
+            case .claude3Opus: return 200_000
+            case .claude35Sonnet: return 200_000
+            case .claude35Haiku: return 200_000
             }
         }
     }

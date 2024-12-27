@@ -159,7 +159,7 @@ public struct CodeCompletionService {
             )
             try Task.checkCancellation()
             return result
-        case .anthropic:
+        case .claude:
             let service = AnthropicService(
                 url: model.endpoint,
                 modelName: model.info.modelName,

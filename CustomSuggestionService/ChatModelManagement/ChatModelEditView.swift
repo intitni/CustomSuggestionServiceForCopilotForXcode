@@ -27,8 +27,8 @@ struct ChatModelEditView: View {
                             googleAI
                         case .ollama:
                             ollama
-                        case .anthropic:
-                            anthropic
+                        case .claude:
+                            claude
                         case .unknown:
                             EmptyView()
                         }
@@ -83,8 +83,8 @@ struct ChatModelEditView: View {
                         Text("Google Generative AI").tag(format)
                     case .ollama:
                         Text("Ollama").tag(format)
-                    case .anthropic:
-                        Text("Anthropic").tag(format)
+                    case .claude:
+                        Text("Claude").tag(format)
                     case .unknown:
                         EmptyView()
                     }
@@ -295,7 +295,7 @@ struct ChatModelEditView: View {
     }
 
     @ViewBuilder
-    var anthropic: some View {
+    var claude: some View {
         baseURLTextField(prompt: Text("https://api.anthropic.com")) {
             Text("/v1/messages")
         }
