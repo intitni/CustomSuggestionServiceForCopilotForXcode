@@ -222,6 +222,9 @@ struct RequestStrategyPicker: View {
                     case .codeLlamaFillInTheMiddleWithSystemPrompt:
                         Text("Fill-in-the-Middle with System Prompt")
                             .tag(option.rawValue)
+                    case .anthropic:
+                        Text("Anthropic optimized")
+                            .tag(option.rawValue)
                     }
                 }
             }
