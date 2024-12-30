@@ -100,6 +100,13 @@ struct ChatModelEdit {
                         state.suggestedMaxTokens = nil
                     }
                     return .none
+                case .claude:
+                    if let knownModel = AnthropicService.Models(rawValue: state.modelName) {
+                        state.suggestedMaxTokens = knownModel.maxToken
+                    } else {
+                        state.suggestedMaxTokens = nil
+                    }
+                    return .none
                 default:
                     state.suggestedMaxTokens = nil
                     return .none

@@ -54,11 +54,12 @@ The template format differs in different tools.
 
 ## Strategies
 
+- Fill-in-the-Middle: It uses special tokens to guide the models to generate suggestions. The models need to support FIM to use it (codellama:xb-code, startcoder, etc.). You need to setup a prompt format to allow it to work properly. The default prompt format is for codellama.
+- Fill-in-the-Middle with System Prompt: The previous one doesn't have a system prompt telling it what to do. You can try to use it in models that don't support FIM.
+- Anthropic Optimized: This strategy is optimized for Anthropic chat models. You can try it on other chat models, too.
 - Default: This strategy meticulously explains the context to the model, prompting it to generate a suggestion.
 - Naive: This strategy rearranges the code in a naive way to trick the model into believing it's appending code at the end of a file.
 - Continue: This strategy employs the "Please Continue" technique to persuade the model that it has started a suggestion and must continue to complete it. (Only effective with the chat completion API).
-- Fill-in-the-Middle: It uses special tokens to guide the models to generate suggestions. The models need to support FIM to use it (codellama:xb-code, startcoder, etc.). You need to setup a prompt format to allow it to work properly. The default prompt format is for codellama.
-- Fill-in-the-Middle with System Prompt: The previous one doesn't have a system prompt telling it what to do. You can try to use it in models that don't support FIM.
 
 ## Contribution
 

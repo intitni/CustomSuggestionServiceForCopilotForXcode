@@ -33,6 +33,7 @@ public enum RequestStrategyOption: String, CaseIterable, Codable {
     case `continue`
     case codeLlamaFillInTheMiddle
     case codeLlamaFillInTheMiddleWithSystemPrompt
+    case anthropic
 }
 
 extension RequestStrategyOption {
@@ -48,6 +49,8 @@ extension RequestStrategyOption {
             return FillInTheMiddleRequestStrategy.self
         case .codeLlamaFillInTheMiddleWithSystemPrompt:
             return FillInTheMiddleWithSystemPromptRequestStrategy.self
+        case .anthropic:
+            return AnthropicRequestStrategy.self
         }
     }
 }
