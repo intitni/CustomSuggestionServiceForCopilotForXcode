@@ -183,6 +183,7 @@ struct RequestStrategyPicker: View {
         @AppStorage(\.fimTemplate) var fimTemplate
         @AppStorage(\.fimPromptIsRaw) var fimPromptIsRaw
         @AppStorage(\.fimStopToken) var fimStopToken
+        @AppStorage(\.fimAttchFileInfo) var fimAttchFileInfo
     }
 
     @StateObject var settings = Settings()
@@ -238,6 +239,7 @@ struct RequestStrategyPicker: View {
                 prompt: Text(UserDefaults.shared.defaultValue(for: \.fimTemplate))
             ) { Text("FIM Template") }
             Toggle(isOn: $settings.fimPromptIsRaw) { Text("Raw Prompt") }
+            Toggle(isOn: $settings.fimAttchFileInfo) { Text("Attch FileInfo") }
             TextField(text: $settings.fimStopToken) { Text("FIM Stop Token") }
         }
     }
