@@ -239,7 +239,7 @@ struct RequestStrategyPicker: View {
                 prompt: Text(UserDefaults.shared.defaultValue(for: \.fimTemplate))
             ) { Text("FIM Template") }
             Toggle(isOn: $settings.fimPromptIsRaw) { Text("Raw Prompt") }
-            Toggle(isOn: $settings.fimAttchFileInfo) { Text("Attch FileInfo") }
+            Toggle(isOn: $settings.fimAttchFileInfo) { Text("Attch File Info") }
             TextField(text: $settings.fimStopToken) { Text("FIM Stop Token") }
         }
     }
