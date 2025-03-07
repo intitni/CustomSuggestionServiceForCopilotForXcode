@@ -46,7 +46,7 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
         }
         var language: CodeLanguage? { sourceRequest.language }
         var promptIsRaw: Bool { UserDefaults.shared.value(for: \.fimPromptIsRaw) }
-        var attchFileInfo: Bool { UserDefaults.shared.value(for: \.fimAttchFileInfo) }
+        var attachFileInfo: Bool { UserDefaults.shared.value(for: \.fimAttachFileInfo) }
 
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
@@ -62,7 +62,7 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
             var template = UserDefaults.shared.value(for: \.fimTemplate)
             if template.isEmpty { template = UserDefaults.shared.defaultValue(for: \.fimTemplate) }
             // Determine whether to append file information according to attachFileInfo
-            let fileInfo = attchFileInfo ? """
+            let fileInfo = attachFileInfo ? """
                 // File Path: \(filePath)
                 // Indentation: \
                 \(sourceRequest.indentSize) \
