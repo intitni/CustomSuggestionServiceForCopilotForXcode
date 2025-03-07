@@ -129,10 +129,10 @@ public extension UserDefaultPreferenceKeys {
         )
     }
     
-    var fimAttchFileInfo: PreferenceKey<Bool> {
+    var fimAttachFileInfo: PreferenceKey<Bool> {
         .init(
             defaultValue: true,
-            key: "CustomSuggestionService-fimAttchFileInfo"
+            key: "CustomSuggestionService-fimAttachFileInfo"
         )
     }
     
