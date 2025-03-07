@@ -267,6 +267,10 @@ extension OpenAIService {
             contextWindow - maxToken - 20
         ))
         let prompts = strategy.createTruncatedPrompt(promptStrategy: request)
+        // if request.systemPrompt empty not append
+        if  request.systemPrompt.isEmpty {
+            return prompts.map(\.content).joined(separator: "\n\n")
+        }
         return ([request.systemPrompt] + prompts.map(\.content)).joined(separator: "\n\n")
     }
 

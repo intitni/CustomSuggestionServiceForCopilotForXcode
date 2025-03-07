@@ -40,9 +40,13 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
         var suffix: [String]
         var filePath: String { sourceRequest.relativePath ?? sourceRequest.fileURL.path }
         var relevantCodeSnippets: [RelevantCodeSnippet] { sourceRequest.relevantCodeSnippets }
-        var stopWords: [String] { ["\n\n", Tag.stop].filter { !$0.isEmpty } }
+        // Stop words should support multiple comma-separated
+        var stopWords: [String] {
+            return ["\n\n"] + Tag.stop.split(separator: ",").map { String($0) }.filter { !$0.isEmpty }
+        }
         var language: CodeLanguage? { sourceRequest.language }
         var promptIsRaw: Bool { UserDefaults.shared.value(for: \.fimPromptIsRaw) }
+        var attachFileInfo: Bool { UserDefaults.shared.value(for: \.fimAttachFileInfo) }
 
         var suggestionPrefix: SuggestionPrefix {
             guard let prefix = prefix.last else { return .empty }
@@ -57,15 +61,17 @@ struct FillInTheMiddleRequestStrategy: RequestStrategy {
             let suffix = truncatedSuffix.joined()
             var template = UserDefaults.shared.value(for: \.fimTemplate)
             if template.isEmpty { template = UserDefaults.shared.defaultValue(for: \.fimTemplate) }
-            
+            // Determine whether to append file information according to attachFileInfo
+            let fileInfo = attachFileInfo ? """
+                // File Path: \(filePath)
+                // Indentation: \
+                \(sourceRequest.indentSize) \
+                \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
+                """ : ""
             let prefixContent = """
-            // File Path: \(filePath)
-            // Indentation: \
-            \(sourceRequest.indentSize) \
-            \(sourceRequest.usesTabsForIndentation ? "tab" : "space")
-            \(includedSnippets.map(\.content).joined(separator: "\n\n"))
-            \(truncatedPrefix.joined())
-            """
+                \(fileInfo)\(fileInfo.isEmpty ? "" : "\n")\(includedSnippets.map(\.content).joined(separator: "\n\n"))
+                \(truncatedPrefix.joined())
+                """
             
             let suffixContent = suffix.isEmpty ? "\n// End of file" : suffix
             
