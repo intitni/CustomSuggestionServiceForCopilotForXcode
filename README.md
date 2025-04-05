@@ -34,6 +34,8 @@ If you are new to running a model locally, you can try [Ollama](https://ollama.c
 
 - Use Tabby since they have extensive experience in code completion.
 - Use models with completions API with Fill-in-the-Middle support (for example, codellama:7b-code), and use the "Fill-in-the-Middle" strategy.
+
+    You can find some [examples here](#example-use-of-local-models).
 - Use models with FIM API.
 
 When using custom models to generate suggestions, it is recommended to setup a lower suggestion limit for faster generation.
@@ -61,6 +63,15 @@ The template format differs in different tools.
 - Naive: This strategy rearranges the code in a naive way to trick the model into believing it's appending code at the end of a file.
 - Continue: This strategy employs the "Please Continue" technique to persuade the model that it has started a suggestion and must continue to complete it. (Only effective with the chat completion API).
 
+## Example Use of Local Models
+
+### Qwen Type in the Middle
+
+1. Load `qwen2.5-coder:32b` with Ollama.
+2. Setup the model with the completions API.
+3. Set the request strategy to "Fill-in-the-Middle".
+4. Set prompt format to `<|fim_prefix|>{prefix}<|fim_suffix|>{suffix}<|fim_middle|>` and turn on Raw Prompt.
+
 ## Contribution
 
 Prompt engineering is a challenging task, and your assistance is invaluable.
@@ -69,4 +80,4 @@ The most complex things are located within the `Core` package.
 
 - To add a new service, please refer to the `CodeCompletionService` folder.
 - To add new request strategies, check out the `SuggestionService` folder.
-
+- To add a new instructions of using a local model, update the `Example Use of Local Models` in the README.md.

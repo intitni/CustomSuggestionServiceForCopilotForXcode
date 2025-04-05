@@ -129,6 +129,13 @@ public extension UserDefaultPreferenceKeys {
         )
     }
     
+    var fimAttachFileInfo: PreferenceKey<Bool> {
+        .init(
+            defaultValue: true,
+            key: "CustomSuggestionService-fimAttachFileInfo"
+        )
+    }
+    
     var maxGenerationToken: PreferenceKey<Int> {
         .init(
             defaultValue: 200,
